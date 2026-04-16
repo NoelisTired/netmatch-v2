@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DAL.DTOModels
+namespace DAL.DTO   
 {
     public enum Status { Active, Inactive, Pending }
     public enum Language { English }
