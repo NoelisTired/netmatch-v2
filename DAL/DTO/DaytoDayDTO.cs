@@ -13,7 +13,7 @@ namespace DAL.DTOModels
         public string Title { get; private set; }
         public string Description { get; private set; }
 
-        public DateTime Created_At { get; private set; }
+        public DateTime Created_At { get; private set; } = DateTime.Now;
 
         public DaytoDayDTO(int id, int dayNumber, string title, string description)
         {
