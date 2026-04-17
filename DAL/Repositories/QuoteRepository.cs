@@ -81,7 +81,7 @@ namespace DAL.Repositories
             }
         }
 
-        public QuoteDTO Add(QuoteDTO DTO)
+        public QuoteDTO Insert(QuoteDTO DTO)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
