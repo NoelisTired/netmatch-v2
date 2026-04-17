@@ -13,15 +13,12 @@ public class DayToDay
     public DateTime UpdatedAt { get; private set; }
     public DateTime Delete_At { get; private set; }
 
-
-
-
     // je moet laten zien hoe waarden worden gezet. (aka Constructors)
     public DayToDay(int id, int dayNumber, string title, string description, DateTime date)
     {
         this.Id = id;
         this.DayNumber = dayNumber;
-        this.Title = title;
+        this.Title = title ?? throw new ArgumentNullException(nameof(title));
         this.Description = description;
         this.Date = date;
     }
