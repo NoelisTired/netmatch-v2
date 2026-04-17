@@ -8,10 +8,10 @@ using DAL.DTO;
 
 namespace DAL.Repositories
 {
-    public class DaytoDayRepository1
+    public class DaytoDayRepository
     {
         private readonly string _connectionString;
-        public DaytoDayRepository1(string connectionString)
+        public DaytoDayRepository(string connectionString)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
@@ -20,7 +20,7 @@ namespace DAL.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                string query = @"SELECT * FROM Day WHERE Id = @id";
+                string query = @"SELECT * FROM `day` WHERE id = @id";
                 using SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@id", id);
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -57,7 +57,7 @@ namespace DAL.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                string query = @"UPDATE Day SET Title = @title, Description = @description, Updated_At = @updatedAt WHERE Id = @id";
+                string query = @"UPDATE `day` SET Title = @title, description = @description, updated_at = @updatedAt WHERE id = @id";
                 using SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@title", title);
@@ -66,21 +66,22 @@ namespace DAL.Repositories
                 command.ExecuteNonQuery();
             }
         }
-        public DaytoDayDTO Insert(DaytoDayDTO item)
+        public DaytoDayDTO Insert(DaytoDayDTO DTO)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                string query = @"INSERT INTO Day (DayNumber, Title, Description, Created_At) VALUES (@dayNumber, @title, @description, @createdAt); SELECT SCOPE_IDENTITY();";
+
+                string query = @"INSERT INTO `day` (daynumber, title, description, created_At) VALUES (@dayNumber, @title, @description, @createdAt); 
+`                SELECT SCOPE_IDENTITY();";
+
                 using SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@dayNumber", item.DayNumber);
-                command.Parameters.AddWithValue("@title", item.Title);
-                command.Parameters.AddWithValue("@description", item.Description);
+                command.Parameters.AddWithValue("@dayNumber", DTO.DayNumber);
+                command.Parameters.AddWithValue("@title", DTO.Title);
+                command.Parameters.AddWithValue("@description", DTO.Description);
                 command.Parameters.AddWithValue("@createdAt", DateTime.Now);
-                int newId = Convert.ToInt32(command.ExecuteScalar());
-                return new DaytoDayDTO(newId, item.DayNumber, item.Title, item.Description);
-
-
+                command.ExecuteNonQuery();
+                return DTO;
             }
         }
     }
