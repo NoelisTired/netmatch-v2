@@ -33,7 +33,7 @@ namespace DAL.Repositories
                             TravelAgentId = (int)reader["travelagent_id"],
                             Title = reader["titel"].ToString(),
                             Language = reader["taal"].ToString(),
-                            Status = reader["status"].ToString()
+                            Status = reader["status"].ToString() 
                         };
                     }
                 }
