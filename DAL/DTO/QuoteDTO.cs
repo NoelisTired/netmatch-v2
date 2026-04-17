@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.SymbolStore;
-using DAL.DTO;
 
 namespace DAL.DTO
 {
