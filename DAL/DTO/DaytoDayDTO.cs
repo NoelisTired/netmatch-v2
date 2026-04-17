@@ -9,23 +9,14 @@ namespace DAL.DTO
 {
     public class DaytoDayDTO
     {
-        public int Id {  get; set; }
-        public int DayNumber { get; private set; }
-        public string Title { get; private set; }
-        public string Description { get; private set; }
+        public int Id { get; set; }
+        public int DayNumber { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
 
-        public DateTime Created_At { get; private set; } = DateTime.Now;
+        public DateTime Created_At { get; set; } = DateTime.Now;
 
-        public DateTime Updated_At { get; private set;  } = DateTime.Now;
-        public DateTime Deleted_At { get; private set; } = DateTime.Now;
-
-        public DaytoDayDTO(int id, int dayNumber, string title, string description)
-        {
-            this.Id = id;
-            this.DayNumber = dayNumber;
-            this.Title = title;
-            this.Description = description;
-        }
-
+        public DateTime Updated_At { get; set; } = DateTime.Now;
+        public DateTime Deleted_At { get; set; } = DateTime.Now;
     }
 }

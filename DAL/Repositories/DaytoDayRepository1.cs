@@ -28,12 +28,12 @@ namespace DAL.Repositories
                     if (reader.Read())
                     {
                         return new DaytoDayDTO
-                        (
-                            id: (int)reader["Id"],
-                            dayNumber: (int)reader["DayNumber"],
-                            title: reader["Title"].ToString(),
-                            description: reader["Description"].ToString()
-                        );
+                        {
+                            Id = (int)reader["id"],
+                            DayNumber = (int)reader["DayNumber"],
+                            Title = reader["Title"].ToString(),
+                            Description = reader["Description"].ToString()
+                        };
                     }
                 }
             }
