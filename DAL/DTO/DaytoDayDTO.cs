@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Logic.Models;
 
 namespace DAL.DTO
 {
@@ -14,6 +15,9 @@ namespace DAL.DTO
         public string Description { get; private set; }
 
         public DateTime Created_At { get; private set; } = DateTime.Now;
+
+        public DateTime Updated_At { get; private set;  } = DateTime.Now;
+        public DateTime Deleted_At { get; private set; } = DateTime.Now;
 
         public DaytoDayDTO(int id, int dayNumber, string title, string description)
         {
