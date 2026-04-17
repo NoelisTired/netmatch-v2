@@ -1,21 +1,18 @@
 ﻿using System;
+using System.Diagnostics.SymbolStore;
+using DAL.DTO;
 
-namespace DAL.DTO   
+namespace DAL.DTO
 {
-    public enum Status { Active, Inactive, Pending }
-    public enum Language { English }
-    
     public class QuoteDTO
     {
-        public int Id { get; private set; }
-        public string Title { get;private set; }
-        public DateTime CreatedAt { get; private set; } = DateTime.Now;
-
-        public QuoteDTO(int id, string title)
-        {
-            Id = id;
-            Title = title;
-        }
+        public int Id { get; set; }
+        public int TravelAgentId { get; set; }
+        public string Title { get; set; } // laat NULL handling in de service plaatsvinden
+        public string Language { get; set; } // parse naar enum in service (logic), laat NULL handling in de service plaatsvinden
+        public string Status { get; set; } // parse naar enum in service (logic), laat NULL handling in de service plaatsvinden 
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime DeletedAt { get; set; } = DateTime.Now;
     }
 }
-            
