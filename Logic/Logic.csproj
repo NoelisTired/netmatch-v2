@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Interface\Interface.csproj" />
-        <ProjectReference Include="..\DAL\DAL.csproj" />
     </ItemGroup>
 
 </Project>
