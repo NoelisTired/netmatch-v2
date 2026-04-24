@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "CreateQuote";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>CreateQuote</h1>
+
+<form asp-controller="Quote" asp-action="Create" method="post">
+    <div class="form-group mb-3">
+        <label for="naam">Naam</label>
+        <input type="text" id="naam" name="Title" class="form-control" required />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="taal">Taal</label>
+        <select id="taal" name="Language" class="form-select" required>
+            <option value="">-- Kies een taal --</option>
+            <option value="NL">Nederlands</option>
+            <option value="EN">Engels</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opslaan</button>
+</form>
+
