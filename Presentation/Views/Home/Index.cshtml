@@ -1,25 +1,2 @@
-﻿@model List<Interface.DTO.QuoteDTO>
-
-<h2>Offerte Overzicht</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Titel</th>
-            <th>Language</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.Language</td>
-                <td>@item.Status</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<a asp-action="Create" class="btn btn-primary">Make new Quote</a>
+﻿<h1>Welkom op de Home Pagina</h1>
+<p>Klik op de link naar Offertes om de lijst te zien.</p>

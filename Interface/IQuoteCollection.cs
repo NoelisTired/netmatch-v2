@@ -7,12 +7,9 @@ using Interface.DTO;
 
 namespace Interface
 {
-    public interface IQuoteContext
+    public interface IQuoteCollection
     {
-        
-
-        int Insert(QuoteDTO quote);
-
-        List<QuoteDTO> GetAll();
+        List<QuoteDTO> GetQuotes();
+        void AddQuote(Interface.DTO.QuoteDTO quote);
     }
 }

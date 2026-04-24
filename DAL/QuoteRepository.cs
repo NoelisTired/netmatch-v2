@@ -19,7 +19,7 @@ namespace DAL
             _db = db;
         }
 
-       // public int Insert(string title, string language, string status, int travelAgentId)
+       
 
         public int Insert(QuoteDTO quote)
         {
@@ -29,17 +29,17 @@ namespace DAL
 
                 using (var cmd = new Microsoft.Data.SqlClient.SqlCommand(query, (Microsoft.Data.SqlClient.SqlConnection)conn))
                 {
-                    cmd.Parameters.AddWithValue("@title", quote.Title);
-                    cmd.Parameters.AddWithValue("@lang", quote.Language);
+                    cmd.Parameters.AddWithValue("@title", (object)quote.Title ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@lang", (object)quote.Language ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@status", "concept");
-                    cmd.Parameters.AddWithValue("@agentId", 1); // testId
+                    cmd.Parameters.AddWithValue("@agentId", 1);
 
                     conn.Open();
-                    // ExecuteScalar voert de INSERT uit en geeft de nieuwe ID terug
+                    
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }
             } 
-            //throw new NotImplementedException();
+           
         }
 
         public List<QuoteDTO> GetAll()
@@ -50,12 +50,12 @@ namespace DAL
             {
                 using (var conn = _db.GetConnection())
                 {
-                    // Dubbelcheck: Is je query exact gelijk aan de DB kolommen?
+                    
                     string query = "SELECT id, travelagent_id, titel, taal, status FROM offerte";
 
                     using (var cmd = new Microsoft.Data.SqlClient.SqlCommand(query, (Microsoft.Data.SqlClient.SqlConnection)conn))
                     {
-                        conn.Open(); // Als dit faalt, springt hij direct naar 'catch'
+                        conn.Open(); 
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -76,8 +76,7 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                // DIT IS HET BELANGRIJKSTE: 
-                // Zet een breakpoint op de regel hieronder (F9)
+             
                 string foutmelding = ex.Message;
                 throw;
             }

@@ -1,10 +1,25 @@
-﻿@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿@model List<Interface.DTO.QuoteDTO>
 
-<h1> QuoteIndex</h1>
-<p>Here you can find an overview of all the quotes!</p>
-    
-<a asp-controller="Quote" asp-action="Create" class="btn btn-primary">Create New Quote</a>
+<h2>Quote Overview</h2>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Language</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Language</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Make new Quote</a>
