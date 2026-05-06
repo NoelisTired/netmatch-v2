@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace DAL.DTO
+namespace Interface.DTO
 {
     public class DaytoDayDTO
     {

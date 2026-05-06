@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.SymbolStore;
 
 namespace Interface.DTO
 {
@@ -10,10 +7,11 @@ namespace Interface.DTO
     {
         public int Id { get; set; }
         public int TravelAgentId { get; set; }
-        public string Title { get; set; }
-        public string Language { get; set; }
-        public string Status { get; set; }
-
-        public DateTime CreatedAt { get; set; }
+        public string? Title { get; set; } // NULL handling moet nog in service plaatsvinden
+        public string? Language { get; set; } // parse naar enum in service (logic), NULL handling moet nog in service plaatsvinden
+        public string? Status { get; set; } // parse naar enum in service (logic), NULL handling moet nog in service plaatsvinden
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime DeletedAt { get; set; } = DateTime.Now;
     }
 }

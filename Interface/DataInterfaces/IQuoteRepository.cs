@@ -1,4 +1,4 @@
-﻿using DAL.DTO;
+﻿using Interface.DTO;
 
 namespace Interface.DataInterfaces;
 

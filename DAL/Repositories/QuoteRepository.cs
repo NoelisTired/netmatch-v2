@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
-using DAL.DTO;
+using Interface.DTO;
 
 namespace DAL.Repositories
 {
