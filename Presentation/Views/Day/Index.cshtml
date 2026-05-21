@@ -1,0 +1,54 @@
+@using Logic.Models
+@model IEnumerable<Day>
+@{
+    var quoteId = (int)ViewBag.QuoteId;
+    ViewData["Title"] = "Dag-tot-dag";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="h3 mb-0">Dag-tot-dag</h1>
+        <small class="text-muted">@ViewBag.QuoteTitle</small>
+    </div>
+    <a asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-primary">Dag toevoegen</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Deze offerte heeft nog geen dagen.</div>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Dag</th>
+                <th>Datum</th>
+                <th>Titel</th>
+                <th class="text-end">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var day in Model)
+            {
+                <tr>
+                    <td>@day.DayNumber</td>
+                    <td>@day.Date.ToString("dd-MM-yyyy")</td>
+                    <td>@day.Title</td>
+                    <td class="text-end">
+                        <a asp-controller="Transport" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-sm btn-outline-secondary">Transport</a>
+                        <a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-sm btn-outline-secondary">Accommodatie</a>
+                        <a asp-action="Edit" asp-route-id="@day.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
+                        <form asp-action="Delete" asp-route-id="@day.Id" asp-route-quoteId="@quoteId"
+                              method="post" class="d-inline"
+                              onsubmit="return confirm('Deze dag verwijderen?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-controller="Quote" asp-action="Details" asp-route-id="@quoteId" class="btn btn-link">Terug naar offerte</a>

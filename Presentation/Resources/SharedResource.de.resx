@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="Home" xml:space="preserve"><value>Start</value></data>
+  <data name="Offertes" xml:space="preserve"><value>Angebote</value></data>
+  <data name="Huisstijl" xml:space="preserve"><value>Corporate Design</value></data>
+  <data name="Privacy" xml:space="preserve"><value>Datenschutz</value></data>
+  <data name="Taal" xml:space="preserve"><value>Sprache</value></data>
+  <data name="Opslaan" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Annuleren" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Bewerken" xml:space="preserve"><value>Bearbeiten</value></data>
+  <data name="Verwijderen" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Toevoegen" xml:space="preserve"><value>Hinzufügen</value></data>
+  <data name="Bekijken" xml:space="preserve"><value>Ansehen</value></data>
+  <data name="Terug naar overzicht" xml:space="preserve"><value>Zurück zur Übersicht</value></data>
+  <data name="Terug naar offertes" xml:space="preserve"><value>Zurück zu den Angeboten</value></data>
+  <data name="Download PDF" xml:space="preserve"><value>PDF herunterladen</value></data>
+  <data name="Naar offertes" xml:space="preserve"><value>Zu den Angeboten</value></data>
+  <data name="Offertes beheren" xml:space="preserve"><value>Angebote verwalten</value></data>
+  <data name="Nieuwe offerte aanmaken" xml:space="preserve"><value>Neues Angebot erstellen</value></data>
+  <data name="Nieuwe offerte" xml:space="preserve"><value>Neues Angebot</value></data>
+  <data name="Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht." xml:space="preserve"><value>Erstellen Sie personalisierte Reiseangebote: pro Angebot ein Tag-für-Tag-Programm mit Transport, Unterkunft und Preisübersicht.</value></data>
+  <data name="Titel" xml:space="preserve"><value>Titel</value></data>
+  <data name="Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Aangemaakt" xml:space="preserve"><value>Erstellt</value></data>
+  <data name="Acties" xml:space="preserve"><value>Aktionen</value></data>
+  <data name="Er zijn nog geen offertes. Maak je eerste offerte aan." xml:space="preserve"><value>Es gibt noch keine Angebote. Erstellen Sie Ihr erstes Angebot.</value></data>
+  <data name="Offerte bewerken" xml:space="preserve"><value>Angebot bearbeiten</value></data>
+  <data name="Dag toevoegen" xml:space="preserve"><value>Tag hinzufügen</value></data>
+  <data name="Deze offerte heeft nog geen dagen. Voeg de eerste dag toe." xml:space="preserve"><value>Dieses Angebot hat noch keine Tage. Fügen Sie den ersten Tag hinzu.</value></data>
+  <data name="Transport" xml:space="preserve"><value>Transport</value></data>
+  <data name="Accommodatie" xml:space="preserve"><value>Unterkunft</value></data>
+  <data name="Transport toevoegen" xml:space="preserve"><value>Transport hinzufügen</value></data>
+  <data name="Accommodatie toevoegen" xml:space="preserve"><value>Unterkunft hinzufügen</value></data>
+  <data name="Kamertype toevoegen" xml:space="preserve"><value>Zimmertyp hinzufügen</value></data>
+  <data name="Geen transport." xml:space="preserve"><value>Kein Transport.</value></data>
+  <data name="Geen accommodatie." xml:space="preserve"><value>Keine Unterkunft.</value></data>
+  <data name="Kamertype" xml:space="preserve"><value>Zimmertyp</value></data>
+  <data name="Prijs/nacht" xml:space="preserve"><value>Preis/Nacht</value></data>
+  <data name="Capaciteit" xml:space="preserve"><value>Kapazität</value></data>
+  <data name="Huidig logo" xml:space="preserve"><value>Aktuelles Logo</value></data>
+  <data name="Nieuw logo" xml:space="preserve"><value>Neues Logo</value></data>
+  <data name="Primaire kleur" xml:space="preserve"><value>Primärfarbe</value></data>
+  <data name="Accentkleur" xml:space="preserve"><value>Akzentfarbe</value></data>
+  <data name="Nog geen logo ingesteld." xml:space="preserve"><value>Noch kein Logo festgelegt.</value></data>
+</root>

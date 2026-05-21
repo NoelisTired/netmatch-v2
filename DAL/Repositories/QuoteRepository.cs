@@ -1,107 +1,177 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
+using System.Data;
+using Interface.DataInterfaces;
 using Interface.DTO;
+using Microsoft.Data.SqlClient;
 
-namespace DAL.Repositories
+namespace DAL.Repositories;
+
+/// <summary>
+/// Datatoegang voor offertes via ruwe SQL (geen ORM). Alle queries filteren
+/// op <c>deleted_at IS NULL</c> zodat soft-deleted offertes nooit terugkomen.
+/// Kolomnaamgeving is snake_case conform het databaseontwerp.
+/// </summary>
+public class QuoteRepository : IQuoteRepository
 {
-    public class QuoteRepository
+    private readonly string _connectionString;
+
+    public QuoteRepository(string connectionString)
     {
-        private readonly string _connectionString;
+        _connectionString = connectionString
+            ?? throw new ArgumentNullException(nameof(connectionString));
+    }
 
-        public QuoteRepository(string connectionString)
+    public IEnumerable<QuoteDto> GetAll()
+    {
+        var quotes = new List<QuoteDto>();
+        try
         {
-            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-        }
-
-        public QuoteDTO? GetById(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                @"SELECT id, travelagent_id, titel, taal, status, created_at, updated_at
+                  FROM offerte
+                  WHERE deleted_at IS NULL
+                  ORDER BY id DESC",
+                connection);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                conn.Open();
-
-                string query = @"SELECT * FROM offerte WHERE id = @id";
-
-                using SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@id", id);
-
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return new QuoteDTO
-                        {
-                            Id = (int)reader["id"],
-                            TravelAgentId = (int)reader["travelagent_id"],
-                            Title = reader["titel"].ToString(),
-                            Language = reader["taal"].ToString(),
-                            Status = reader["status"].ToString() 
-                        };
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public void RemoveByID(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-
-                string query = @"DELETE FROM Offerte WHERE id = @Id";
-
-                using SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@id", id);
-
-                command.ExecuteNonQuery();
+                quotes.Add(ReadDto(reader));
             }
         }
-
-        public void UpdateByID(int id, string titel, string taal, string status)
+        catch (SqlException ex)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            throw new InvalidOperationException("Kan offertes niet ophalen.", ex);
+        }
+        return quotes;
+    }
+
+    public IEnumerable<QuoteDto> GetAllByTravelAgent(int travelAgentId)
+    {
+        var quotes = new List<QuoteDto>();
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                @"SELECT id, travelagent_id, titel, taal, status, created_at, updated_at
+                  FROM offerte
+                  WHERE deleted_at IS NULL AND travelagent_id = @TravelAgentId
+                  ORDER BY id DESC",
+                connection);
+            command.Parameters.AddWithValue("@TravelAgentId", travelAgentId);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                conn.Open();
-
-                string query = @"UPDATE Offerte SET titel = @Titel, taal = @Taal, status = @Status WHERE id = @Id";
-
-                using SqlCommand command = new SqlCommand(query, conn);
-                
-                command.Parameters.AddWithValue("@Id", id);
-                command.Parameters.AddWithValue("@Titel", titel);
-                command.Parameters.AddWithValue("@Taal", taal);
-                command.Parameters.AddWithValue("@Status", status);
-
-                command.ExecuteNonQuery();
+                quotes.Add(ReadDto(reader));
             }
         }
-
-        public QuoteDTO Insert(QuoteDTO DTO)
+        catch (SqlException ex)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
+            throw new InvalidOperationException("Kan offertes niet ophalen.", ex);
+        }
+        return quotes;
+    }
 
-                string query = @"INSERT INTO Offerte (travelagent_id, titel, taal, status) 
-                                VALUES (@TravelAgentId, @Titel, @Taal, @Status)";
-
-                using SqlCommand command = new SqlCommand(query, conn);
-
-                command.Parameters.AddWithValue("@TravelAgentId", DTO.TravelAgentId);
-                command.Parameters.AddWithValue("@Titel", DTO.Title);
-                command.Parameters.AddWithValue("@Taal", DTO.Language);
-                command.Parameters.AddWithValue("@Status", DTO.Status);
-
-                command.ExecuteNonQuery();
-
-                return DTO;
-            }
+    public QuoteDto? GetById(int id)
+    {
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                @"SELECT id, travelagent_id, titel, taal, status, created_at, updated_at
+                  FROM offerte
+                  WHERE id = @Id AND deleted_at IS NULL",
+                connection);
+            command.Parameters.AddWithValue("@Id", id);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            return reader.Read() ? ReadDto(reader) : null;
+        }
+        catch (SqlException ex)
+        {
+            throw new InvalidOperationException("Kan offerte niet ophalen.", ex);
         }
     }
-}
 
+    public int Add(CreateQuoteDto dto)
+    {
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                @"INSERT INTO offerte (travelagent_id, titel, taal, status, created_at, updated_at)
+                  OUTPUT INSERTED.id
+                  VALUES (@TravelAgentId, @Title, @Language, @Status, SYSUTCDATETIME(), SYSUTCDATETIME())",
+                connection);
+            command.Parameters.AddWithValue("@TravelAgentId", dto.TravelAgentId);
+            command.Parameters.AddWithValue("@Title", dto.Title);
+            command.Parameters.AddWithValue("@Language", dto.Language);
+            command.Parameters.AddWithValue("@Status", dto.Status);
+            connection.Open();
+            var result = command.ExecuteScalar();
+            return result is null ? 0 : Convert.ToInt32(result);
+        }
+        catch (SqlException ex)
+        {
+            throw new InvalidOperationException("Kan offerte niet opslaan.", ex);
+        }
+    }
+
+    public void Update(int id, CreateQuoteDto dto)
+    {
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                @"UPDATE offerte
+                  SET titel = @Title, taal = @Language, status = @Status, updated_at = SYSUTCDATETIME()
+                  WHERE id = @Id AND deleted_at IS NULL",
+                connection);
+            command.Parameters.AddWithValue("@Id", id);
+            command.Parameters.AddWithValue("@Title", dto.Title);
+            command.Parameters.AddWithValue("@Language", dto.Language);
+            command.Parameters.AddWithValue("@Status", dto.Status);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+        catch (SqlException ex)
+        {
+            throw new InvalidOperationException("Kan offerte niet bijwerken.", ex);
+        }
+    }
+
+    public void SoftDelete(int id)
+    {
+        try
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                @"UPDATE offerte
+                  SET deleted_at = SYSUTCDATETIME()
+                  WHERE id = @Id AND deleted_at IS NULL",
+                connection);
+            command.Parameters.AddWithValue("@Id", id);
+            connection.Open();
+            command.ExecuteNonQuery();
+        }
+        catch (SqlException ex)
+        {
+            throw new InvalidOperationException("Kan offerte niet verwijderen.", ex);
+        }
+    }
+
+    private static QuoteDto ReadDto(IDataReader reader)
+    {
+        return new QuoteDto
+        {
+            Id = reader.GetInt32(0),
+            TravelAgentId = reader.GetInt32(1),
+            Title = reader.GetString(2),
+            Language = reader.GetString(3),
+            Status = reader.GetString(4),
+            CreatedAt = reader.GetDateTime(5),
+            UpdatedAt = reader.GetDateTime(6)
+        };
+    }
+}

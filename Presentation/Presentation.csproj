@@ -8,11 +8,13 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.12" />
+      <PackageReference Include="QuestPDF" Version="2026.5.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Interface\Interface.csproj" />
         <ProjectReference Include="..\Logic\Logic.csproj" />
+        <ProjectReference Include="..\DAL.Fake\DAL.Fake.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,46 @@
+@model Presentation.Models.TransportViewModel
+@{
+    ViewData["Title"] = "Transport toevoegen";
+}
+
+<h1 class="h3 mb-3">Transport toevoegen</h1>
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Create" method="post" class="col-md-6">
+    <input type="hidden" asp-for="DayId" />
+
+    <div class="mb-3">
+        <label asp-for="Type" class="form-label">Type</label>
+        <select asp-for="Type" class="form-select">
+            <option value="">-- Kies een transporttype --</option>
+            <option value="Vlucht">Vlucht</option>
+            <option value="Bus">Bus</option>
+            <option value="Trein">Trein</option>
+            <option value="Eigen vervoer">Eigen vervoer</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DepartureLocation" class="form-label">Vertreklocatie</label>
+        <input asp-for="DepartureLocation" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ArrivalLocation" class="form-label">Aankomstlocatie</label>
+        <input asp-for="ArrivalLocation" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FlightNumber" class="form-label">Vluchtnummer <span class="text-muted">(verplicht bij Vlucht)</span></label>
+        <input asp-for="FlightNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Airline" class="form-label">Luchtvaartmaatschappij <span class="text-muted">(verplicht bij Vlucht)</span></label>
+        <input asp-for="Airline" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opslaan</button>
+    <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn btn-link">Annuleren</a>
+</form>

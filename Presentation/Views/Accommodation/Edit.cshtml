@@ -1,0 +1,31 @@
+@model Presentation.Models.AccommodationViewModel
+@{
+    ViewData["Title"] = "Accommodatie bewerken";
+}
+
+<h1 class="h3 mb-3">Accommodatie bewerken</h1>
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Edit" method="post" class="col-md-6">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="DayId" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Naam</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label">Adres <span class="text-muted">(optioneel)</span></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opslaan</button>
+    <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn btn-link">Annuleren</a>
+</form>

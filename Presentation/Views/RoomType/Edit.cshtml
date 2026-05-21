@@ -1,0 +1,31 @@
+@model Presentation.Models.RoomTypeViewModel
+@{
+    ViewData["Title"] = "Kamertype bewerken";
+}
+
+<h1 class="h3 mb-3">Kamertype bewerken</h1>
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Edit" method="post" class="col-md-6">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="AccommodationId" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Naam</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PricePerNight" class="form-label">Prijs per nacht (&euro;)</label>
+        <input asp-for="PricePerNight" type="number" step="0.01" min="0" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Capacity" class="form-label">Capaciteit (personen)</label>
+        <input asp-for="Capacity" type="number" min="1" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opslaan</button>
+    <a asp-action="Index" asp-route-accommodationId="@Model.AccommodationId" class="btn btn-link">Annuleren</a>
+</form>

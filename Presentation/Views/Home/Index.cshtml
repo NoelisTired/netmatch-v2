@@ -1,2 +1,17 @@
-﻿<h1>Welkom op de Home Pagina</h1>
-<p>Klik op de link naar Offertes om de lijst te zien.</p>
+@{
+    ViewData["Title"] = L["Home"];
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">NetMatch</h1>
+    <a asp-controller="Quote" asp-action="Index" class="btn btn-primary">@L["Naar offertes"]</a>
+</div>
+
+<p class="text-muted">
+    @L["Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht."]
+</p>
+
+<ul class="list-unstyled">
+    <li class="mb-1"><a asp-controller="Quote" asp-action="Index">@L["Offertes beheren"]</a></li>
+    <li class="mb-1"><a asp-controller="Quote" asp-action="Create">@L["Nieuwe offerte aanmaken"]</a></li>
+</ul>

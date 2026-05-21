@@ -1,9 +1,18 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@using System.Globalization
+@{
+    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+    var languages = new (string Code, string Label)[]
+    {
+        ("nl", "Nederlands"), ("en", "English"), ("de", "Deutsch"), ("fr", "Français")
+    };
+}
+<!DOCTYPE html>
+<html lang="@culture">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - Presentation</title>
+    <title>@ViewData["Title"] · NetMatch</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
@@ -13,7 +22,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Presentation</a>
+            <a class="navbar-brand fw-semibold" asp-controller="Quote" asp-action="Index">NetMatch</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -21,15 +30,33 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">@L["Home"]</a>
                     </li>
                     <li class="nav-item">
-                         <a class="nav-link text-dark" asp-area="" asp-controller="Quote" asp-action="Index">Quotes</a>
+                        <a class="nav-link text-dark" asp-controller="Quote" asp-action="Index">@L["Offertes"]</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-controller="Branding" asp-action="Edit">@L["Huisstijl"]</a>
                     </li>
                 </ul>
+                <form asp-controller="Culture" asp-action="Set" method="post" class="d-flex align-items-center">
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    <label class="me-2 text-muted small mb-0" for="culture-select">@L["Taal"]</label>
+                    <select id="culture-select" name="culture" class="form-select form-select-sm w-auto"
+                            onchange="this.form.submit()">
+                        @foreach (var lang in languages)
+                        {
+                            if (lang.Code == culture)
+                            {
+                                <option value="@lang.Code" selected>@lang.Label</option>
+                            }
+                            else
+                            {
+                                <option value="@lang.Code">@lang.Label</option>
+                            }
+                        }
+                    </select>
+                </form>
             </div>
         </div>
     </nav>
@@ -42,7 +69,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2026 - Presentation - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2026 NetMatch — <a asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

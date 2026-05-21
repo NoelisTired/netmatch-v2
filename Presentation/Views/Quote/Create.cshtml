@@ -1,25 +1,29 @@
-﻿@{
-    ViewData["Title"] = "CreateQuote";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+@model Presentation.Models.QuoteViewModel
+@{
+    ViewData["Title"] = "Nieuwe offerte";
 }
 
-<h1>CreateQuote</h1>
+<h1 class="h3 mb-3">Nieuwe offerte</h1>
 
-<form asp-controller="Quote" asp-action="Create" method="post">
-    <div class="form-group mb-3">
-        <label for="naam">Naam</label>
-        <input type="text" id="naam" name="Title" class="form-control" required />
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Create" method="post" class="col-md-6">
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Titel</label>
+        <input asp-for="Title" class="form-control" autofocus />
     </div>
 
-    <div class="form-group mb-3">
-        <label for="taal">Taal</label>
-        <select id="taal" name="Language" class="form-select" required>
+    <div class="mb-3">
+        <label asp-for="Language" class="form-label">Taal</label>
+        <select asp-for="Language" class="form-select">
             <option value="">-- Kies een taal --</option>
             <option value="NL">Nederlands</option>
             <option value="EN">Engels</option>
+            <option value="DE">Duits</option>
+            <option value="FR">Frans</option>
         </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Opslaan</button>
+    <a asp-action="Index" class="btn btn-link">Annuleren</a>
 </form>
-
