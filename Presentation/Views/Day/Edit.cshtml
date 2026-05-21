@@ -1,0 +1,36 @@
+@model Presentation.Models.DayViewModel
+@{
+    ViewData["Title"] = "Dag bewerken";
+}
+
+<h1 class="h3 mb-3">Dag bewerken</h1>
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Edit" method="post" class="col-md-6">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="QuoteId" />
+
+    <div class="mb-3">
+        <label asp-for="DayNumber" class="form-label">Dagnummer</label>
+        <input asp-for="DayNumber" type="number" min="1" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Date" class="form-label">Datum</label>
+        <input asp-for="Date" type="date" class="form-control" value="@Model.Date?.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Titel <span class="text-muted">(optioneel)</span></label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opslaan</button>
+    <a asp-action="Index" asp-route-quoteId="@Model.QuoteId" class="btn btn-link">Annuleren</a>
+</form>

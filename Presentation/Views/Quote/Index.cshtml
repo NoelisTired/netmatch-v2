@@ -1,25 +1,50 @@
-﻿@model List<Interface.DTO.QuoteDTO>
+@using Logic.Models
+@model IEnumerable<Quote>
+@{
+    ViewData["Title"] = L["Offertes"];
+}
 
-<h2>Quote Overview</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">@L["Offertes"]</h1>
+    <a asp-action="Create" class="btn btn-primary">@L["Nieuwe offerte"]</a>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Titel</th>
-            <th>Language</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (!Model.Any())
+{
+    <div class="alert alert-info">@L["Er zijn nog geen offertes. Maak je eerste offerte aan."]</div>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
             <tr>
-                <td>@item.Title</td>
-                <td>@item.Language</td>
-                <td>@item.Status</td>
+                <th>@L["Titel"]</th>
+                <th>@L["Taal"]</th>
+                <th>@L["Status"]</th>
+                <th>@L["Aangemaakt"]</th>
+                <th class="text-end">@L["Acties"]</th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<a asp-action="Create" class="btn btn-primary">Make new Quote</a>
+        </thead>
+        <tbody>
+            @foreach (var quote in Model)
+            {
+                <tr>
+                    <td>@quote.Title</td>
+                    <td>@quote.Language</td>
+                    <td>
+                        <span class="badge bg-secondary">@quote.Status</span>
+                    </td>
+                    <td>@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-secondary">@L["Bekijken"]</a>
+                        <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
+                        <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="d-inline"
+                              onsubmit="return confirm('@L["Deze offerte verwijderen?"]');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

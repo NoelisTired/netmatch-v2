@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace Logic.Enums;
 
-namespace Logic.Enums
+/// <summary>
+/// Ondersteunde offerte-talen (FR-01). Wordt als taalcode (NL/EN/DE/FR)
+/// als NVARCHAR opgeslagen; vier vaste waarden, geen aparte tabel.
+/// </summary>
+public enum LanguageType
 {
-    public enum LanguageType
-    {
-        Nederlands,
-        Engels,
-        Frans,
-        Duits
-    }
+    Nederlands,
+    Engels,
+    Duits,
+    Frans
 }

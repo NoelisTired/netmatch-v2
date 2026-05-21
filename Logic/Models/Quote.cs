@@ -1,8 +1,11 @@
-﻿using System;
 using Logic.Enums;
 
 namespace Logic.Models;
 
+/// <summary>
+/// Domeinmodel van een offerte. Bewaakt zijn eigen invarianten: een offerte
+/// zonder titel kan niet bestaan (FR-01). Losgekoppeld van DTO's en database.
+/// </summary>
 public class Quote
 {
     public int Id { get; private set; }
@@ -11,15 +14,32 @@ public class Quote
     public LanguageType Language { get; private set; }
     public StatusType Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public DateTime UpdatedAt { get; }
-    public DateTime DeletedAt { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
 
-    public Quote(int id, int travelAgentId, string title, LanguageType language, StatusType status)
+    /// <summary>Nieuwe offerte (nog niet opgeslagen). Start standaard als concept.</summary>
+    public Quote(int travelAgentId, string title, LanguageType language, StatusType status = StatusType.Concept)
     {
-        this.Id = id;
-        this.TravelAgentId = travelAgentId;
-        this.Title = title ?? throw new ArgumentNullException(nameof(title));
-        this.Language = language;
-        this.Status = status;
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            throw new ArgumentException("Titel en taal zijn verplicht.", nameof(title));
+        }
+
+        TravelAgentId = travelAgentId;
+        Title = title.Trim();
+        Language = language;
+        Status = status;
+    }
+
+    /// <summary>Hydratie van een bestaande offerte uit de database.</summary>
+    public Quote(int id, int travelAgentId, string title, LanguageType language,
+        StatusType status, DateTime createdAt, DateTime updatedAt)
+    {
+        Id = id;
+        TravelAgentId = travelAgentId;
+        Title = title;
+        Language = language;
+        Status = status;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
     }
 }

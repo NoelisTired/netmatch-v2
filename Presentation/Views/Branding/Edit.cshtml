@@ -1,0 +1,47 @@
+@model Presentation.Models.BrandingViewModel
+@{
+    ViewData["Title"] = L["Huisstijl"];
+}
+
+<h1 class="h3 mb-3">@L["Huisstijl"]</h1>
+
+@if (TempData["BrandingSaved"] is string saved)
+{
+    <div class="alert alert-success">@saved</div>
+}
+
+<div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="col-md-6">
+    <div class="mb-3">
+        <label class="form-label">@L["Huidig logo"]</label>
+        <div>
+            @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
+            {
+                <img src="@Model.LogoPath" alt="@L["Huidig logo"]" style="max-height:64px;" class="border rounded p-1" />
+            }
+            else
+            {
+                <span class="text-muted">@L["Nog geen logo ingesteld."]</span>
+            }
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Logo" class="form-label">@L["Nieuw logo"] <span class="text-muted">(PNG, JPG / SVG, max 2 MB)</span></label>
+        <input asp-for="Logo" type="file" accept=".png,.jpg,.jpeg,.svg" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PrimaryColor" class="form-label">@L["Primaire kleur"]</label>
+        <input asp-for="PrimaryColor" type="color" class="form-control form-control-color" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AccentColor" class="form-label">@L["Accentkleur"]</label>
+        <input asp-for="AccentColor" type="color" class="form-control form-control-color" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">@L["Opslaan"]</button>
+    <a asp-controller="Quote" asp-action="Index" class="btn btn-link">@L["Terug naar offertes"]</a>
+</form>

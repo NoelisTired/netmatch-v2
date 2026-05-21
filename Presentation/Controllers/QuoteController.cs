@@ -1,69 +1,179 @@
-﻿using DAL;
-using Interface;
 using Logic;
-using Interface.DTO;
+using Logic.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using NetMatch.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Presentation.Models;
+using Presentation.Pdf;
+using QuestPDF.Fluent;
 
+namespace Presentation.Controllers;
 
-namespace Presentation.Controllers
+public class QuoteController : Controller
 {
-    public class QuoteController : Controller
+    // Tot er login/auth is, hangen offertes aan één vast reisbureau.
+    // FR-09 (data-isolatie per TravelAgent) komt met de auth-feature.
+    private const int DemoTravelAgentId = 1;
+
+    private readonly QuoteService _quoteService;
+    private readonly DayService _dayService;
+    private readonly TransportService _transportService;
+    private readonly AccommodationService _accommodationService;
+    private readonly RoomTypeService _roomTypeService;
+    private readonly BrandingService _brandingService;
+    private readonly IWebHostEnvironment _environment;
+
+    public QuoteController(
+        QuoteService quoteService,
+        DayService dayService,
+        TransportService transportService,
+        AccommodationService accommodationService,
+        RoomTypeService roomTypeService,
+        BrandingService brandingService,
+        IWebHostEnvironment environment)
     {
-        private readonly QuoteCollection _quoteCollection;
+        _quoteService = quoteService;
+        _dayService = dayService;
+        _transportService = transportService;
+        _accommodationService = accommodationService;
+        _roomTypeService = roomTypeService;
+        _brandingService = brandingService;
+        _environment = environment;
+    }
 
-        public QuoteController(IConfiguration configuration)
+    public IActionResult Index()
+    {
+        var quotes = _quoteService.GetQuotesForTravelAgent(DemoTravelAgentId);
+        return View(quotes);
+    }
+
+    /// <summary>
+    /// Volledige offerte op één pagina: dagen → transport/accommodatie →
+    /// kamertypes, in één samengesteld model.
+    /// </summary>
+    public IActionResult Details(int id)
+    {
+        var overview = BuildOverview(id);
+        return overview is null ? NotFound() : View(overview);
+    }
+
+    /// <summary>FR-11: genereert de offerte als PDF met de huisstijl.</summary>
+    public IActionResult Pdf(int id)
+    {
+        var overview = BuildOverview(id);
+        if (overview is null)
         {
-            var dbConn = new DatabaseConnection(configuration);
-            IQuoteContext repo = new QuoteRepository(dbConn);
-            _quoteCollection = new QuoteCollection(repo);
+            return NotFound();
         }
 
+        var bytes = new QuotePdfDocument(overview, _environment.WebRootPath).GeneratePdf();
+        return File(bytes, "application/pdf", $"offerte-{id}.pdf");
+    }
 
-       
-        public IActionResult Index()
+    /// <summary>
+    /// Stelt de volledige offerte samen: dagen → transport/accommodatie →
+    /// kamertypes + huisstijl. Hergebruikt door Details (HTML) en Pdf.
+    /// </summary>
+    private QuoteOverviewViewModel? BuildOverview(int id)
+    {
+        var quote = _quoteService.GetQuoteById(id);
+        if (quote is null)
         {
-            
-            var quotes = _quoteCollection.GetQuotes();
-
-          
-            return View(quotes);
+            return null;
         }
 
-        
-
-        [HttpGet]
-        public IActionResult Create()
+        var overview = new QuoteOverviewViewModel
         {
-            return View();
+            Quote = quote,
+            Branding = _brandingService.GetForTravelAgent(DemoTravelAgentId)
+        };
+
+        foreach (var day in _dayService.GetDaysForQuote(quote.Id))
+        {
+            var dayBlock = new DayBlock
+            {
+                Day = day,
+                Transports = _transportService.GetTransportsForDay(day.Id).ToList()
+            };
+
+            foreach (var accommodation in _accommodationService.GetAccommodationsForDay(day.Id))
+            {
+                var roomTypes = _roomTypeService
+                    .GetRoomTypesForAccommodation(accommodation.Id).ToList();
+
+                if (roomTypes.Count > 0)
+                {
+                    overview.IndicativeAccommodationTotal += roomTypes.Min(r => r.PricePerNight);
+                }
+
+                dayBlock.Accommodations.Add(new AccommodationBlock
+                {
+                    Accommodation = accommodation,
+                    RoomTypes = roomTypes
+                });
+            }
+
+            overview.Days.Add(dayBlock);
         }
 
-        
-        [HttpPost]
-        public IActionResult Create(Interface.DTO.QuoteDTO newQuote)
-        {
-         
-            _quoteCollection.AddQuote(newQuote);
+        return overview;
+    }
 
-            
-            return RedirectToAction("Index");
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View(new QuoteViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(QuoteViewModel model)
+    {
+        var (error, id) = _quoteService.CreateQuote(DemoTravelAgentId, model.Title, model.Language);
+        if (error is not null)
+        {
+            ModelState.AddModelError(string.Empty, error);
+            return View(model);
         }
 
-        [HttpGet]
-        [HttpPost]
-        public IActionResult Edit(int id)
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var quote = _quoteService.GetQuoteById(id);
+        if (quote is null)
         {
-            return View();
+            return NotFound();
         }
 
-        public IActionResult Store(int id)
+        return View(new QuoteViewModel
         {
-            
-            return View();
+            Id = quote.Id,
+            Title = quote.Title,
+            Language = quote.Language.ToCode(),
+            Status = quote.Status.ToCode()
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(QuoteViewModel model)
+    {
+        var error = _quoteService.UpdateQuote(model.Id, model.Title, model.Language, model.Status);
+        if (error is not null)
+        {
+            ModelState.AddModelError(string.Empty, error);
+            return View(model);
         }
+
+        return RedirectToAction(nameof(Details), new { id = model.Id });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Delete(int id)
+    {
+        _quoteService.DeleteQuote(id);
+        return RedirectToAction(nameof(Index));
     }
 }
