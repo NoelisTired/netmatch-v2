@@ -50,6 +50,7 @@ public class FakeAccommodationRepository : IAccommodationRepository
             Name = dto.Name,
             Address = dto.Address,
             Description = dto.Description,
+            ImagePath = dto.ImagePath,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         });
@@ -69,6 +70,7 @@ public class FakeAccommodationRepository : IAccommodationRepository
             Name = dto.Name,
             Address = dto.Address,
             Description = dto.Description,
+            ImagePath = dto.ImagePath,
             UpdatedAt = DateTime.Now
         };
     }

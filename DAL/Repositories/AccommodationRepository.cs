@@ -26,7 +26,7 @@ public class AccommodationRepository : IAccommodationRepository
         {
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(
-                @"SELECT id, dag_id, naam, adres, omschrijving, created_at, updated_at
+                @"SELECT id, dag_id, naam, adres, omschrijving, afbeelding_pad, created_at, updated_at
                   FROM accommodatie
                   WHERE deleted_at IS NULL AND dag_id = @DayId
                   ORDER BY id",
@@ -52,7 +52,7 @@ public class AccommodationRepository : IAccommodationRepository
         {
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(
-                @"SELECT id, dag_id, naam, adres, omschrijving, created_at, updated_at
+                @"SELECT id, dag_id, naam, adres, omschrijving, afbeelding_pad, created_at, updated_at
                   FROM accommodatie
                   WHERE id = @Id AND deleted_at IS NULL",
                 connection);
@@ -73,14 +73,15 @@ public class AccommodationRepository : IAccommodationRepository
         {
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(
-                @"INSERT INTO accommodatie (dag_id, naam, adres, omschrijving, created_at, updated_at)
+                @"INSERT INTO accommodatie (dag_id, naam, adres, omschrijving, afbeelding_pad, created_at, updated_at)
                   OUTPUT INSERTED.id
-                  VALUES (@DayId, @Name, @Address, @Description, SYSUTCDATETIME(), SYSUTCDATETIME())",
+                  VALUES (@DayId, @Name, @Address, @Description, @ImagePath, SYSUTCDATETIME(), SYSUTCDATETIME())",
                 connection);
             command.Parameters.AddWithValue("@DayId", dto.DayId);
             command.Parameters.AddWithValue("@Name", dto.Name);
             command.Parameters.AddWithValue("@Address", (object?)dto.Address ?? DBNull.Value);
             command.Parameters.AddWithValue("@Description", (object?)dto.Description ?? DBNull.Value);
+            command.Parameters.AddWithValue("@ImagePath", (object?)dto.ImagePath ?? DBNull.Value);
             connection.Open();
             var result = command.ExecuteScalar();
             return result is null ? 0 : Convert.ToInt32(result);
@@ -99,13 +100,14 @@ public class AccommodationRepository : IAccommodationRepository
             using var command = new SqlCommand(
                 @"UPDATE accommodatie
                   SET naam = @Name, adres = @Address, omschrijving = @Description,
-                      updated_at = SYSUTCDATETIME()
+                      afbeelding_pad = @ImagePath, updated_at = SYSUTCDATETIME()
                   WHERE id = @Id AND deleted_at IS NULL",
                 connection);
             command.Parameters.AddWithValue("@Id", id);
             command.Parameters.AddWithValue("@Name", dto.Name);
             command.Parameters.AddWithValue("@Address", (object?)dto.Address ?? DBNull.Value);
             command.Parameters.AddWithValue("@Description", (object?)dto.Description ?? DBNull.Value);
+            command.Parameters.AddWithValue("@ImagePath", (object?)dto.ImagePath ?? DBNull.Value);
             connection.Open();
             command.ExecuteNonQuery();
         }
@@ -144,8 +146,9 @@ public class AccommodationRepository : IAccommodationRepository
             Name = reader.GetString(2),
             Address = reader.IsDBNull(3) ? null : reader.GetString(3),
             Description = reader.IsDBNull(4) ? null : reader.GetString(4),
-            CreatedAt = reader.GetDateTime(5),
-            UpdatedAt = reader.GetDateTime(6)
+            ImagePath = reader.IsDBNull(5) ? null : reader.GetString(5),
+            CreatedAt = reader.GetDateTime(6),
+            UpdatedAt = reader.GetDateTime(7)
         };
     }
 }

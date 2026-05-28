@@ -9,4 +9,5 @@ public record CreateAccommodationDto
     public string Name { get; init; } = string.Empty;
     public string? Address { get; init; }
     public string? Description { get; init; }
+    public string? ImagePath { get; init; }
 }

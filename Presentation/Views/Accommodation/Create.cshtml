@@ -7,7 +7,7 @@
 
 <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-<form asp-action="Create" method="post" class="col-md-6">
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="col-md-6">
     <input type="hidden" asp-for="DayId" />
 
     <div class="mb-3">
@@ -23,6 +23,11 @@
     <div class="mb-3">
         <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
         <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label">Afbeelding <span class="text-muted">(optioneel, max 5 MB)</span></label>
+        <input asp-for="Image" type="file" class="form-control" accept="image/png,image/jpeg,image/webp" />
     </div>
 
     <button type="submit" class="btn btn-primary">Opslaan</button>

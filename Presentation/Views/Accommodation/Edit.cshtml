@@ -7,9 +7,10 @@
 
 <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-<form asp-action="Edit" method="post" class="col-md-6">
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="col-md-6">
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="DayId" />
+    <input type="hidden" asp-for="ImagePath" />
 
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Naam</label>
@@ -24,6 +25,18 @@
     <div class="mb-3">
         <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
         <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label">Afbeelding <span class="text-muted">(optioneel, max 5 MB)</span></label>
+        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+        {
+            <div class="mb-2">
+                <img src="@Model.ImagePath" alt="Huidige afbeelding" class="img-thumbnail" style="max-height: 150px;" />
+            </div>
+        }
+        <input asp-for="Image" type="file" class="form-control" accept="image/png,image/jpeg,image/webp" />
+        <div class="form-text">Laat leeg om de huidige afbeelding te behouden.</div>
     </div>
 
     <button type="submit" class="btn btn-primary">Opslaan</button>
