@@ -16,7 +16,6 @@ public class QuotePdfDocument : IDocument
     private readonly Color _primary;
     private readonly Color _accent;
     private readonly Color _lightBg;
-    private readonly Color _cardBg;
 
     public QuotePdfDocument(QuoteOverviewViewModel model, string webRootPath)
     {
@@ -24,8 +23,7 @@ public class QuotePdfDocument : IDocument
         _webRootPath = webRootPath;
         _primary = ParseColor(model.Branding.PrimaryColor, Colors.Blue.Medium);
         _accent = ParseColor(model.Branding.AccentColor, Colors.Grey.Darken1);
-        _lightBg = Color.FromHex("#F8F9FA");
-        _cardBg = Color.FromHex("#FAFBFC");
+        _lightBg = Color.FromHex("#F5F6F8");
     }
 
     private static Color ParseColor(string? hex, Color fallback)
@@ -57,10 +55,12 @@ public class QuotePdfDocument : IDocument
             page.DefaultTextStyle(x => x.FontSize(9.5f).FontColor(Colors.Grey.Darken3));
 
             page.Header().Element(ComposeHeader);
-            page.Content().PaddingVertical(12).Element(ComposeContent);
+            page.Content().PaddingVertical(10).Element(ComposeContent);
             page.Footer().Element(ComposeFooter);
         });
     }
+
+    // ───────────────────────── Header ─────────────────────────
 
     private void ComposeHeader(IContainer container)
     {
@@ -84,29 +84,25 @@ public class QuotePdfDocument : IDocument
 
             col.Item().PaddingTop(6).Row(row =>
             {
-                row.RelativeItem().Text(text =>
-                {
-                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
-                    text.Span("Taal: ").SemiBold();
-                    text.Span($"{_model.Quote.Language}");
-                });
-
-                row.RelativeItem().AlignCenter().Text(text =>
-                {
-                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
-                    text.Span("Status: ").SemiBold();
-                    text.Span($"{_model.Quote.Status}");
-                });
-
-                row.RelativeItem().AlignRight().Text(text =>
-                {
-                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
-                    text.Span("Datum: ").SemiBold();
-                    text.Span($"{_model.Quote.CreatedAt:dd MMMM yyyy}");
-                });
+                ComposeMetaSpan(row.RelativeItem(), "Taal", $"{_model.Quote.Language}");
+                ComposeMetaSpan(row.RelativeItem().AlignCenter(), "Status", $"{_model.Quote.Status}");
+                ComposeMetaSpan(row.RelativeItem().AlignRight(), "Datum",
+                    $"{_model.Quote.CreatedAt:dd MMMM yyyy}");
             });
         });
     }
+
+    private static void ComposeMetaSpan(IContainer container, string label, string value)
+    {
+        container.Text(text =>
+        {
+            text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
+            text.Span($"{label}: ").SemiBold();
+            text.Span(value);
+        });
+    }
+
+    // ───────────────────────── Footer ─────────────────────────
 
     private void ComposeFooter(IContainer container)
     {
@@ -128,11 +124,13 @@ public class QuotePdfDocument : IDocument
         });
     }
 
+    // ───────────────────────── Content ─────────────────────────
+
     private void ComposeContent(IContainer container)
     {
         container.Column(column =>
         {
-            column.Spacing(16);
+            column.Spacing(14);
 
             if (_model.Days.Count == 0)
             {
@@ -147,20 +145,20 @@ public class QuotePdfDocument : IDocument
                 column.Item().EnsureSpace(80).Element(c => ComposeDayBlock(c, block));
             }
 
-            if (_model.IndicativeAccommodationTotal > 0)
-            {
-                column.Item().PaddingTop(4).Element(ComposeTotalBar);
-            }
+            // Prijsoverzicht
+            column.Item().EnsureSpace(120).Element(ComposePriceOverview);
         });
     }
+
+    // ───────────────────────── Dag blok ─────────────────────────
 
     private void ComposeDayBlock(IContainer container, DayBlock block)
     {
         container.Column(day =>
         {
-            day.Spacing(8);
+            day.Spacing(6);
 
-            // Dag header: gekleurde balk met dagnummer + titel
+            // Dag header
             var title = string.IsNullOrWhiteSpace(block.Day.Title)
                 ? $"Dag {block.Day.DayNumber}"
                 : $"Dag {block.Day.DayNumber} \u2014 {block.Day.Title}";
@@ -169,40 +167,42 @@ public class QuotePdfDocument : IDocument
             {
                 row.RelativeItem().AlignMiddle().Text(title)
                     .FontSize(12).Bold().FontColor(Colors.White);
-                row.ConstantItem(140).AlignRight().AlignMiddle()
+                row.ConstantItem(150).AlignRight().AlignMiddle()
                     .Text(block.Day.Date.ToString("dddd d MMMM yyyy"))
                     .FontSize(8).FontColor(Colors.White);
             });
 
-            // Dag omschrijving
+            // Omschrijving
             if (!string.IsNullOrWhiteSpace(block.Day.Description))
             {
-                day.Item().PaddingHorizontal(4).PaddingTop(2)
+                day.Item().PaddingHorizontal(2).PaddingTop(2)
                     .Text(block.Day.Description!)
                     .FontSize(9).FontColor(Colors.Grey.Darken2).LineHeight(1.4f);
             }
 
-            // Transport sectie
+            // Transport
             if (block.Transports.Count > 0)
             {
                 day.Item().Element(c => ComposeTransportSection(c, block.Transports));
             }
 
-            // Accommodatie secties
+            // Accommodaties
             foreach (var acc in block.Accommodations)
             {
-                day.Item().Element(c => ComposeAccommodationSection(c, acc));
+                day.Item().Element(c => ComposeAccommodationCard(c, acc));
             }
         });
     }
+
+    // ───────────────────────── Transport ─────────────────────────
 
     private void ComposeTransportSection(IContainer container, List<Logic.Models.Transport> transports)
     {
         container.Background(_lightBg).Padding(10).Column(col =>
         {
-            col.Item().Text("\u2708  Transport")
+            col.Item().Text("Transport")
                 .FontSize(10).SemiBold().FontColor(_accent);
-            col.Item().PaddingTop(6);
+            col.Item().PaddingTop(5);
 
             col.Item().Table(table =>
             {
@@ -214,18 +214,11 @@ public class QuotePdfDocument : IDocument
                     c.RelativeColumn();
                 });
 
-                // Header rij
-                table.Cell().PaddingBottom(4).Text("Type")
-                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
-                table.Cell().PaddingBottom(4).Text("Vertrek")
-                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
-                table.Cell().PaddingBottom(4).Text("Aankomst")
-                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
-                table.Cell().PaddingBottom(4).Text("Details")
-                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
+                // Header
+                ComposeTableHeader(table, "Type", "Vertrek", "Aankomst", "Details");
 
-                // Lijn onder header
-                table.Cell().ColumnSpan(4).LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
+                table.Cell().ColumnSpan(4).PaddingBottom(2)
+                    .LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
 
                 foreach (var t in transports)
                 {
@@ -243,85 +236,194 @@ public class QuotePdfDocument : IDocument
         });
     }
 
-    private void ComposeAccommodationSection(IContainer container, AccommodationBlock acc)
+    // ───────────────────────── Accommodatie ─────────────────────────
+
+    private void ComposeAccommodationCard(IContainer container, AccommodationBlock acc)
     {
-        container.Border(0.5f).BorderColor(Colors.Grey.Lighten2).Background(_cardBg).Column(col =>
+        var imagePath = ResolveFilePath(acc.Accommodation.ImagePath);
+
+        container.Border(0.5f).BorderColor(Colors.Grey.Lighten2).Column(col =>
         {
-            // Afbeelding bovenaan de kaart
-            var imagePath = ResolveFilePath(acc.Accommodation.ImagePath);
+            // Afbeelding + info naast elkaar als er een afbeelding is
             if (imagePath is not null)
             {
-                col.Item().Height(140).Image(imagePath).FitArea();
+                col.Item().Row(row =>
+                {
+                    row.ConstantItem(180).Height(120).Image(imagePath).FitArea();
+                    row.RelativeItem().Padding(10).Column(info =>
+                    {
+                        ComposeAccommodationInfo(info, acc);
+                    });
+                });
+            }
+            else
+            {
+                col.Item().Padding(10).Column(info =>
+                {
+                    ComposeAccommodationInfo(info, acc);
+                });
             }
 
-            col.Item().Padding(10).Column(content =>
+            // Kamertypes tabel altijd over de volle breedte
+            if (acc.RoomTypes.Count > 0)
             {
-                content.Spacing(3);
-
-                // Naam
-                content.Item().Text($"\ud83c\udfe8  {acc.Accommodation.Name}")
-                    .FontSize(11).SemiBold().FontColor(_accent);
-
-                // Adres
-                if (!string.IsNullOrWhiteSpace(acc.Accommodation.Address))
-                {
-                    content.Item().Text(acc.Accommodation.Address!)
-                        .FontSize(8).FontColor(Colors.Grey.Darken1);
-                }
-
-                // Omschrijving
-                if (!string.IsNullOrWhiteSpace(acc.Accommodation.Description))
-                {
-                    content.Item().PaddingTop(3).Text(acc.Accommodation.Description!)
-                        .FontSize(8.5f).FontColor(Colors.Grey.Darken2).LineHeight(1.35f);
-                }
-
-                // Kamertypes tabel
-                if (acc.RoomTypes.Count > 0)
-                {
-                    content.Item().PaddingTop(8).Table(table =>
-                    {
-                        table.ColumnsDefinition(c =>
-                        {
-                            c.RelativeColumn(3);
-                            c.RelativeColumn();
-                            c.RelativeColumn();
-                        });
-
-                        // Header
-                        table.Cell().Background(_primary).Padding(5)
-                            .Text("Kamertype").FontSize(7.5f).SemiBold().FontColor(Colors.White);
-                        table.Cell().Background(_primary).Padding(5)
-                            .Text("Prijs / nacht").FontSize(7.5f).SemiBold().FontColor(Colors.White);
-                        table.Cell().Background(_primary).Padding(5)
-                            .Text("Capaciteit").FontSize(7.5f).SemiBold().FontColor(Colors.White);
-
-                        foreach (var rt in acc.RoomTypes)
-                        {
-                            table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
-                                .Padding(5).Text(rt.Name).FontSize(8.5f);
-                            table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
-                                .Padding(5).Text($"\u20ac {rt.PricePerNight:0.00}").FontSize(8.5f);
-                            table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
-                                .Padding(5).Text($"{rt.Capacity} pers.").FontSize(8.5f);
-                        }
-                    });
-                }
-            });
+                col.Item().PaddingHorizontal(10).PaddingBottom(10)
+                    .Element(c => ComposeRoomTypeTable(c, acc.RoomTypes));
+            }
         });
     }
 
-    private void ComposeTotalBar(IContainer container)
+    private void ComposeAccommodationInfo(ColumnDescriptor info, AccommodationBlock acc)
     {
-        container.Background(_primary).Padding(12).Row(row =>
+        info.Spacing(2);
+
+        info.Item().Text(acc.Accommodation.Name)
+            .FontSize(11).SemiBold().FontColor(_accent);
+
+        if (!string.IsNullOrWhiteSpace(acc.Accommodation.Address))
         {
-            row.RelativeItem().AlignLeft().AlignMiddle()
-                .Text("Indicatie accommodatiekosten")
-                .FontSize(11).SemiBold().FontColor(Colors.White);
-            row.RelativeItem().AlignRight().AlignMiddle()
-                .Text($"\u20ac {_model.IndicativeAccommodationTotal:N2} per nacht")
-                .FontSize(13).Bold().FontColor(Colors.White);
+            info.Item().Text(acc.Accommodation.Address!)
+                .FontSize(8).FontColor(Colors.Grey.Darken1);
+        }
+
+        if (!string.IsNullOrWhiteSpace(acc.Accommodation.Description))
+        {
+            info.Item().PaddingTop(3).Text(acc.Accommodation.Description!)
+                .FontSize(8.5f).FontColor(Colors.Grey.Darken2).LineHeight(1.3f);
+        }
+    }
+
+    private void ComposeRoomTypeTable(IContainer container, List<Logic.Models.RoomType> roomTypes)
+    {
+        container.Table(table =>
+        {
+            table.ColumnsDefinition(c =>
+            {
+                c.RelativeColumn(3);
+                c.RelativeColumn();
+                c.RelativeColumn();
+            });
+
+            // Header
+            table.Cell().Background(_primary).Padding(5)
+                .Text("Kamertype").FontSize(7.5f).SemiBold().FontColor(Colors.White);
+            table.Cell().Background(_primary).Padding(5)
+                .Text("Prijs / nacht").FontSize(7.5f).SemiBold().FontColor(Colors.White);
+            table.Cell().Background(_primary).Padding(5)
+                .Text("Capaciteit").FontSize(7.5f).SemiBold().FontColor(Colors.White);
+
+            foreach (var rt in roomTypes)
+            {
+                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5).Text(rt.Name).FontSize(8.5f);
+                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5).Text($"\u20ac {rt.PricePerNight:0.00}").FontSize(8.5f);
+                table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
+                    .Padding(5).Text($"{rt.Capacity} pers.").FontSize(8.5f);
+            }
         });
+    }
+
+    // ───────────────────────── Prijsoverzicht ─────────────────────────
+
+    private void ComposePriceOverview(IContainer container)
+    {
+        // Verzamel alle accommodaties met kamertypes
+        var entries = _model.Days
+            .SelectMany(d => d.Accommodations)
+            .Where(a => a.RoomTypes.Count > 0)
+            .ToList();
+
+        if (entries.Count == 0)
+        {
+            return;
+        }
+
+        container.Column(col =>
+        {
+            col.Spacing(8);
+
+            // Sectie header
+            col.Item().Background(_primary).Padding(8)
+                .Text("Prijsoverzicht accommodaties")
+                .FontSize(13).Bold().FontColor(Colors.White);
+
+            // Tabel
+            col.Item().Table(table =>
+            {
+                table.ColumnsDefinition(c =>
+                {
+                    c.RelativeColumn(3);   // Accommodatie
+                    c.RelativeColumn(3);   // Kamertype
+                    c.RelativeColumn();    // Capaciteit
+                    c.RelativeColumn();    // Prijs / nacht
+                });
+
+                // Header
+                table.Cell().Background(_lightBg).Padding(6)
+                    .Text("Accommodatie").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken2);
+                table.Cell().Background(_lightBg).Padding(6)
+                    .Text("Kamertype").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken2);
+                table.Cell().Background(_lightBg).Padding(6)
+                    .Text("Capaciteit").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken2);
+                table.Cell().Background(_lightBg).Padding(6).AlignRight()
+                    .Text("Prijs / nacht").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken2);
+
+                foreach (var entry in entries)
+                {
+                    var isFirst = true;
+                    foreach (var rt in entry.RoomTypes.OrderBy(r => r.PricePerNight))
+                    {
+                        // Accommodatienaam alleen bij de eerste rij tonen
+                        table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5)
+                            .Text(isFirst ? entry.Accommodation.Name : "")
+                            .FontSize(8.5f).SemiBold();
+
+                        table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5)
+                            .Text(rt.Name).FontSize(8.5f);
+
+                        table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5)
+                            .Text($"{rt.Capacity} pers.").FontSize(8.5f);
+
+                        table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Padding(5)
+                            .AlignRight()
+                            .Text($"\u20ac {rt.PricePerNight:0.00}").FontSize(8.5f);
+
+                        isFirst = false;
+                    }
+                }
+            });
+
+            // "Vanaf" totaal: som van goedkoopste kamer per accommodatie
+            var fromTotal = entries.Sum(e => e.RoomTypes.Min(r => r.PricePerNight));
+
+            col.Item().Background(_primary).Padding(10).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().AlignMiddle()
+                    .Text("Indicatie totaal (goedkoopste opties)")
+                    .FontSize(10).SemiBold().FontColor(Colors.White);
+                row.ConstantItem(150).AlignRight().AlignMiddle()
+                    .Text($"\u20ac {fromTotal:N2} / nacht")
+                    .FontSize(12).Bold().FontColor(Colors.White);
+            });
+
+            // Toelichting
+            col.Item().PaddingTop(2)
+                .Text("* Prijzen zijn indicatief en onder voorbehoud van beschikbaarheid. " +
+                      "Het totaal betreft de goedkoopste kameroptie per accommodatie per nacht.")
+                .FontSize(7).FontColor(Colors.Grey.Darken1).Italic();
+        });
+    }
+
+    // ───────────────────────── Helpers ─────────────────────────
+
+    private static void ComposeTableHeader(TableDescriptor table, params string[] headers)
+    {
+        foreach (var h in headers)
+        {
+            table.Cell().PaddingBottom(4)
+                .Text(h).FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
+        }
     }
 
     /// <summary>Fysiek pad naar een bestand in wwwroot, of null.</summary>
@@ -332,7 +434,6 @@ public class QuotePdfDocument : IDocument
             return null;
         }
 
-        // QuestPDF ondersteunt alleen rasterformaten
         if (relativePath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
         {
             return null;
