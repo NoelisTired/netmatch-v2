@@ -16,6 +16,7 @@ public class QuotePdfDocument : IDocument
     private readonly Color _primary;
     private readonly Color _accent;
     private readonly Color _lightBg;
+    private readonly Color _cardBg;
 
     public QuotePdfDocument(QuoteOverviewViewModel model, string webRootPath)
     {
@@ -24,6 +25,7 @@ public class QuotePdfDocument : IDocument
         _primary = ParseColor(model.Branding.PrimaryColor, Colors.Blue.Medium);
         _accent = ParseColor(model.Branding.AccentColor, Colors.Grey.Darken1);
         _lightBg = Color.FromHex("#F8F9FA");
+        _cardBg = Color.FromHex("#FAFBFC");
     }
 
     private static Color ParseColor(string? hex, Color fallback)
@@ -50,12 +52,12 @@ public class QuotePdfDocument : IDocument
         container.Page(page =>
         {
             page.Size(PageSizes.A4);
-            page.Margin(2, Unit.Centimetre);
+            page.Margin(1.8f, Unit.Centimetre);
             page.PageColor(Colors.White);
-            page.DefaultTextStyle(x => x.FontSize(10).FontColor(Colors.Grey.Darken3));
+            page.DefaultTextStyle(x => x.FontSize(9.5f).FontColor(Colors.Grey.Darken3));
 
             page.Header().Element(ComposeHeader);
-            page.Content().PaddingVertical(16).Element(ComposeContent);
+            page.Content().PaddingVertical(12).Element(ComposeContent);
             page.Footer().Element(ComposeFooter);
         });
     }
@@ -69,37 +71,36 @@ public class QuotePdfDocument : IDocument
                 var logo = ResolveFilePath(_model.Branding.LogoPath);
                 if (logo is not null)
                 {
-                    row.ConstantItem(80).Height(44).AlignLeft().AlignMiddle()
+                    row.ConstantItem(72).Height(40).AlignLeft().AlignMiddle()
                         .Image(logo).FitArea();
-                    row.ConstantItem(16);
+                    row.ConstantItem(14);
                 }
 
-                row.RelativeItem().AlignMiddle().Column(title =>
-                {
-                    title.Item().Text(_model.Quote.Title)
-                        .FontSize(22).Bold().FontColor(_primary);
-                });
+                row.RelativeItem().AlignMiddle().Text(_model.Quote.Title)
+                    .FontSize(20).Bold().FontColor(_primary);
             });
 
-            col.Item().PaddingTop(6).LineHorizontal(1.5f).LineColor(_primary);
+            col.Item().PaddingTop(5).LineHorizontal(2f).LineColor(_primary);
 
-            col.Item().PaddingTop(8).DefaultTextStyle(x => x.FontSize(9).FontColor(Colors.Grey.Darken1))
-                .Row(row =>
+            col.Item().PaddingTop(6).Row(row =>
             {
                 row.RelativeItem().Text(text =>
                 {
+                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
                     text.Span("Taal: ").SemiBold();
                     text.Span($"{_model.Quote.Language}");
                 });
 
                 row.RelativeItem().AlignCenter().Text(text =>
                 {
+                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
                     text.Span("Status: ").SemiBold();
                     text.Span($"{_model.Quote.Status}");
                 });
 
                 row.RelativeItem().AlignRight().Text(text =>
                 {
+                    text.DefaultTextStyle(x => x.FontSize(8).FontColor(Colors.Grey.Darken1));
                     text.Span("Datum: ").SemiBold();
                     text.Span($"{_model.Quote.CreatedAt:dd MMMM yyyy}");
                 });
@@ -112,16 +113,16 @@ public class QuotePdfDocument : IDocument
         container.Column(col =>
         {
             col.Item().LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
-            col.Item().PaddingTop(6).Row(row =>
+            col.Item().PaddingTop(4).Row(row =>
             {
                 row.RelativeItem().Text(_model.Quote.Title)
-                    .FontSize(8).FontColor(Colors.Grey.Lighten1);
+                    .FontSize(7).FontColor(Colors.Grey.Lighten1);
                 row.RelativeItem().AlignRight().Text(text =>
                 {
-                    text.Span("Pagina ").FontSize(8).FontColor(Colors.Grey.Lighten1);
-                    text.CurrentPageNumber().FontSize(8).FontColor(Colors.Grey.Darken1).SemiBold();
-                    text.Span(" / ").FontSize(8).FontColor(Colors.Grey.Lighten1);
-                    text.TotalPages().FontSize(8).FontColor(Colors.Grey.Darken1).SemiBold();
+                    text.Span("Pagina ").FontSize(7).FontColor(Colors.Grey.Lighten1);
+                    text.CurrentPageNumber().FontSize(7).FontColor(Colors.Grey.Darken1).SemiBold();
+                    text.Span(" / ").FontSize(7).FontColor(Colors.Grey.Lighten1);
+                    text.TotalPages().FontSize(7).FontColor(Colors.Grey.Darken1).SemiBold();
                 });
             });
         });
@@ -131,7 +132,7 @@ public class QuotePdfDocument : IDocument
     {
         container.Column(column =>
         {
-            column.Spacing(20);
+            column.Spacing(16);
 
             if (_model.Days.Count == 0)
             {
@@ -143,12 +144,12 @@ public class QuotePdfDocument : IDocument
 
             foreach (var block in _model.Days)
             {
-                column.Item().EnsureSpace(100).Element(c => ComposeDayBlock(c, block));
+                column.Item().EnsureSpace(80).Element(c => ComposeDayBlock(c, block));
             }
 
             if (_model.IndicativeAccommodationTotal > 0)
             {
-                column.Item().Element(ComposeTotalBar);
+                column.Item().PaddingTop(4).Element(ComposeTotalBar);
             }
         });
     }
@@ -157,82 +158,85 @@ public class QuotePdfDocument : IDocument
     {
         container.Column(day =>
         {
-            // Dag header
+            day.Spacing(8);
+
+            // Dag header: gekleurde balk met dagnummer + titel
             var title = string.IsNullOrWhiteSpace(block.Day.Title)
                 ? $"Dag {block.Day.DayNumber}"
-                : $"Dag {block.Day.DayNumber} — {block.Day.Title}";
+                : $"Dag {block.Day.DayNumber} \u2014 {block.Day.Title}";
 
-            day.Item().Row(row =>
+            day.Item().Background(_primary).Padding(8).Row(row =>
             {
-                row.ConstantItem(4).Background(_primary).ExtendVertical();
-                row.ConstantItem(8);
-                row.RelativeItem().PaddingVertical(4).Column(header =>
-                {
-                    header.Item().Text(title).FontSize(14).Bold().FontColor(_primary);
-                    header.Item().Text(block.Day.Date.ToString("dddd d MMMM yyyy"))
-                        .FontSize(9).FontColor(Colors.Grey.Darken1);
-                });
+                row.RelativeItem().AlignMiddle().Text(title)
+                    .FontSize(12).Bold().FontColor(Colors.White);
+                row.ConstantItem(140).AlignRight().AlignMiddle()
+                    .Text(block.Day.Date.ToString("dddd d MMMM yyyy"))
+                    .FontSize(8).FontColor(Colors.White);
             });
 
             // Dag omschrijving
             if (!string.IsNullOrWhiteSpace(block.Day.Description))
             {
-                day.Item().PaddingTop(6).PaddingLeft(12)
-                    .Text(block.Day.Description!).FontSize(10).FontColor(Colors.Grey.Darken2);
+                day.Item().PaddingHorizontal(4).PaddingTop(2)
+                    .Text(block.Day.Description!)
+                    .FontSize(9).FontColor(Colors.Grey.Darken2).LineHeight(1.4f);
             }
 
             // Transport sectie
             if (block.Transports.Count > 0)
             {
-                day.Item().PaddingTop(10).Element(c => ComposeTransportSection(c, block.Transports));
+                day.Item().Element(c => ComposeTransportSection(c, block.Transports));
             }
 
             // Accommodatie secties
             foreach (var acc in block.Accommodations)
             {
-                day.Item().PaddingTop(10).Element(c => ComposeAccommodationSection(c, acc));
+                day.Item().Element(c => ComposeAccommodationSection(c, acc));
             }
         });
     }
 
     private void ComposeTransportSection(IContainer container, List<Logic.Models.Transport> transports)
     {
-        container.Background(_lightBg).Border(0.5f).BorderColor(Colors.Grey.Lighten2)
-            .Padding(10).Column(col =>
+        container.Background(_lightBg).Padding(10).Column(col =>
         {
-            col.Item().Text("Transport").FontSize(11).SemiBold().FontColor(_accent);
-            col.Item().PaddingTop(4);
+            col.Item().Text("\u2708  Transport")
+                .FontSize(10).SemiBold().FontColor(_accent);
+            col.Item().PaddingTop(6);
 
             col.Item().Table(table =>
             {
                 table.ColumnsDefinition(c =>
                 {
-                    c.ConstantColumn(70);
+                    c.ConstantColumn(80);
                     c.RelativeColumn();
                     c.RelativeColumn();
                     c.RelativeColumn();
                 });
 
                 // Header rij
-                table.Cell().Text("Type").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
-                table.Cell().Text("Vertrek").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
-                table.Cell().Text("Aankomst").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
-                table.Cell().Text("Details").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
+                table.Cell().PaddingBottom(4).Text("Type")
+                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
+                table.Cell().PaddingBottom(4).Text("Vertrek")
+                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
+                table.Cell().PaddingBottom(4).Text("Aankomst")
+                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
+                table.Cell().PaddingBottom(4).Text("Details")
+                    .FontSize(7.5f).SemiBold().FontColor(Colors.Grey.Darken1);
+
+                // Lijn onder header
+                table.Cell().ColumnSpan(4).LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
 
                 foreach (var t in transports)
                 {
-                    // Separator
-                    table.Cell().ColumnSpan(4).PaddingVertical(3)
-                        .LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
-
-                    table.Cell().PaddingVertical(2).Text($"{t.Type}").FontSize(9);
-                    table.Cell().PaddingVertical(2).Text(t.DepartureLocation).FontSize(9);
-                    table.Cell().PaddingVertical(2).Text(t.ArrivalLocation).FontSize(9);
+                    table.Cell().PaddingVertical(3).Text($"{t.Type}").FontSize(8.5f).SemiBold();
+                    table.Cell().PaddingVertical(3).Text(t.DepartureLocation).FontSize(8.5f);
+                    table.Cell().PaddingVertical(3).Text(t.ArrivalLocation).FontSize(8.5f);
 
                     var details = t.FlightNumber is not null
-                        ? $"{t.FlightNumber} · {t.Airline}"
-                        : "–";
-                    table.Cell().PaddingVertical(2).Text(details).FontSize(9)
+                        ? $"{t.FlightNumber} \u00b7 {t.Airline}"
+                        : "\u2013";
+                    table.Cell().PaddingVertical(3).Text(details).FontSize(8.5f)
                         .FontColor(Colors.Grey.Darken1);
                 }
             });
@@ -241,30 +245,35 @@ public class QuotePdfDocument : IDocument
 
     private void ComposeAccommodationSection(IContainer container, AccommodationBlock acc)
     {
-        container.Border(0.5f).BorderColor(Colors.Grey.Lighten2).Column(col =>
+        container.Border(0.5f).BorderColor(Colors.Grey.Lighten2).Background(_cardBg).Column(col =>
         {
-            // Accommodation header met optioneel afbeelding
+            // Afbeelding bovenaan de kaart
             var imagePath = ResolveFilePath(acc.Accommodation.ImagePath);
             if (imagePath is not null)
             {
-                col.Item().MaxHeight(160).Image(imagePath).FitArea();
+                col.Item().Height(140).Image(imagePath).FitArea();
             }
 
             col.Item().Padding(10).Column(content =>
             {
-                content.Item().Text($"Accommodatie: {acc.Accommodation.Name}")
+                content.Spacing(3);
+
+                // Naam
+                content.Item().Text($"\ud83c\udfe8  {acc.Accommodation.Name}")
                     .FontSize(11).SemiBold().FontColor(_accent);
 
+                // Adres
                 if (!string.IsNullOrWhiteSpace(acc.Accommodation.Address))
                 {
-                    content.Item().PaddingTop(2).Text(acc.Accommodation.Address!)
-                        .FontSize(9).FontColor(Colors.Grey.Darken1);
+                    content.Item().Text(acc.Accommodation.Address!)
+                        .FontSize(8).FontColor(Colors.Grey.Darken1);
                 }
 
+                // Omschrijving
                 if (!string.IsNullOrWhiteSpace(acc.Accommodation.Description))
                 {
-                    content.Item().PaddingTop(4).Text(acc.Accommodation.Description!)
-                        .FontSize(9).FontColor(Colors.Grey.Darken2);
+                    content.Item().PaddingTop(3).Text(acc.Accommodation.Description!)
+                        .FontSize(8.5f).FontColor(Colors.Grey.Darken2).LineHeight(1.35f);
                 }
 
                 // Kamertypes tabel
@@ -280,21 +289,21 @@ public class QuotePdfDocument : IDocument
                         });
 
                         // Header
-                        table.Cell().Background(_lightBg).Padding(4)
-                            .Text("Kamertype").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
-                        table.Cell().Background(_lightBg).Padding(4)
-                            .Text("Prijs / nacht").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
-                        table.Cell().Background(_lightBg).Padding(4)
-                            .Text("Capaciteit").FontSize(8).SemiBold().FontColor(Colors.Grey.Darken1);
+                        table.Cell().Background(_primary).Padding(5)
+                            .Text("Kamertype").FontSize(7.5f).SemiBold().FontColor(Colors.White);
+                        table.Cell().Background(_primary).Padding(5)
+                            .Text("Prijs / nacht").FontSize(7.5f).SemiBold().FontColor(Colors.White);
+                        table.Cell().Background(_primary).Padding(5)
+                            .Text("Capaciteit").FontSize(7.5f).SemiBold().FontColor(Colors.White);
 
                         foreach (var rt in acc.RoomTypes)
                         {
                             table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
-                                .Padding(4).Text(rt.Name).FontSize(9);
+                                .Padding(5).Text(rt.Name).FontSize(8.5f);
                             table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
-                                .Padding(4).Text($"\u20ac {rt.PricePerNight:0.00}").FontSize(9);
+                                .Padding(5).Text($"\u20ac {rt.PricePerNight:0.00}").FontSize(8.5f);
                             table.Cell().BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2)
-                                .Padding(4).Text($"{rt.Capacity} pers.").FontSize(9);
+                                .Padding(5).Text($"{rt.Capacity} pers.").FontSize(8.5f);
                         }
                     });
                 }
