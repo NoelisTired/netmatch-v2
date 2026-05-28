@@ -14,40 +14,52 @@ public class FakeRoomTypeRepository : IRoomTypeRepository
         // Hotel Brunelleschi (Florence)
         new RoomTypeDto
         {
-            Id = 1, AccommodationId = 1, Name = "Tweepersoonskamer",
-            PricePerNight = 145m, Capacity = 2,
+            Id = 1, AccommodationId = 1, Name = "Classic Tweepersoonskamer",
+            PricePerNight = 185m, Capacity = 2,
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
         new RoomTypeDto
         {
-            Id = 2, AccommodationId = 1, Name = "Junior Suite",
-            PricePerNight = 260m, Capacity = 3,
+            Id = 2, AccommodationId = 1, Name = "Deluxe met uitzicht op de Duomo",
+            PricePerNight = 295m, Capacity = 2,
+            CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
+        },
+        new RoomTypeDto
+        {
+            Id = 3, AccommodationId = 1, Name = "Junior Suite",
+            PricePerNight = 420m, Capacity = 3,
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
 
         // Palazzo Ravizza (Siena)
         new RoomTypeDto
         {
-            Id = 3, AccommodationId = 2, Name = "Classic",
-            PricePerNight = 120m, Capacity = 2,
+            Id = 4, AccommodationId = 2, Name = "Classic met tuinzicht",
+            PricePerNight = 135m, Capacity = 2,
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
         new RoomTypeDto
         {
-            Id = 4, AccommodationId = 2, Name = "Superior",
-            PricePerNight = 175m, Capacity = 2,
+            Id = 5, AccommodationId = 2, Name = "Superior met balkon",
+            PricePerNight = 195m, Capacity = 2,
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
 
         // Hotel Catalonia (Barcelona)
         new RoomTypeDto
         {
-            Id = 5, AccommodationId = 3, Name = "Double Room",
-            PricePerNight = 130m, Capacity = 2,
+            Id = 6, AccommodationId = 3, Name = "Standard Double",
+            PricePerNight = 145m, Capacity = 2,
+            CreatedAt = DateTime.Now.AddDays(-5), UpdatedAt = DateTime.Now.AddDays(-5)
+        },
+        new RoomTypeDto
+        {
+            Id = 7, AccommodationId = 3, Name = "Superior met stadszicht",
+            PricePerNight = 210m, Capacity = 2,
             CreatedAt = DateTime.Now.AddDays(-5), UpdatedAt = DateTime.Now.AddDays(-5)
         }
     };
-    private int _nextId = 6;
+    private int _nextId = 8;
 
     public IEnumerable<RoomTypeDto> GetByAccommodation(int accommodationId) =>
         _items.Where(r => r.AccommodationId == accommodationId).OrderBy(r => r.Id).ToList();

@@ -14,33 +14,54 @@ public class FakeTransportRepository : ITransportRepository
         new TransportDto
         {
             Id = 1, DayId = 1, Type = "Vlucht",
-            DepartureLocation = "Amsterdam (AMS)", ArrivalLocation = "Florence (FLR)",
-            FlightNumber = "KL1653", Airline = "KLM",
+            DepartureLocation = "Amsterdam Schiphol (AMS)", ArrivalLocation = "Florence Peretola (FLR)",
+            FlightNumber = "KL1653", Airline = "KLM Royal Dutch Airlines",
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
         new TransportDto
         {
-            Id = 2, DayId = 3, Type = "Trein",
-            DepartureLocation = "Florence S.M.N.", ArrivalLocation = "Siena",
+            Id = 2, DayId = 1, Type = "Privétransfer",
+            DepartureLocation = "Florence Peretola (FLR)", ArrivalLocation = "Hotel Brunelleschi, centrum",
             FlightNumber = null, Airline = null,
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
         new TransportDto
         {
-            Id = 3, DayId = 4, Type = "Vlucht",
-            DepartureLocation = "Florence (FLR)", ArrivalLocation = "Amsterdam (AMS)",
-            FlightNumber = "KL1654", Airline = "KLM",
+            Id = 3, DayId = 3, Type = "Trein",
+            DepartureLocation = "Firenze Santa Maria Novella", ArrivalLocation = "Siena Piazza Gramsci",
+            FlightNumber = null, Airline = null,
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
         new TransportDto
         {
-            Id = 4, DayId = 5, Type = "Vlucht",
-            DepartureLocation = "Amsterdam (AMS)", ArrivalLocation = "Barcelona (BCN)",
-            FlightNumber = "VY8301", Airline = "Vueling",
+            Id = 4, DayId = 4, Type = "Privétransfer",
+            DepartureLocation = "Palazzo Ravizza, Siena", ArrivalLocation = "Florence Peretola (FLR)",
+            FlightNumber = null, Airline = null,
+            CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
+        },
+        new TransportDto
+        {
+            Id = 5, DayId = 4, Type = "Vlucht",
+            DepartureLocation = "Florence Peretola (FLR)", ArrivalLocation = "Amsterdam Schiphol (AMS)",
+            FlightNumber = "KL1654", Airline = "KLM Royal Dutch Airlines",
+            CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
+        },
+        new TransportDto
+        {
+            Id = 6, DayId = 5, Type = "Vlucht",
+            DepartureLocation = "Amsterdam Schiphol (AMS)", ArrivalLocation = "Barcelona El Prat (BCN)",
+            FlightNumber = "VY8301", Airline = "Vueling Airlines",
+            CreatedAt = DateTime.Now.AddDays(-5), UpdatedAt = DateTime.Now.AddDays(-5)
+        },
+        new TransportDto
+        {
+            Id = 7, DayId = 6, Type = "Vlucht",
+            DepartureLocation = "Barcelona El Prat (BCN)", ArrivalLocation = "Amsterdam Schiphol (AMS)",
+            FlightNumber = "VY8302", Airline = "Vueling Airlines",
             CreatedAt = DateTime.Now.AddDays(-5), UpdatedAt = DateTime.Now.AddDays(-5)
         }
     };
-    private int _nextId = 5;
+    private int _nextId = 8;
 
     public IEnumerable<TransportDto> GetByDay(int dayId) =>
         _transports.Where(t => t.DayId == dayId).OrderBy(t => t.Id).ToList();
