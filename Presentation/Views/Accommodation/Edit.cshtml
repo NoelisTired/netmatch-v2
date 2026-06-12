@@ -1,53 +1,84 @@
 @model Presentation.Models.AccommodationViewModel
 @{
-    ViewData["Title"] = "Accommodatie bewerken";
+    ViewData["Title"] = L["Accommodatie bewerken"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        (L["Accommodatie bewerken"].Value, null)
+    };
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
-    <div>
-        <p class="eyebrow mb-2">TourWeb Portal</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Accommodatie bewerken</h1>
-    </div>
+<div class="mb-6">
+    <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Accommodatie bewerken"]</h1>
+    <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Pas de gegevens van dit verblijf aan."]</p>
 </div>
 
-<div class="card-glass reveal max-w-xl p-6 sm:p-7">
-    <div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
+<div class="card max-w-2xl">
+    <div class="card-header">
+        <span class="card-title">@L["Accommodatiegegevens"]</span>
+    </div>
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="p-5 sm:p-6">
+        <div asp-validation-summary="All" class="validation-errors mb-5"></div>
+        <input type="hidden" asp-for="Id"/>
+        <input type="hidden" asp-for="DayId"/>
+        <input type="hidden" asp-for="ImagePath"/>
 
-    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="space-y-5">
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="DayId" />
-        <input type="hidden" asp-for="ImagePath" />
+        <div class="space-y-5">
+            <div>
+                <label asp-for="Name" class="field-label">@L["Naam"] <span class="req">*</span></label>
+                <input asp-for="Name" class="field"/>
+            </div>
 
-        <div>
-            <label asp-for="Name" class="field-label">Naam</label>
-            <input asp-for="Name" class="field" />
+            <div>
+                <label asp-for="Address" class="field-label">@L["Adres"] <span class="opt">(@L["optioneel"])</span></label>
+                <input asp-for="Address" class="field"/>
+            </div>
+
+            <div>
+                <label asp-for="Description" class="field-label">@L["Omschrijving"] <span class="opt">(@L["optioneel"])</span></label>
+                <textarea asp-for="Description" class="field" rows="4"></textarea>
+            </div>
+
+            <div>
+                <label asp-for="Image" class="field-label">@L["Afbeelding"] <span class="opt">(@L["optioneel, max 5 MB"])</span></label>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                {
+                    <div class="mb-3 flex items-center gap-3 rounded-lg border p-3" style="border-color:var(--border); background:var(--bg-subtle);">
+                        <a href="@Model.ImagePath" class="glightbox thumb h-14 w-20 shrink-0"
+                           data-glightbox="title: @Model.Name">
+                            <img src="@Model.ImagePath" alt="@L["Huidige afbeelding"]"/>
+                        </a>
+                        <div class="text-xs leading-relaxed" style="color:var(--text-secondary);">
+                            <p class="font-medium" style="color:var(--text-primary);">@L["Huidige afbeelding"]</p>
+                            <p>@L["Laat het veld hieronder leeg om deze afbeelding te behouden."]</p>
+                        </div>
+                    </div>
+                }
+
+                <input asp-for="Image" type="file" accept="image/png,image/jpeg,image/webp" data-filepond/>
+            </div>
         </div>
 
-        <div>
-            <label asp-for="Address" class="field-label">Adres <span style="color:var(--text-secondary);">(optioneel)</span></label>
-            <input asp-for="Address" class="field" />
-        </div>
-
-        <div>
-            <label asp-for="Description" class="field-label">Omschrijving <span style="color:var(--text-secondary);">(optioneel)</span></label>
-            <textarea asp-for="Description" class="field" rows="3"></textarea>
-        </div>
-
-        <div>
-            <label asp-for="Image" class="field-label">Afbeelding <span style="color:var(--text-secondary);">(optioneel, max 5 MB)</span></label>
-            @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
-            {
-                <div class="mb-2">
-                    <img src="@Model.ImagePath" alt="Huidige afbeelding" class="max-h-16 rounded-lg border p-1" style="border-color:var(--card-border);" />
-                </div>
-            }
-            <input asp-for="Image" type="file" class="field" accept="image/png,image/jpeg,image/webp" />
-            <div class="mt-1 text-sm" style="color:var(--text-secondary);">Laat leeg om de huidige afbeelding te behouden.</div>
-        </div>
-
-        <div class="flex items-center gap-3 pt-1">
-            <button type="submit" class="btn btn-primary">Opslaan</button>
-            <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn-link text-sm font-semibold">Annuleren</a>
+        <div class="mt-6 flex items-center justify-end gap-2.5 border-t pt-5" style="border-color:var(--border);">
+            <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn btn-ghost">@L["Annuleren"]</a>
+            <button type="submit" class="btn btn-primary">
+                <i data-lucide="check" class="h-4 w-4"></i>
+                @L["Wijzigingen opslaan"]
+            </button>
         </div>
     </form>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/lib/filepond/filepond.min.css"/>
+    <link rel="stylesheet" href="~/lib/filepond/filepond-plugin-image-preview.min.css"/>
+}
+
+@section Scripts {
+    <script src="~/lib/filepond/filepond-plugin-image-preview.min.js" defer></script>
+    <script src="~/lib/filepond/filepond-plugin-file-validate-type.min.js" defer></script>
+    <script src="~/lib/filepond/filepond-plugin-file-validate-size.min.js" defer></script>
+    <script src="~/lib/filepond/filepond.min.js" defer></script>
+    <partial name="_FilePondInit"/>
+}

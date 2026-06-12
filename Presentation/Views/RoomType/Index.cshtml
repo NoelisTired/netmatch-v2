@@ -3,55 +3,81 @@
 @{
     var accommodationId = (int)ViewBag.AccommodationId;
     var dayId = (int)ViewBag.DayId;
-    ViewData["Title"] = "Kamertypes";
+    ViewData["Title"] = L["Kamertypes"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        ((string?)ViewBag.AccommodationName ?? L["Accommodatie"].Value, null),
+        (L["Kamertypes"].Value, null)
+    };
+    var roomTypes = Model.ToList();
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
-        <p class="eyebrow mb-2">@ViewBag.AccommodationName</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Kamertypes</h1>
+        <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Kamertypes"]</h1>
+        <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@ViewBag.AccommodationName</p>
     </div>
-    <a asp-action="Create" asp-route-accommodationId="@accommodationId" class="btn btn-accent">Kamertype toevoegen</a>
+    <a asp-action="Create" asp-route-accommodationId="@accommodationId" class="btn btn-primary">
+        <i data-lucide="plus" class="h-4 w-4"></i>
+        @L["Kamertype toevoegen"]
+    </a>
 </div>
 
-@if (!Model.Any())
+@if (roomTypes.Count == 0)
 {
-    <div class="alert alert-info reveal">Deze accommodatie heeft nog geen kamertypes.</div>
+    <div class="empty-state">
+        <span class="empty-icon"><i data-lucide="bed-single" class="h-5 w-5"></i></span>
+        <p class="text-sm font-medium" style="color:var(--text-primary);">@L["Nog geen kamertypes"]</p>
+        <p class="max-w-sm text-sm" style="color:var(--text-secondary);">@L["Deze accommodatie heeft nog geen kamertypes."]</p>
+        <a asp-action="Create" asp-route-accommodationId="@accommodationId" class="btn btn-primary btn-sm mt-3">@L["Kamertype toevoegen"]</a>
+    </div>
 }
 else
 {
-    <div class="card-glass reveal overflow-hidden">
-        <table class="table-glass">
+    <div class="card overflow-x-auto">
+        <table class="table-data">
             <thead>
-                <tr>
-                    <th>Naam</th>
-                    <th>Prijs per nacht</th>
-                    <th>Capaciteit</th>
-                    <th class="text-right">Acties</th>
-                </tr>
+            <tr>
+                <th>@L["Naam"]</th>
+                <th class="num">@L["Prijs per nacht"]</th>
+                <th class="num">@L["Capaciteit"]</th>
+                <th class="text-right">@L["Acties"]</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var roomType in Model)
-                {
-                    <tr>
-                        <td>@roomType.Name</td>
-                        <td>&euro; @roomType.PricePerNight.ToString("0.00")</td>
-                        <td>@roomType.Capacity p.</td>
-                        <td>
-                            <div class="flex flex-wrap justify-end gap-2">
-                                <a asp-action="Edit" asp-route-id="@roomType.Id" class="btn btn-ghost btn-sm">Bewerken</a>
-                                <form asp-action="Delete" asp-route-id="@roomType.Id" asp-route-accommodationId="@accommodationId"
-                                      method="post" class="inline"
-                                      onsubmit="return confirm('Dit kamertype verwijderen?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Verwijderen</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
+            @foreach (var roomType in roomTypes)
+            {
+                <tr>
+                    <td class="font-medium" style="color:var(--text-primary);">@roomType.Name</td>
+                    <td class="num tabular-nums">&euro;&nbsp;@roomType.PricePerNight.ToString("0.00")</td>
+                    <td class="num">
+                        <span class="inline-flex items-center gap-1.5">
+                            <i data-lucide="users" class="h-3.5 w-3.5" style="color:var(--text-tertiary);"></i>
+                            @roomType.Capacity @L["pers."]
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-end gap-1">
+                            <a asp-action="Edit" asp-route-id="@roomType.Id" class="btn-icon" title="@L["Bewerken"]" aria-label="@L["Bewerken"]">
+                                <i data-lucide="pencil" class="h-4 w-4"></i>
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@roomType.Id" asp-route-accommodationId="@accommodationId"
+                                  method="post" class="inline" data-confirm="@L["Dit kamertype verwijderen?"]">
+                                <button type="submit" class="btn-icon btn-icon-danger" title="@L["Verwijderen"]" aria-label="@L["Verwijderen"]">
+                                    <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
 }
 
-<a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@dayId" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar accommodatie</a>
+<a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@dayId" class="btn-link mt-5 text-sm">
+    <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i>
+    @L["Terug naar accommodatie"]
+</a>

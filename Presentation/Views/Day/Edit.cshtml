@@ -1,45 +1,57 @@
 @model Presentation.Models.DayViewModel
 @{
-    ViewData["Title"] = "Dag bewerken";
+    ViewData["Title"] = L["Dag bewerken"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        (L["Offerte"].Value, Url.Action("Details", "Quote", new { id = Model.QuoteId })),
+        (L["Dag bewerken"].Value, null)
+    };
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
-    <div>
-        <p class="eyebrow mb-2">TourWeb Portal</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Dag bewerken</h1>
-    </div>
+<div class="mb-6">
+    <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Dag bewerken"]</h1>
+    <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Pas het dagprogramma van deze offerte aan."]</p>
 </div>
 
-<div class="card-glass reveal max-w-xl p-6 sm:p-7">
-    <div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
+<div class="card max-w-2xl">
+    <div class="card-header">
+        <span class="card-title">@L["Daggegevens"]</span>
+    </div>
+    <form asp-action="Edit" method="post" class="p-5 sm:p-6">
+        <div asp-validation-summary="All" class="validation-errors mb-5"></div>
+        <input type="hidden" asp-for="Id"/>
+        <input type="hidden" asp-for="QuoteId"/>
 
-    <form asp-action="Edit" method="post" class="space-y-5">
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="QuoteId" />
+        <div class="space-y-5">
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label asp-for="DayNumber" class="field-label">@L["Dagnummer"] <span class="req">*</span></label>
+                    <input asp-for="DayNumber" type="number" min="1" class="field"/>
+                </div>
+                <div>
+                    <label asp-for="Date" class="field-label">@L["Datum"] <span class="req">*</span></label>
+                    <input asp-for="Date" type="date" class="field" data-date value="@Model.Date?.ToString("yyyy-MM-dd")"/>
+                </div>
+            </div>
 
-        <div>
-            <label asp-for="DayNumber" class="field-label">Dagnummer</label>
-            <input asp-for="DayNumber" type="number" min="1" class="field" />
+            <div>
+                <label asp-for="Title" class="field-label">@L["Titel"] <span class="opt">(@L["optioneel"])</span></label>
+                <input asp-for="Title" class="field"/>
+            </div>
+
+            <div>
+                <label asp-for="Description" class="field-label">@L["Omschrijving"] <span class="opt">(@L["optioneel"])</span></label>
+                <textarea asp-for="Description" class="field" rows="4"></textarea>
+            </div>
         </div>
 
-        <div>
-            <label asp-for="Date" class="field-label">Datum</label>
-            <input asp-for="Date" type="date" class="field" value="@Model.Date?.ToString("yyyy-MM-dd")" />
-        </div>
-
-        <div>
-            <label asp-for="Title" class="field-label">Titel <span style="color:var(--text-secondary);">(optioneel)</span></label>
-            <input asp-for="Title" class="field" />
-        </div>
-
-        <div>
-            <label asp-for="Description" class="field-label">Omschrijving <span style="color:var(--text-secondary);">(optioneel)</span></label>
-            <textarea asp-for="Description" class="field" rows="3"></textarea>
-        </div>
-
-        <div class="flex items-center gap-3 pt-1">
-            <button type="submit" class="btn btn-primary">Opslaan</button>
-            <a asp-action="Index" asp-route-quoteId="@Model.QuoteId" class="btn-link text-sm font-semibold">Annuleren</a>
+        <div class="mt-6 flex items-center justify-end gap-2.5 border-t pt-5" style="border-color:var(--border);">
+            <a asp-controller="Quote" asp-action="Details" asp-route-id="@Model.QuoteId" class="btn btn-ghost">@L["Annuleren"]</a>
+            <button type="submit" class="btn btn-primary">
+                <i data-lucide="check" class="h-4 w-4"></i>
+                @L["Wijzigingen opslaan"]
+            </button>
         </div>
     </form>
 </div>

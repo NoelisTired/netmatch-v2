@@ -1,40 +1,58 @@
 @model Presentation.Models.RoomTypeViewModel
 @{
-    ViewData["Title"] = "Kamertype bewerken";
+    ViewData["Title"] = L["Kamertype bewerken"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        (L["Kamertype bewerken"].Value, null)
+    };
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
-    <div>
-        <p class="eyebrow mb-2">TourWeb Portal</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Kamertype bewerken</h1>
-    </div>
+<div class="mb-6">
+    <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Kamertype bewerken"]</h1>
+    <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Pas de prijs of capaciteit van dit kamertype aan."]</p>
 </div>
 
-<div class="card-glass reveal max-w-xl p-6 sm:p-7">
-    <div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
+<div class="card max-w-2xl">
+    <div class="card-header">
+        <span class="card-title">@L["Kamertypegegevens"]</span>
+    </div>
+    <form asp-action="Edit" method="post" class="p-5 sm:p-6">
+        <div asp-validation-summary="All" class="validation-errors mb-5"></div>
+        <input type="hidden" asp-for="Id"/>
+        <input type="hidden" asp-for="AccommodationId"/>
 
-    <form asp-action="Edit" method="post" class="space-y-5">
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="AccommodationId" />
+        <div class="space-y-5">
+            <div>
+                <label asp-for="Name" class="field-label">@L["Naam"] <span class="req">*</span></label>
+                <input asp-for="Name" class="field"/>
+            </div>
 
-        <div>
-            <label asp-for="Name" class="field-label">Naam</label>
-            <input asp-for="Name" class="field" />
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label asp-for="PricePerNight" class="field-label">@L["Prijs per nacht"] <span class="req">*</span></label>
+                    <div class="input-affix">
+                        <span class="affix">&euro;</span>
+                        <input asp-for="PricePerNight" type="number" step="0.01" min="0"/>
+                    </div>
+                </div>
+                <div>
+                    <label asp-for="Capacity" class="field-label">@L["Capaciteit"] <span class="req">*</span></label>
+                    <div class="input-affix">
+                        <span class="affix"><i data-lucide="users" class="h-3.5 w-3.5"></i></span>
+                        <input asp-for="Capacity" type="number" min="1"/>
+                    </div>
+                    <p class="field-hint">@L["Aantal personen per kamer."]</p>
+                </div>
+            </div>
         </div>
 
-        <div>
-            <label asp-for="PricePerNight" class="field-label">Prijs per nacht (&euro;)</label>
-            <input asp-for="PricePerNight" type="number" step="0.01" min="0" class="field" />
-        </div>
-
-        <div>
-            <label asp-for="Capacity" class="field-label">Capaciteit (personen)</label>
-            <input asp-for="Capacity" type="number" min="1" class="field" />
-        </div>
-
-        <div class="flex items-center gap-3 pt-1">
-            <button type="submit" class="btn btn-primary">Opslaan</button>
-            <a asp-action="Index" asp-route-accommodationId="@Model.AccommodationId" class="btn-link text-sm font-semibold">Annuleren</a>
+        <div class="mt-6 flex items-center justify-end gap-2.5 border-t pt-5" style="border-color:var(--border);">
+            <a asp-action="Index" asp-route-accommodationId="@Model.AccommodationId" class="btn btn-ghost">@L["Annuleren"]</a>
+            <button type="submit" class="btn btn-primary">
+                <i data-lucide="check" class="h-4 w-4"></i>
+                @L["Wijzigingen opslaan"]
+            </button>
         </div>
     </form>
 </div>

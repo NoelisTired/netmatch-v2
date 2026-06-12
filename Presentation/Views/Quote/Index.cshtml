@@ -3,57 +3,106 @@
 @model IEnumerable<Quote>
 @{
     ViewData["Title"] = L["Offertes"];
+    ViewData["Crumbs"] = new (string, string?)[] { (L["Offertes"].Value, null) };
+    var quotes = Model.ToList();
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
-        <p class="eyebrow mb-2">TourWeb Portal</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">@L["Offertes"]</h1>
+        <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Offertes"]</h1>
+        <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Beheer alle reisoffertes van je reisbureau."]</p>
     </div>
-    <a asp-action="Create" class="btn btn-accent">@L["Nieuwe offerte"]</a>
+    <a asp-action="Create" class="btn btn-primary">
+        <i data-lucide="plus" class="h-4 w-4"></i>
+        @L["Nieuwe offerte"]
+    </a>
 </div>
 
-@if (!Model.Any())
+@if (quotes.Count == 0)
 {
-    <div class="alert alert-info reveal">@L["Er zijn nog geen offertes. Maak je eerste offerte aan."]</div>
+    <div class="empty-state">
+        <span class="empty-icon"><i data-lucide="file-plus-2" class="h-5 w-5"></i></span>
+        <p class="text-sm font-medium" style="color:var(--text-primary);">@L["Nog geen offertes"]</p>
+        <p class="max-w-sm text-sm" style="color:var(--text-secondary);">@L["Er zijn nog geen offertes. Maak je eerste offerte aan."]</p>
+        <a asp-action="Create" class="btn btn-primary btn-sm mt-3">@L["Nieuwe offerte"]</a>
+    </div>
 }
 else
 {
-    <div class="card-glass reveal overflow-hidden">
-        <table class="table-glass">
-            <thead>
+    <div class="card"
+         data-list='[{"name":"q-title"},{"name":"q-lang"},{"name":"q-status","attr":"data-status"},{"name":"q-created","attr":"data-ts"}]'>
+
+        <div class="flex flex-wrap items-center gap-3 border-b px-5 py-4" style="border-color:var(--border);">
+            <div class="relative">
+                <i data-lucide="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                   style="color:var(--text-tertiary);"></i>
+                <input type="search" class="search field w-64 !pl-9" placeholder="@L["Zoeken op titel of taal"]"
+                       aria-label="@L["Zoeken"]"/>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+                <button type="button" class="filter-pill is-active" data-filter-status="">@L["Alle"]</button>
+                <button type="button" class="filter-pill" data-filter-status="Concept">@L["Concept"]</button>
+                <button type="button" class="filter-pill" data-filter-status="Definitief">@L["Definitief"]</button>
+            </div>
+
+            <span class="ml-auto text-sm tabular-nums" style="color:var(--text-tertiary);">
+                <span data-list-count>@quotes.Count</span> @L["van"] @quotes.Count
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="table-data">
+                <thead>
                 <tr>
-                    <th>@L["Titel"]</th>
+                    <th><button type="button" class="sort" data-sort="q-title">@L["Titel"]</button></th>
                     <th>@L["Taal"]</th>
-                    <th>@L["Status"]</th>
-                    <th>@L["Aangemaakt"]</th>
+                    <th><button type="button" class="sort" data-sort="q-status">@L["Status"]</button></th>
+                    <th><button type="button" class="sort" data-sort="q-created">@L["Aangemaakt"]</button></th>
                     <th class="text-right">@L["Acties"]</th>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var quote in Model)
+                </thead>
+                <tbody class="list">
+                @foreach (var quote in quotes)
                 {
                     var isFinal = quote.Status == StatusType.Definitief;
                     <tr>
-                        <td class="font-semibold" style="color:var(--text-primary);">@quote.Title</td>
-                        <td style="color:var(--text-secondary);">@quote.Language</td>
-                        <td>
-                            <span class="pill @(isFinal ? "pill-final" : "pill-draft")">@quote.Status</span>
+                        <td class="q-title font-medium" style="color:var(--text-primary);">@quote.Title</td>
+                        <td><span class="badge q-lang">@quote.Language.ToCode()</span></td>
+                        <td class="q-status" data-status="@quote.Status">
+                            <span class="badge @(isFinal ? "badge-success" : "badge-warning")">
+                                <span class="dot"></span>@quote.Status
+                            </span>
                         </td>
-                        <td style="color:var(--text-secondary);">@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
+                        <td class="q-created tabular-nums" data-ts="@quote.CreatedAt.Ticks">@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
                         <td>
-                            <div class="flex flex-wrap justify-end gap-2">
-                                <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-ghost btn-sm">@L["Bekijken"]</a>
-                                <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-ghost btn-sm">@L["Bewerken"]</a>
+                            <div class="flex items-center justify-end gap-1">
+                                <a asp-action="Details" asp-route-id="@quote.Id" class="btn-icon"
+                                   title="@L["Bekijken"]" aria-label="@L["Bekijken"]">
+                                    <i data-lucide="eye" class="h-4 w-4"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@quote.Id" class="btn-icon"
+                                   title="@L["Bewerken"]" aria-label="@L["Bewerken"]">
+                                    <i data-lucide="pencil" class="h-4 w-4"></i>
+                                </a>
                                 <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="inline"
-                                      onsubmit="return confirm('@L["Deze offerte verwijderen?"]');">
-                                    <button type="submit" class="btn btn-danger btn-sm">@L["Verwijderen"]</button>
+                                      data-confirm="@L["Deze offerte verwijderen?"]">
+                                    <button type="submit" class="btn-icon btn-icon-danger"
+                                            title="@L["Verwijderen"]" aria-label="@L["Verwijderen"]">
+                                        <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+
+        <div data-list-empty class="hidden border-t px-5 py-8 text-center text-sm"
+             style="border-color:var(--border); color:var(--text-secondary);">
+            @L["Geen offertes gevonden voor deze zoekopdracht."]
+        </div>
     </div>
 }

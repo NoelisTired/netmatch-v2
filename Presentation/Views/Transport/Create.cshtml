@@ -1,60 +1,83 @@
 @model Presentation.Models.TransportViewModel
 @{
-    ViewData["Title"] = "Transport toevoegen";
+    ViewData["Title"] = L["Transport toevoegen"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        (L["Transport toevoegen"].Value, null)
+    };
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
-    <div>
-        <p class="eyebrow mb-2">TourWeb Portal</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Transport toevoegen</h1>
-    </div>
+<div class="mb-6">
+    <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Transport toevoegen"]</h1>
+    <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Voeg vervoer toe aan deze reisdag."]</p>
 </div>
 
-<div class="card-glass reveal max-w-2xl p-6 sm:p-7">
-    <div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
-
-    <form asp-action="Create" method="post" class="space-y-5">
-    <input type="hidden" asp-for="DayId" />
-
-    <div>
-        <label asp-for="Type" class="field-label">Type</label>
-        <select asp-for="Type" class="field">
-            <option value="">-- Kies een transporttype --</option>
-            <option value="Vlucht">Vlucht</option>
-            <option value="Bus">Bus</option>
-            <option value="Trein">Trein</option>
-            <option value="Eigen vervoer">Eigen vervoer</option>
-        </select>
+<div class="card max-w-2xl">
+    <div class="card-header">
+        <span class="card-title">@L["Transportgegevens"]</span>
     </div>
+    <form asp-action="Create" method="post" class="p-5 sm:p-6" x-data="{ type: '@(Model.Type ?? "")' }">
+        <div asp-validation-summary="All" class="validation-errors mb-5"></div>
+        <input type="hidden" asp-for="DayId"/>
 
-    <div>
-        <label asp-for="DepartureLocation" class="field-label">Vertreklocatie</label>
-        <input asp-for="DepartureLocation" class="field" />
-    </div>
+        <div class="space-y-5">
+            <div>
+                <label asp-for="Type" class="field-label">@L["Type"] <span class="req">*</span></label>
+                <select asp-for="Type" class="field" x-model="type">
+                    <option value="">@L["Kies een transporttype"]</option>
+                    <option value="Vlucht">@L["Vlucht"]</option>
+                    <option value="Bus">@L["Bus"]</option>
+                    <option value="Trein">@L["Trein"]</option>
+                    <option value="Eigen vervoer">@L["Eigen vervoer"]</option>
+                </select>
+            </div>
 
-    <div>
-        <label asp-for="ArrivalLocation" class="field-label">Aankomstlocatie</label>
-        <input asp-for="ArrivalLocation" class="field" />
-    </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label asp-for="DepartureLocation" class="field-label">@L["Vertreklocatie"] <span class="req">*</span></label>
+                    <input asp-for="DepartureLocation" class="field" placeholder="@L["Bijv. Amsterdam"]"/>
+                </div>
+                <div>
+                    <label asp-for="ArrivalLocation" class="field-label">@L["Aankomstlocatie"] <span class="req">*</span></label>
+                    <input asp-for="ArrivalLocation" class="field" placeholder="@L["Bijv. Tokio"]"/>
+                </div>
+            </div>
 
-    <div>
-        <label asp-for="FlightNumber" class="field-label">Vluchtnummer <span style="color:var(--text-secondary);">(verplicht bij Vlucht)</span></label>
-        <input asp-for="FlightNumber" class="field" />
-    </div>
+            <div x-cloak x-show="type === 'Vlucht'" x-transition.opacity.duration.150ms
+                 class="space-y-5 rounded-lg border p-4" style="border-color:var(--border); background:var(--bg-subtle);">
+                <p class="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider" style="color:var(--text-tertiary);">
+                    <i data-lucide="plane" class="h-3.5 w-3.5"></i>
+                    @L["Vluchtgegevens"]
+                </p>
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <div>
+                        <label asp-for="FlightNumber" class="field-label">@L["Vluchtnummer"] <span class="req">*</span></label>
+                        <input asp-for="FlightNumber" class="field" placeholder="KL0861"/>
+                    </div>
+                    <div>
+                        <label asp-for="Airline" class="field-label">@L["Luchtvaartmaatschappij"] <span class="req">*</span></label>
+                        <input asp-for="Airline" class="field" placeholder="KLM"/>
+                    </div>
+                </div>
+            </div>
 
-    <div>
-        <label asp-for="Airline" class="field-label">Luchtvaartmaatschappij <span style="color:var(--text-secondary);">(verplicht bij Vlucht)</span></label>
-        <input asp-for="Airline" class="field" />
-    </div>
+            <div>
+                <label asp-for="Price" class="field-label">@L["Prijs"] <span class="opt">(@L["optioneel"])</span></label>
+                <div class="input-affix max-w-44">
+                    <span class="affix">&euro;</span>
+                    <input asp-for="Price" type="number" step="0.01" min="0" placeholder="0,00"/>
+                </div>
+                <p class="field-hint">@L["Wordt meegeteld in de prijsindicatie van de offerte."]</p>
+            </div>
+        </div>
 
-    <div>
-        <label asp-for="Price" class="field-label">Prijs <span style="color:var(--text-secondary);">(optioneel, in &euro;)</span></label>
-        <input asp-for="Price" type="number" step="0.01" min="0" class="field" placeholder="0,00" />
-    </div>
-
-    <div class="flex items-center gap-3 pt-1">
-        <button type="submit" class="btn btn-primary">Opslaan</button>
-        <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn-link text-sm font-semibold">Annuleren</a>
-    </div>
+        <div class="mt-6 flex items-center justify-end gap-2.5 border-t pt-5" style="border-color:var(--border);">
+            <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn btn-ghost">@L["Annuleren"]</a>
+            <button type="submit" class="btn btn-primary">
+                <i data-lucide="check" class="h-4 w-4"></i>
+                @L["Transport opslaan"]
+            </button>
+        </div>
     </form>
 </div>

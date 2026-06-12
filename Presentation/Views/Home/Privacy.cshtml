@@ -1,20 +1,27 @@
 @{
-    ViewData["Title"] = "Privacy";
+    ViewData["Title"] = L["Privacy"];
+    ViewData["Crumbs"] = new (string, string?)[] { (L["Privacy"].Value, null) };
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
-    <div>
-        <p class="eyebrow mb-2">TourWeb Portal</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Privacy</h1>
-    </div>
+<div class="mb-6">
+    <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Privacy"]</h1>
+    <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Hoe TourWeb Portal met gegevens omgaat."]</p>
 </div>
 
-<div class="card-glass reveal max-w-2xl p-6 sm:p-8">
-    <p style="color:var(--text-secondary);">
-        TourWeb Portal verwerkt uitsluitend de gegevens die nodig zijn om reisoffertes
-        samen te stellen. Offertegegevens zijn alleen zichtbaar voor het reisbureau
-        dat ze heeft aangemaakt en worden niet met derden gedeeld.
-    </p>
-
-    <a asp-controller="Home" asp-action="Index" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar home</a>
+<div class="card max-w-2xl">
+    <div class="flex items-start gap-4 p-6">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg"
+              style="background:var(--accent-soft); color:var(--accent);">
+            <i data-lucide="shield-check" class="h-5 w-5"></i>
+        </span>
+        <div class="text-sm leading-relaxed" style="color:var(--text-secondary);">
+            <p>
+                @L["TourWeb Portal verwerkt uitsluitend de gegevens die nodig zijn om reisoffertes samen te stellen. Offertegegevens zijn alleen zichtbaar voor het reisbureau dat ze heeft aangemaakt en worden niet met derden gedeeld."]
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="btn-link mt-4 text-sm">
+                <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i>
+                @L["Terug naar dashboard"]
+            </a>
+        </div>
+    </div>
 </div>

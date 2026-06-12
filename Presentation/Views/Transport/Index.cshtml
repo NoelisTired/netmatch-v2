@@ -1,68 +1,117 @@
 @using Logic.Models
+@using Logic.Enums
 @model IEnumerable<Transport>
 @{
     var dayId = (int)ViewBag.DayId;
     var quoteId = (int)ViewBag.QuoteId;
-    ViewData["Title"] = "Transport";
+    ViewData["Title"] = L["Transport"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        (L["Offerte"].Value, Url.Action("Details", "Quote", new { id = quoteId })),
+        ($"{L["Transport"].Value} ({L["Dag"].Value} {ViewBag.DayNumber})", null)
+    };
+    var transports = Model.ToList();
+
+    string TransportIcon(TransportType type) => type switch
+    {
+        TransportType.Vlucht => "plane",
+        TransportType.Trein => "train-front",
+        TransportType.Bus => "bus",
+        TransportType.EigenVervoer => "car",
+        _ => "route"
+    };
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
-        <p class="eyebrow mb-2">Dag @ViewBag.DayNumber</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Transport</h1>
+        <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Transport"]</h1>
+        <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Dag"] @ViewBag.DayNumber</p>
     </div>
-    <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-accent">Transport toevoegen</a>
+    <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-primary">
+        <i data-lucide="plus" class="h-4 w-4"></i>
+        @L["Transport toevoegen"]
+    </a>
 </div>
 
-@if (!Model.Any())
+@if (transports.Count == 0)
 {
-    <div class="alert alert-info reveal">Deze dag heeft nog geen transport.</div>
+    <div class="empty-state">
+        <span class="empty-icon"><i data-lucide="route" class="h-5 w-5"></i></span>
+        <p class="text-sm font-medium" style="color:var(--text-primary);">@L["Nog geen transport"]</p>
+        <p class="max-w-sm text-sm" style="color:var(--text-secondary);">@L["Deze dag heeft nog geen transport."]</p>
+        <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-primary btn-sm mt-3">@L["Transport toevoegen"]</a>
+    </div>
 }
 else
 {
-    <div class="card-glass reveal overflow-hidden">
-        <table class="table-glass">
+    <div class="card overflow-x-auto">
+        <table class="table-data">
             <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Van</th>
-                    <th>Naar</th>
-                    <th>Vlucht</th>
-                    <th class="text-right">Acties</th>
-                </tr>
+            <tr>
+                <th>@L["Type"]</th>
+                <th>@L["Van"]</th>
+                <th>@L["Naar"]</th>
+                <th>@L["Vlucht"]</th>
+                <th class="num">@L["Prijs"]</th>
+                <th class="text-right">@L["Acties"]</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var transport in Model)
-                {
-                    <tr>
-                        <td>@transport.Type</td>
-                        <td>@transport.DepartureLocation</td>
-                        <td>@transport.ArrivalLocation</td>
-                        <td>
-                            @if (transport.FlightNumber is not null)
-                            {
-                                <text>@transport.FlightNumber, @transport.Airline</text>
-                            }
-                            else
-                            {
-                                <span style="color:var(--text-secondary);">-</span>
-                            }
-                        </td>
-                        <td class="text-right">
-                            <div class="flex flex-wrap justify-end gap-2">
-                                <a asp-action="Edit" asp-route-id="@transport.Id" class="btn btn-ghost btn-sm">Bewerken</a>
-                                <form asp-action="Delete" asp-route-id="@transport.Id" asp-route-dayId="@dayId"
-                                      method="post" class="inline"
-                                      onsubmit="return confirm('Dit transport verwijderen?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Verwijderen</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
+            @foreach (var transport in transports)
+            {
+                <tr>
+                    <td>
+                        <span class="inline-flex items-center gap-2 font-medium" style="color:var(--text-primary);">
+                            <span class="grid h-7 w-7 place-items-center rounded-lg" style="background:var(--accent-soft); color:var(--accent);">
+                                <i data-lucide="@TransportIcon(transport.Type)" class="h-3.5 w-3.5"></i>
+                            </span>
+                            @transport.Type.ToCode()
+                        </span>
+                    </td>
+                    <td>@transport.DepartureLocation</td>
+                    <td>@transport.ArrivalLocation</td>
+                    <td>
+                        @if (transport.FlightNumber is not null)
+                        {
+                            <span class="badge">@transport.FlightNumber · @transport.Airline</span>
+                        }
+                        else
+                        {
+                            <span style="color:var(--text-tertiary);">-</span>
+                        }
+                    </td>
+                    <td class="num tabular-nums">
+                        @if (transport.Price is not null)
+                        {
+                            <text>&euro;&nbsp;@transport.Price.Value.ToString("0.00")</text>
+                        }
+                        else
+                        {
+                            <span style="color:var(--text-tertiary);">-</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-end gap-1">
+                            <a asp-action="Edit" asp-route-id="@transport.Id" class="btn-icon" title="@L["Bewerken"]" aria-label="@L["Bewerken"]">
+                                <i data-lucide="pencil" class="h-4 w-4"></i>
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@transport.Id" asp-route-dayId="@dayId"
+                                  method="post" class="inline" data-confirm="@L["Dit transport verwijderen?"]">
+                                <button type="submit" class="btn-icon btn-icon-danger" title="@L["Verwijderen"]" aria-label="@L["Verwijderen"]">
+                                    <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
 }
 
-<a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn-link">Terug naar dag-tot-dag</a>
+<a asp-controller="Quote" asp-action="Details" asp-route-id="@quoteId" class="btn-link mt-5 text-sm">
+    <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i>
+    @L["Terug naar offerte"]
+</a>

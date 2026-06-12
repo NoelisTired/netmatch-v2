@@ -2,57 +2,87 @@
 @model IEnumerable<Day>
 @{
     var quoteId = (int)ViewBag.QuoteId;
-    ViewData["Title"] = "Dag-tot-dag";
+    ViewData["Title"] = L["Dag-tot-dag"];
+    ViewData["Crumbs"] = new (string, string?)[]
+    {
+        (L["Offertes"].Value, Url.Action("Index", "Quote")),
+        ((string?)ViewBag.QuoteTitle ?? L["Offerte"].Value, Url.Action("Details", "Quote", new { id = quoteId })),
+        (L["Dag-tot-dag"].Value, null)
+    };
+    var days = Model.ToList();
 }
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
-        <p class="eyebrow mb-2">@ViewBag.QuoteTitle</p>
-        <h1 class="font-display text-3xl font-bold sm:text-4xl">Dag-tot-dag</h1>
+        <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Dag-tot-dag"]</h1>
+        <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@ViewBag.QuoteTitle</p>
     </div>
-    <a asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-accent">Dag toevoegen</a>
+    <a asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-primary">
+        <i data-lucide="plus" class="h-4 w-4"></i>
+        @L["Dag toevoegen"]
+    </a>
 </div>
 
-@if (!Model.Any())
+@if (days.Count == 0)
 {
-    <div class="alert alert-info reveal">Deze offerte heeft nog geen dagen.</div>
+    <div class="empty-state">
+        <span class="empty-icon"><i data-lucide="calendar-plus" class="h-5 w-5"></i></span>
+        <p class="text-sm font-medium" style="color:var(--text-primary);">@L["Nog geen dagprogramma"]</p>
+        <p class="max-w-sm text-sm" style="color:var(--text-secondary);">@L["Deze offerte heeft nog geen dagen."]</p>
+        <a asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-primary btn-sm mt-3">@L["Dag toevoegen"]</a>
+    </div>
 }
 else
 {
-    <div class="card-glass reveal overflow-hidden">
-        <table class="table-glass">
+    <div class="card overflow-x-auto">
+        <table class="table-data">
             <thead>
-                <tr>
-                    <th>Dag</th>
-                    <th>Datum</th>
-                    <th>Titel</th>
-                    <th class="text-right">Acties</th>
-                </tr>
+            <tr>
+                <th class="w-16">@L["Dag"]</th>
+                <th>@L["Datum"]</th>
+                <th>@L["Titel"]</th>
+                <th class="text-right">@L["Acties"]</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var day in Model)
-                {
-                    <tr>
-                        <td>@day.DayNumber</td>
-                        <td>@day.Date.ToString("dd-MM-yyyy")</td>
-                        <td>@day.Title</td>
-                        <td>
-                            <div class="flex flex-wrap justify-end gap-2">
-                                <a asp-controller="Transport" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-ghost btn-sm">Transport</a>
-                                <a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-ghost btn-sm">Accommodatie</a>
-                                <a asp-action="Edit" asp-route-id="@day.Id" class="btn btn-primary btn-sm">Bewerken</a>
-                                <form asp-action="Delete" asp-route-id="@day.Id" asp-route-quoteId="@quoteId"
-                                      method="post" class="inline"
-                                      onsubmit="return confirm('Deze dag verwijderen?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Verwijderen</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
+            @foreach (var day in days)
+            {
+                <tr>
+                    <td>
+                        <span class="grid h-7 w-7 place-items-center rounded-lg text-xs font-semibold tabular-nums"
+                              style="background:var(--accent-soft); color:var(--accent);">@day.DayNumber</span>
+                    </td>
+                    <td class="tabular-nums">@day.Date.ToString("dd-MM-yyyy")</td>
+                    <td class="font-medium" style="color:var(--text-primary);">@(string.IsNullOrWhiteSpace(day.Title) ? "" : day.Title)</td>
+                    <td>
+                        <div class="flex flex-wrap items-center justify-end gap-1">
+                            <a asp-controller="Transport" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-ghost btn-sm">
+                                <i data-lucide="route" class="h-3.5 w-3.5"></i>
+                                @L["Transport"]
+                            </a>
+                            <a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-ghost btn-sm">
+                                <i data-lucide="bed-double" class="h-3.5 w-3.5"></i>
+                                @L["Accommodatie"]
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@day.Id" class="btn-icon" title="@L["Bewerken"]" aria-label="@L["Bewerken"]">
+                                <i data-lucide="pencil" class="h-4 w-4"></i>
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@day.Id" asp-route-quoteId="@quoteId"
+                                  method="post" class="inline" data-confirm="@L["Deze dag verwijderen?"]">
+                                <button type="submit" class="btn-icon btn-icon-danger" title="@L["Verwijderen"]" aria-label="@L["Verwijderen"]">
+                                    <i data-lucide="trash-2" class="h-4 w-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>
 }
 
-<a asp-controller="Quote" asp-action="Details" asp-route-id="@quoteId" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar offerte</a>
+<a asp-controller="Quote" asp-action="Details" asp-route-id="@quoteId" class="btn-link mt-5 text-sm">
+    <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i>
+    @L["Terug naar offerte"]
+</a>

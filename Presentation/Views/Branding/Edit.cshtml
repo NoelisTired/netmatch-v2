@@ -1,131 +1,189 @@
 @model Presentation.Models.BrandingViewModel
 @{
     ViewData["Title"] = L["Huisstijl"];
+    ViewData["Crumbs"] = new (string, string?)[] { (L["Huisstijl"].Value, null) };
 }
 
-<div class="mb-8 reveal">
-    <p class="eyebrow mb-2">TourWeb Portal</p>
-    <h1 class="font-display text-3xl font-bold sm:text-4xl">@L["Huisstijl"]</h1>
+<div class="mb-6">
+    <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Huisstijl"]</h1>
+    <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@L["Logo en kleuren van je reisbureau, toegepast op offertes en PDF-documenten."]</p>
 </div>
 
-@if (TempData["BrandingSaved"] is string saved)
-{
-    <div class="alert alert-success reveal mb-4">@saved</div>
-}
+<div class="grid items-start gap-5 lg:grid-cols-2">
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">@L["Merkinstellingen"]</span>
+        </div>
+        <form asp-action="Edit" method="post" enctype="multipart/form-data" class="p-5 sm:p-6">
+            <div asp-validation-summary="All" class="validation-errors mb-5"></div>
 
-<div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
-
-<div class="grid gap-5 lg:grid-cols-2">
-    <div class="card-glass reveal p-6">
-        <form asp-action="Edit" method="post" enctype="multipart/form-data" class="space-y-5">
-            <div>
-                <label class="field-label">@L["Huidig logo"]</label>
-                @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
-                {
-                    <img src="@Model.LogoPath" alt="@L["Huidig logo"]" class="max-h-16 rounded-lg border p-1" style="border-color:var(--card-border);" />
-                }
-                else
-                {
-                    <span class="text-sm" style="color:var(--text-secondary);">@L["Nog geen logo ingesteld."]</span>
-                }
-            </div>
-
-            <div>
-                <label asp-for="Logo" class="field-label">@L["Nieuw logo"] <span class="font-normal opacity-70">(PNG, JPG, SVG, max 2 MB)</span></label>
-                <input asp-for="Logo" type="file" accept=".png,.jpg,.jpeg,.svg" class="field" id="logoInput" />
-            </div>
-
-            <div class="grid gap-4 sm:grid-cols-2">
+            <div class="space-y-5">
                 <div>
-                    <label asp-for="PrimaryColor" class="field-label">@L["Primaire kleur"]</label>
-                    <div class="flex items-center gap-3">
-                        <input asp-for="PrimaryColor" type="color" class="h-10 w-14 cursor-pointer rounded-lg border bg-transparent p-1" style="border-color:var(--card-border);" id="primaryColor" />
-                        <code class="text-sm" style="color:var(--text-secondary);" id="primaryColorHex">@Model.PrimaryColor</code>
+                    <span class="field-label">@L["Logo"] <span class="opt">(PNG, JPG, SVG, max 2 MB)</span></span>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
+                    {
+                        <div class="mb-3 flex items-center gap-3 rounded-lg border p-3" style="border-color:var(--border); background:var(--bg-subtle);">
+                            <img src="@Model.LogoPath" alt="@L["Huidig logo"]" class="max-h-10 max-w-24 rounded object-contain"/>
+                            <div class="text-xs leading-relaxed" style="color:var(--text-secondary);">
+                                <p class="font-medium" style="color:var(--text-primary);">@L["Huidig logo"]</p>
+                                <p>@L["Upload een nieuw bestand om dit logo te vervangen."]</p>
+                            </div>
+                        </div>
+                    }
+
+                    <input asp-for="Logo" type="file" accept="image/png,image/jpeg,image/svg+xml" data-filepond data-max-size="2MB"/>
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2">
+                    <div>
+                        <label asp-for="PrimaryColor" class="field-label">@L["Primaire kleur"]</label>
+                        <div class="flex items-center gap-2.5">
+                            <input asp-for="PrimaryColor" type="color"
+                                   class="h-9 w-12 shrink-0 cursor-pointer rounded-lg border bg-transparent p-1"
+                                   style="border-color:var(--border-strong);"/>
+                            <input type="text" id="PrimaryColorHex" value="@Model.PrimaryColor" maxlength="7"
+                                   class="field font-mono !text-sm uppercase" spellcheck="false" aria-label="@L["Primaire kleur"] hex"/>
+                        </div>
+                        <p class="field-hint">@L["Voor koppen en knoppen op de offerte."]</p>
+                    </div>
+                    <div>
+                        <label asp-for="AccentColor" class="field-label">@L["Accentkleur"]</label>
+                        <div class="flex items-center gap-2.5">
+                            <input asp-for="AccentColor" type="color"
+                                   class="h-9 w-12 shrink-0 cursor-pointer rounded-lg border bg-transparent p-1"
+                                   style="border-color:var(--border-strong);"/>
+                            <input type="text" id="AccentColorHex" value="@Model.AccentColor" maxlength="7"
+                                   class="field font-mono !text-sm uppercase" spellcheck="false" aria-label="@L["Accentkleur"] hex"/>
+                        </div>
+                        <p class="field-hint">@L["Voor statuslabels en secundaire accenten."]</p>
                     </div>
                 </div>
-                <div>
-                    <label asp-for="AccentColor" class="field-label">@L["Accentkleur"]</label>
-                    <div class="flex items-center gap-3">
-                        <input asp-for="AccentColor" type="color" class="h-10 w-14 cursor-pointer rounded-lg border bg-transparent p-1" style="border-color:var(--card-border);" id="accentColor" />
-                        <code class="text-sm" style="color:var(--text-secondary);" id="accentColorHex">@Model.AccentColor</code>
-                    </div>
-                </div>
             </div>
 
-            <div class="flex items-center gap-3 pt-1">
-                <button type="submit" class="btn btn-primary">@L["Opslaan"]</button>
-                <a asp-controller="Quote" asp-action="Index" class="btn-link text-sm font-semibold">@L["Terug naar offertes"]</a>
+            <div class="mt-6 flex items-center justify-end gap-2.5 border-t pt-5" style="border-color:var(--border);">
+                <a asp-controller="Quote" asp-action="Index" class="btn btn-ghost">@L["Annuleren"]</a>
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="check" class="h-4 w-4"></i>
+                    @L["Huisstijl opslaan"]
+                </button>
             </div>
         </form>
     </div>
 
-    <div class="card-glass reveal p-6">
-        <p class="eyebrow mb-4">@L["Voorbeeld"]</p>
-
-        <div class="mb-4 flex items-center justify-between rounded-xl p-4"
-             id="brandPreviewHeader"
-             style="border-left:6px solid @Model.PrimaryColor; background:#f8f9fa;">
-            <div class="flex items-center gap-3">
-                <img id="brandPreviewLogo"
-                     src="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "" : Model.LogoPath)"
-                     alt="logo"
-                     class="max-h-10"
-                     style="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "display:none;" : "")" />
-                <div>
-                    <strong id="brandPreviewTitle" style="color:@Model.PrimaryColor;">@L["Voorbeeldofferte"]</strong>
-                    <div class="text-xs text-slate-500">NL, @L["Voorbeeld"]</div>
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">@L["Live voorbeeld"]</span>
+            <span class="badge">@L["Zo ziet je klant het"]</span>
+        </div>
+        <div class="p-5 sm:p-6">
+            <div class="overflow-hidden rounded-lg border" style="border-color:var(--border);">
+                <div id="pv-strip" class="h-1" style="background:@Model.PrimaryColor;"></div>
+                <div class="flex flex-wrap items-center gap-3.5 p-4">
+                    <img id="pv-logo"
+                         src="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "" : Model.LogoPath)"
+                         alt="@L["Logo"]" class="max-h-9 max-w-20 object-contain"
+                         style="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "display:none;" : "")"/>
+                    <div class="min-w-0">
+                        <p id="pv-overline" class="text-[0.65rem] font-semibold uppercase tracking-[0.12em]" style="color:@Model.PrimaryColor;">@L["Reisofferte"]</p>
+                        <p class="text-sm font-semibold" style="color:var(--text-primary);">@L["Rondreis Japan, 14 dagen"]</p>
+                        <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+                            <span id="pv-badge" class="badge text-white" style="background:@Model.AccentColor; border-color:transparent;">concept</span>
+                            <span class="badge">NL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 border-t p-4" style="border-color:var(--border);">
+                    <span id="pv-btn-primary" class="btn btn-sm pointer-events-none text-white" style="background:@Model.PrimaryColor;">
+                        @L["Dag toevoegen"]
+                    </span>
+                    <span id="pv-btn-accent" class="btn btn-sm pointer-events-none text-white" style="background:@Model.AccentColor;">
+                        @L["Download PDF"]
+                    </span>
                 </div>
             </div>
-            <span class="rounded-full px-3 py-1 text-xs font-semibold text-white" id="brandPreviewBadge" style="background:@Model.AccentColor;">concept</span>
+            <p class="mt-4 flex items-center gap-1.5 text-xs" style="color:var(--text-tertiary);">
+                <i data-lucide="info" class="h-3.5 w-3.5 shrink-0"></i>
+                @L["Deze kleuren en dit logo worden ook in de PDF van de offerte gebruikt."]
+            </p>
         </div>
-
-        <div class="flex flex-wrap gap-2">
-            <span class="rounded-lg px-3 py-1.5 text-sm font-semibold text-white" id="brandPreviewBtnPrimary"
-                  style="background:@Model.PrimaryColor;">@L["Dag toevoegen"]</span>
-            <span class="rounded-lg px-3 py-1.5 text-sm font-semibold text-white" id="brandPreviewBtnAccent"
-                  style="background:@Model.AccentColor;">@L["Download PDF"]</span>
-        </div>
-
-        <p class="mt-4 text-sm" style="color:var(--text-secondary);">@L["Zo zien je kleuren en logo eruit op een offerte voor je klant."]</p>
     </div>
 </div>
 
+@section Styles {
+    <link rel="stylesheet" href="~/lib/filepond/filepond.min.css"/>
+    <link rel="stylesheet" href="~/lib/filepond/filepond-plugin-image-preview.min.css"/>
+}
+
 @section Scripts {
+    <script src="~/lib/filepond/filepond-plugin-image-preview.min.js" defer></script>
+    <script src="~/lib/filepond/filepond-plugin-file-validate-type.min.js" defer></script>
+    <script src="~/lib/filepond/filepond-plugin-file-validate-size.min.js" defer></script>
+    <script src="~/lib/filepond/filepond.min.js" defer></script>
+    <partial name="_FilePondInit"/>
     <script>
-        (function () {
-            const primary = document.getElementById('primaryColor');
-            const accent = document.getElementById('accentColor');
-            const primaryHex = document.getElementById('primaryColorHex');
-            const accentHex = document.getElementById('accentColorHex');
-            const header = document.getElementById('brandPreviewHeader');
-            const title = document.getElementById('brandPreviewTitle');
-            const badge = document.getElementById('brandPreviewBadge');
-            const btnPrimary = document.getElementById('brandPreviewBtnPrimary');
-            const btnAccent = document.getElementById('brandPreviewBtnAccent');
-            const logoInput = document.getElementById('logoInput');
-            const logoImg = document.getElementById('brandPreviewLogo');
+        document.addEventListener('DOMContentLoaded', function () {
+            var primary = document.getElementById('PrimaryColor');
+            var accent = document.getElementById('AccentColor');
+            var primaryHex = document.getElementById('PrimaryColorHex');
+            var accentHex = document.getElementById('AccentColorHex');
+            var strip = document.getElementById('pv-strip');
+            var overline = document.getElementById('pv-overline');
+            var badge = document.getElementById('pv-badge');
+            var btnPrimary = document.getElementById('pv-btn-primary');
+            var btnAccent = document.getElementById('pv-btn-accent');
+            var logoImg = document.getElementById('pv-logo');
+            var originalLogo = logoImg.getAttribute('src');
 
-            function applyPrimary() {
-                header.style.borderLeftColor = primary.value;
-                title.style.color = primary.value;
-                btnPrimary.style.background = primary.value;
-                primaryHex.textContent = primary.value;
+            function applyPrimary(value) {
+                strip.style.background = value;
+                overline.style.color = value;
+                btnPrimary.style.background = value;
             }
-            function applyAccent() {
-                badge.style.background = accent.value;
-                btnAccent.style.background = accent.value;
-                accentHex.textContent = accent.value;
-            }
-            primary.addEventListener('input', applyPrimary);
-            accent.addEventListener('input', applyAccent);
 
-            logoInput.addEventListener('change', function () {
-                const file = this.files && this.files[0];
-                if (!file) return;
-                const url = URL.createObjectURL(file);
-                logoImg.src = url;
-                logoImg.style.display = '';
-            });
-        })();
+            function applyAccent(value) {
+                badge.style.background = value;
+                btnAccent.style.background = value;
+            }
+
+            function bindColor(colorInput, hexInput, apply) {
+                colorInput.addEventListener('input', function () {
+                    hexInput.value = colorInput.value;
+                    apply(colorInput.value);
+                });
+                hexInput.addEventListener('input', function () {
+                    var value = hexInput.value.trim();
+                    if (/^#[0-9a-fA-F]{6}$/.test(value)) {
+                        colorInput.value = value;
+                        apply(value);
+                    }
+                });
+            }
+
+            bindColor(primary, primaryHex, applyPrimary);
+            bindColor(accent, accentHex, applyAccent);
+
+            // Logo-preview live bijwerken via FilePond
+            if (window.FilePond) {
+                var pondRoot = document.querySelector('.filepond--root');
+                var pond = pondRoot ? window.FilePond.find(pondRoot) : null;
+                if (pond) {
+                    pond.on('addfile', function (error, item) {
+                        if (error || !item || !item.file) return;
+                        logoImg.src = URL.createObjectURL(item.file);
+                        logoImg.style.display = '';
+                    });
+                    pond.on('removefile', function () {
+                        if (originalLogo) {
+                            logoImg.src = originalLogo;
+                            logoImg.style.display = '';
+                        } else {
+                            logoImg.removeAttribute('src');
+                            logoImg.style.display = 'none';
+                        }
+                    });
+                }
+            }
+        });
     </script>
 }
