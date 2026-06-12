@@ -8,50 +8,61 @@
     };
     var activeController = (ViewContext.RouteData.Values["controller"] as string) ?? "";
     string NavActive(params string[] controllers) =>
-        controllers.Contains(activeController, StringComparer.OrdinalIgnoreCase) ? "active" : "";
+        controllers.Contains(activeController, StringComparer.OrdinalIgnoreCase) ? "is-active" : "";
 }
 <!DOCTYPE html>
-<html lang="@culture">
+<html lang="@culture" class="dark">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] · TourWeb Portal</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <script>
+        // Pas thema toe voor eerste paint zodat er geen flits is.
+        (function () {
+            try {
+                var saved = localStorage.getItem('tw-theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var dark = saved ? saved === 'dark' : prefersDark;
+                document.documentElement.classList.toggle('dark', dark);
+            } catch (e) { /* laat standaard dark staan */ }
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="~/css/build.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Presentation.styles.css" asp-append-version="true"/>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-4">
-        <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                <span class="brand-mark">TW</span>
-                <span class="d-flex flex-column lh-1">
-                    TourWeb Portal
-                    <span class="brand-sub">by NetMatch</span>
-                </span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1 ms-sm-4">
-                    <li class="nav-item">
-                        <a class="nav-link @NavActive("Home")" asp-controller="Home" asp-action="Index">@L["Home"]</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @NavActive("Quote", "Day", "Transport", "Accommodation", "RoomType")" asp-controller="Quote" asp-action="Index">@L["Offertes"]</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @NavActive("Branding")" asp-controller="Branding" asp-action="Edit">@L["Huisstijl"]</a>
-                    </li>
-                </ul>
-                <form asp-controller="Culture" asp-action="Set" method="post" class="d-flex align-items-center">
+<div class="app-bg"></div>
+
+<header class="sticky top-0 z-40 backdrop-blur-md" style="background:color-mix(in srgb, var(--bg-primary) 78%, transparent); border-bottom:1px solid var(--card-border);">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+        <a class="group flex items-center gap-3" asp-controller="Home" asp-action="Index">
+            <span class="grid h-9 w-9 place-items-center rounded-xl font-display text-sm font-bold text-[#04122a]"
+                  style="background-image:linear-gradient(135deg, var(--color-cyan), var(--color-violet));">TW</span>
+            <span class="flex flex-col leading-none">
+                <span class="font-display text-lg font-bold tracking-tight" style="color:var(--text-primary);">TourWeb Portal</span>
+                <span class="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style="color:var(--text-secondary);">by NetMatch</span>
+            </span>
+        </a>
+
+        <button type="button" id="nav-toggle" class="btn btn-ghost btn-sm sm:hidden" aria-label="Menu" aria-expanded="false">
+            <span class="block h-0.5 w-4 bg-current"></span>
+        </button>
+
+        <div id="nav-menu" class="hidden w-full flex-col gap-4 sm:flex sm:w-auto sm:flex-row sm:items-center">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <a class="nav-link @NavActive("Home")" asp-controller="Home" asp-action="Index">@L["Home"]</a>
+                <a class="nav-link @NavActive("Quote", "Day", "Transport", "Accommodation", "RoomType")" asp-controller="Quote" asp-action="Index">@L["Offertes"]</a>
+                <a class="nav-link @NavActive("Branding")" asp-controller="Branding" asp-action="Edit">@L["Huisstijl"]</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <form asp-controller="Culture" asp-action="Set" method="post" class="flex items-center gap-2">
                     <input type="hidden" name="returnUrl" value="@returnUrl" />
-                    <label class="me-2 text-muted small mb-0" for="culture-select">@L["Taal"]</label>
-                    <select id="culture-select" name="culture" class="form-select form-select-sm w-auto"
+                    <label class="sr-only" for="culture-select">@L["Taal"]</label>
+                    <select id="culture-select" name="culture" class="field !w-auto !py-1.5 !text-sm"
                             onchange="this.form.submit()">
                         @foreach (var lang in languages)
                         {
@@ -66,25 +77,50 @@
                         }
                     </select>
                 </form>
+
+                <button type="button" id="theme-toggle" class="btn btn-ghost btn-sm" aria-label="Thema wisselen" title="Thema wisselen">
+                    <span id="theme-icon-dark" class="hidden dark:inline">Licht</span>
+                    <span id="theme-icon-light" class="inline dark:hidden">Donker</span>
+                </button>
             </div>
         </div>
     </nav>
 </header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
 
-<footer class="border-top footer text-muted">
-    <div class="container d-flex justify-content-between align-items-center flex-wrap">
-        <span>&copy; 2026 TourWeb Portal — <span class="nm-product">a NetMatch product</span></span>
-        <a asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
+<main role="main" class="mx-auto max-w-6xl px-5 py-8">
+    @RenderBody()
+</main>
+
+<footer class="mt-16" style="border-top:1px solid var(--card-border);">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-5 py-6 text-sm" style="color:var(--text-secondary);">
+        <span>&copy; 2026 TourWeb Portal, een NetMatch product</span>
+        <a class="btn-link text-sm" asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
     </div>
 </footer>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    (function () {
+        // Thema-toggle
+        var toggle = document.getElementById('theme-toggle');
+        if (toggle) {
+            toggle.addEventListener('click', function () {
+                var isDark = document.documentElement.classList.toggle('dark');
+                try { localStorage.setItem('tw-theme', isDark ? 'dark' : 'light'); } catch (e) {}
+            });
+        }
+        // Mobiel menu
+        var navToggle = document.getElementById('nav-toggle');
+        var navMenu = document.getElementById('nav-menu');
+        if (navToggle && navMenu) {
+            navToggle.addEventListener('click', function () {
+                var open = navMenu.classList.toggle('hidden');
+                navToggle.setAttribute('aria-expanded', String(!open));
+            });
+        }
+    })();
+</script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

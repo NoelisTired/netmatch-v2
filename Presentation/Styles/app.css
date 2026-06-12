@@ -1,0 +1,379 @@
+@import "tailwindcss";
+
+/* Scan alle Razor views en JS voor utility classes */
+@source "../Views/**/*.cshtml";
+@source "../wwwroot/js/**/*.js";
+
+/*
+  TourWeb Portal - thema in de stijl van noelp.dev
+  Dark-first met light variant, geanimeerd, glassmorphism en gradient-accenten.
+  Class-based dark mode: de <html> krijgt class "dark" via de toggle.
+*/
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+
+  /* Accent-gradient palet van noelp.dev */
+  --color-cyan: #32c5ff;
+  --color-violet: #b620e0;
+  --color-amber: #f7b500;
+  --color-magenta: #d946ef;
+  --color-pink: #ec4899;
+
+  /* Merkkleuren (TourWeb / NetMatch) blijven beschikbaar als accent */
+  --color-brand: #008fd1;
+  --color-brand-deep: #002855;
+
+  /* Neutrale donkere schil */
+  --color-ink-950: #0a0e27;
+  --color-ink-900: #11163a;
+  --color-ink-850: #1a1f3a;
+  --color-ink-800: #252b4a;
+
+  --radius-xl2: 1.25rem;
+
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-glow: glow 2.4s ease-in-out infinite;
+  --animate-gradient: gradient 6s ease infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* Thema-variabelen per modus                                          */
+/* ------------------------------------------------------------------ */
+:root {
+  --bg-primary: #f6f7f9;
+  --bg-accent: #ffffff;
+  --bg-accent-light: #f0f2f5;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(226, 232, 240, 0.9);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --glow-alpha: 0.06;
+  --grid-line: rgba(15, 23, 42, 0.04);
+}
+
+.dark {
+  --bg-primary: #0a0e27;
+  --bg-accent: #1a1f3a;
+  --bg-accent-light: #252b4a;
+  --card-bg: rgba(26, 31, 58, 0.8);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --glow-alpha: 0.18;
+  --grid-line: rgba(255, 255, 255, 0.04);
+}
+
+/* ------------------------------------------------------------------ */
+/* Basis                                                               */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: var(--color-cyan);
+    color: #04122a;
+  }
+
+  /* Geanimeerde achtergrond: zacht raster + twee drijvende gloed-orbs */
+  .app-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .app-bg::before,
+  .app-bg::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    opacity: var(--glow-alpha);
+  }
+  .app-bg::before {
+    width: 42rem; height: 42rem;
+    top: -10rem; left: -8rem;
+    background: radial-gradient(circle, var(--color-cyan), transparent 70%);
+    animation: float 11s ease-in-out infinite;
+  }
+  .app-bg::after {
+    width: 38rem; height: 38rem;
+    bottom: -12rem; right: -8rem;
+    background: radial-gradient(circle, var(--color-violet), transparent 70%);
+    animation: float 14s ease-in-out infinite reverse;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Componenten                                                         */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Glass-card */
+  .card-glass {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-xl2);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 40px -24px rgba(2, 8, 40, 0.55);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .card-glass-hover:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--color-cyan) 45%, var(--card-border));
+    box-shadow: 0 26px 60px -28px rgba(8, 18, 60, 0.7);
+  }
+
+  /* Gradient tekst */
+  .text-gradient {
+    background-image: linear-gradient(110deg, var(--color-cyan), var(--color-violet) 55%, var(--color-magenta));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: var(--animate-gradient);
+  }
+
+  /* Knoppen */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0.65rem 1.15rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+  }
+  .btn:active { transform: translateY(1px) scale(0.99); }
+  .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: 0.6rem; }
+
+  .btn-primary {
+    color: #04122a;
+    background-image: linear-gradient(110deg, var(--color-cyan), #1fa8e8);
+    box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--color-cyan) 70%, transparent);
+  }
+  .btn-primary:hover { box-shadow: 0 14px 30px -8px color-mix(in srgb, var(--color-cyan) 80%, transparent); transform: translateY(-1px); }
+
+  .btn-accent {
+    color: #fff;
+    background-image: linear-gradient(110deg, var(--color-violet), var(--color-magenta));
+    box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--color-violet) 70%, transparent);
+  }
+  .btn-accent:hover { transform: translateY(-1px); }
+
+  .btn-ghost {
+    color: var(--text-primary);
+    border-color: var(--card-border);
+    background: color-mix(in srgb, var(--card-bg) 40%, transparent);
+  }
+  .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
+
+  .btn-danger {
+    color: #fecaca;
+    border-color: rgba(248, 113, 113, 0.35);
+    background: rgba(239, 68, 68, 0.1);
+  }
+  .btn-danger:hover { background: rgba(239, 68, 68, 0.22); color: #fff; border-color: rgba(248, 113, 113, 0.6); }
+
+  .btn-link {
+    color: var(--color-cyan);
+    padding-left: 0; padding-right: 0;
+    background: none;
+  }
+  .btn-link:hover { color: var(--color-violet); }
+
+  /* Inputs */
+  .field {
+    width: 100%;
+    background: var(--bg-accent);
+    border: 1px solid var(--card-border);
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .field::placeholder { color: color-mix(in srgb, var(--text-secondary) 70%, transparent); }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-cyan);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-cyan) 25%, transparent);
+  }
+  .field-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* Eyebrow */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-cyan);
+  }
+
+  /* Tabel */
+  .table-glass {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .table-glass thead th {
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .table-glass tbody td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 0.9rem;
+  }
+  .table-glass tbody tr {
+    transition: background 0.18s ease;
+  }
+  .table-glass tbody tr:hover td {
+    background: color-mix(in srgb, var(--color-cyan) 7%, transparent);
+  }
+  .table-glass tbody tr:last-child td { border-bottom: 0; }
+
+  /* Status pill */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+  }
+  .pill-draft {
+    color: var(--color-cyan);
+    background: color-mix(in srgb, var(--color-cyan) 12%, transparent);
+    border-color: color-mix(in srgb, var(--color-cyan) 30%, transparent);
+  }
+  .pill-final {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  /* Nav links */
+  .nav-link {
+    position: relative;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    padding: 0.4rem 0.15rem;
+    transition: color 0.2s ease;
+  }
+  .nav-link:hover { color: var(--text-primary); }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -2px;
+    height: 2px; width: 0;
+    background-image: linear-gradient(90deg, var(--color-cyan), var(--color-violet));
+    border-radius: 2px;
+    transition: width 0.25s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+  .nav-link.is-active { color: var(--text-primary); }
+  .nav-link.is-active::after { width: 100%; }
+
+  /* Reveal-on-load helper */
+  .reveal { opacity: 0; animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+
+  /* Whitelabel: per-offerte merkkleuren van het reisbureau */
+  .nm-quote {
+    --quote-primary: var(--color-brand);
+    --quote-accent: var(--color-violet);
+  }
+  .nm-btn-brand {
+    color: #fff;
+    background-image: linear-gradient(110deg,
+      var(--quote-primary),
+      color-mix(in srgb, var(--quote-primary) 70%, #000));
+    box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--quote-primary) 70%, transparent);
+  }
+  .nm-btn-brand:hover { transform: translateY(-1px); }
+
+  .alert {
+    border-radius: 1rem;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+  }
+  .alert-info { border-color: color-mix(in srgb, var(--color-cyan) 35%, transparent); }
+  .alert-success { border-color: rgba(16, 185, 129, 0.4); color: #34d399; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Keyframes                                                           */
+/* ------------------------------------------------------------------ */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-22px) translateX(10px); }
+}
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-cyan) 0%, transparent); }
+  50% { box-shadow: 0 0 26px 2px color-mix(in srgb, var(--color-cyan) 45%, transparent); }
+}
+@keyframes gradient {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, .app-bg::before, .app-bg::after, .reveal, .text-gradient {
+    animation: none !important;
+    transition: none !important;
+  }
+}

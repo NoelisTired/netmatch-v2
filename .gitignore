@@ -72,3 +72,5 @@ bld/
 *.snupkg
 **/packages/*
 !**/packages/build/
+# Tailwind generated stylesheet (built in Docker)
+Presentation/wwwroot/css/build.css
