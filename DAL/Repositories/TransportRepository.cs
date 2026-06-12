@@ -27,7 +27,7 @@ public class TransportRepository : ITransportRepository
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(
                 @"SELECT id, dag_id, type, vertreklocatie, aankomstlocatie,
-                         vluchtnummer, luchtvaartmaatschappij, created_at, updated_at
+                         vluchtnummer, luchtvaartmaatschappij, prijs, created_at, updated_at
                   FROM transport
                   WHERE deleted_at IS NULL AND dag_id = @DayId
                   ORDER BY id",
@@ -54,7 +54,7 @@ public class TransportRepository : ITransportRepository
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(
                 @"SELECT id, dag_id, type, vertreklocatie, aankomstlocatie,
-                         vluchtnummer, luchtvaartmaatschappij, created_at, updated_at
+                         vluchtnummer, luchtvaartmaatschappij, prijs, created_at, updated_at
                   FROM transport
                   WHERE id = @Id AND deleted_at IS NULL",
                 connection);
@@ -76,9 +76,9 @@ public class TransportRepository : ITransportRepository
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(
                 @"INSERT INTO transport (dag_id, type, vertreklocatie, aankomstlocatie,
-                                         vluchtnummer, luchtvaartmaatschappij, created_at, updated_at)
+                                         vluchtnummer, luchtvaartmaatschappij, prijs, created_at, updated_at)
                   OUTPUT INSERTED.id
-                  VALUES (@DayId, @Type, @Departure, @Arrival, @FlightNumber, @Airline,
+                  VALUES (@DayId, @Type, @Departure, @Arrival, @FlightNumber, @Airline, @Price,
                           SYSUTCDATETIME(), SYSUTCDATETIME())",
                 connection);
             command.Parameters.AddWithValue("@DayId", dto.DayId);
@@ -87,6 +87,7 @@ public class TransportRepository : ITransportRepository
             command.Parameters.AddWithValue("@Arrival", dto.ArrivalLocation);
             command.Parameters.AddWithValue("@FlightNumber", (object?)dto.FlightNumber ?? DBNull.Value);
             command.Parameters.AddWithValue("@Airline", (object?)dto.Airline ?? DBNull.Value);
+            command.Parameters.AddWithValue("@Price", (object?)dto.Price ?? DBNull.Value);
             connection.Open();
             var result = command.ExecuteScalar();
             return result is null ? 0 : Convert.ToInt32(result);
@@ -106,7 +107,7 @@ public class TransportRepository : ITransportRepository
                 @"UPDATE transport
                   SET type = @Type, vertreklocatie = @Departure, aankomstlocatie = @Arrival,
                       vluchtnummer = @FlightNumber, luchtvaartmaatschappij = @Airline,
-                      updated_at = SYSUTCDATETIME()
+                      prijs = @Price, updated_at = SYSUTCDATETIME()
                   WHERE id = @Id AND deleted_at IS NULL",
                 connection);
             command.Parameters.AddWithValue("@Id", id);
@@ -115,6 +116,7 @@ public class TransportRepository : ITransportRepository
             command.Parameters.AddWithValue("@Arrival", dto.ArrivalLocation);
             command.Parameters.AddWithValue("@FlightNumber", (object?)dto.FlightNumber ?? DBNull.Value);
             command.Parameters.AddWithValue("@Airline", (object?)dto.Airline ?? DBNull.Value);
+            command.Parameters.AddWithValue("@Price", (object?)dto.Price ?? DBNull.Value);
             connection.Open();
             command.ExecuteNonQuery();
         }
@@ -155,8 +157,9 @@ public class TransportRepository : ITransportRepository
             ArrivalLocation = reader.GetString(4),
             FlightNumber = reader.IsDBNull(5) ? null : reader.GetString(5),
             Airline = reader.IsDBNull(6) ? null : reader.GetString(6),
-            CreatedAt = reader.GetDateTime(7),
-            UpdatedAt = reader.GetDateTime(8)
+            Price = reader.IsDBNull(7) ? null : reader.GetDecimal(7),
+            CreatedAt = reader.GetDateTime(8),
+            UpdatedAt = reader.GetDateTime(9)
         };
     }
 }

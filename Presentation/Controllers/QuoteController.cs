@@ -88,10 +88,14 @@ public class QuoteController : Controller
 
         foreach (var day in _dayService.GetDaysForQuote(quote.Id))
         {
+            var transports = _transportService.GetTransportsForDay(day.Id).ToList();
+            overview.IndicativeTransportTotal += transports
+                .Where(t => t.Price.HasValue).Sum(t => t.Price!.Value);
+
             var dayBlock = new DayBlock
             {
                 Day = day,
-                Transports = _transportService.GetTransportsForDay(day.Id).ToList()
+                Transports = transports
             };
 
             foreach (var accommodation in _accommodationService.GetAccommodationsForDay(day.Id))

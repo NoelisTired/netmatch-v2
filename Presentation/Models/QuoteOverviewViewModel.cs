@@ -18,6 +18,9 @@ public class QuoteOverviewViewModel
 
     /// <summary>Indicatie: som van de goedkoopste kamerprijs per accommodatie.</summary>
     public decimal IndicativeAccommodationTotal { get; set; }
+
+    /// <summary>Indicatie: som van alle transportprijzen.</summary>
+    public decimal IndicativeTransportTotal { get; set; }
 }
 
 public class DayBlock

@@ -16,12 +16,13 @@ public class Transport
     public string ArrivalLocation { get; private set; }
     public string? FlightNumber { get; private set; }
     public string? Airline { get; private set; }
+    public decimal? Price { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
     /// <summary>Nieuw transport (nog niet opgeslagen).</summary>
     public Transport(int dayId, TransportType type, string? departureLocation,
-        string? arrivalLocation, string? flightNumber, string? airline)
+        string? arrivalLocation, string? flightNumber, string? airline, decimal? price = null)
     {
         if (string.IsNullOrWhiteSpace(departureLocation) || string.IsNullOrWhiteSpace(arrivalLocation))
         {
@@ -41,11 +42,12 @@ public class Transport
         ArrivalLocation = arrivalLocation.Trim();
         FlightNumber = string.IsNullOrWhiteSpace(flightNumber) ? null : flightNumber.Trim();
         Airline = string.IsNullOrWhiteSpace(airline) ? null : airline.Trim();
+        Price = price is > 0 ? price : null;
     }
 
     /// <summary>Hydratie van bestaand transport uit de database.</summary>
     public Transport(int id, int dayId, TransportType type, string departureLocation,
-        string arrivalLocation, string? flightNumber, string? airline,
+        string arrivalLocation, string? flightNumber, string? airline, decimal? price,
         DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
@@ -55,6 +57,7 @@ public class Transport
         ArrivalLocation = arrivalLocation;
         FlightNumber = flightNumber;
         Airline = airline;
+        Price = price;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }

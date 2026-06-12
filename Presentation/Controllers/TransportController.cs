@@ -49,7 +49,8 @@ public class TransportController : Controller
     public IActionResult Create(TransportViewModel model)
     {
         var (error, _) = _transportService.AddTransport(model.DayId, model.Type,
-            model.DepartureLocation, model.ArrivalLocation, model.FlightNumber, model.Airline);
+            model.DepartureLocation, model.ArrivalLocation, model.FlightNumber, model.Airline,
+            model.Price);
         if (error is not null)
         {
             ModelState.AddModelError(string.Empty, error);
@@ -76,7 +77,8 @@ public class TransportController : Controller
             DepartureLocation = transport.DepartureLocation,
             ArrivalLocation = transport.ArrivalLocation,
             FlightNumber = transport.FlightNumber,
-            Airline = transport.Airline
+            Airline = transport.Airline,
+            Price = transport.Price
         });
     }
 
@@ -85,7 +87,8 @@ public class TransportController : Controller
     public IActionResult Edit(TransportViewModel model)
     {
         var error = _transportService.UpdateTransport(model.Id, model.Type,
-            model.DepartureLocation, model.ArrivalLocation, model.FlightNumber, model.Airline);
+            model.DepartureLocation, model.ArrivalLocation, model.FlightNumber, model.Airline,
+            model.Price);
         if (error is not null)
         {
             ModelState.AddModelError(string.Empty, error);

@@ -16,4 +16,5 @@ public class TransportViewModel
     public string? ArrivalLocation { get; set; }
     public string? FlightNumber { get; set; }
     public string? Airline { get; set; }
+    public decimal? Price { get; set; }
 }

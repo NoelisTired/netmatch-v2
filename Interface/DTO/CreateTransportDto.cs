@@ -11,4 +11,5 @@ public record CreateTransportDto
     public string ArrivalLocation { get; init; } = string.Empty;
     public string? FlightNumber { get; init; }
     public string? Airline { get; init; }
+    public decimal? Price { get; init; }
 }

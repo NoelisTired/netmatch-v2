@@ -35,7 +35,8 @@ public class TransportService
     /// verplicht (TC-07), bij vlucht ook vluchtnummer+maatschappij (TC-06).
     /// </summary>
     public (string? Error, int Id) AddTransport(int dayId, string? type,
-        string? departureLocation, string? arrivalLocation, string? flightNumber, string? airline)
+        string? departureLocation, string? arrivalLocation, string? flightNumber, string? airline,
+        decimal? price = null)
     {
         if (!TransportEnumMapping.TryParse(type, out var parsedType))
         {
@@ -45,7 +46,7 @@ public class TransportService
         try
         {
             var transport = new Transport(dayId, parsedType, departureLocation,
-                arrivalLocation, flightNumber, airline);
+                arrivalLocation, flightNumber, airline, price);
 
             var id = _transportRepository.Add(new CreateTransportDto
             {
@@ -54,7 +55,8 @@ public class TransportService
                 DepartureLocation = transport.DepartureLocation,
                 ArrivalLocation = transport.ArrivalLocation,
                 FlightNumber = transport.FlightNumber,
-                Airline = transport.Airline
+                Airline = transport.Airline,
+                Price = transport.Price
             });
 
             return (null, id);
@@ -66,7 +68,7 @@ public class TransportService
     }
 
     public string? UpdateTransport(int id, string? type, string? departureLocation,
-        string? arrivalLocation, string? flightNumber, string? airline)
+        string? arrivalLocation, string? flightNumber, string? airline, decimal? price = null)
     {
         var existing = _transportRepository.GetById(id);
         if (existing is null)
@@ -82,7 +84,7 @@ public class TransportService
         try
         {
             var transport = new Transport(existing.DayId, parsedType, departureLocation,
-                arrivalLocation, flightNumber, airline);
+                arrivalLocation, flightNumber, airline, price);
 
             _transportRepository.Update(id, new CreateTransportDto
             {
@@ -91,7 +93,8 @@ public class TransportService
                 DepartureLocation = transport.DepartureLocation,
                 ArrivalLocation = transport.ArrivalLocation,
                 FlightNumber = transport.FlightNumber,
-                Airline = transport.Airline
+                Airline = transport.Airline,
+                Price = transport.Price
             });
 
             return null;
@@ -111,6 +114,7 @@ public class TransportService
     {
         TransportEnumMapping.TryParse(dto.Type, out var type);
         return new Transport(dto.Id, dto.DayId, type, dto.DepartureLocation,
-            dto.ArrivalLocation, dto.FlightNumber, dto.Airline, dto.CreatedAt, dto.UpdatedAt);
+            dto.ArrivalLocation, dto.FlightNumber, dto.Airline, dto.Price,
+            dto.CreatedAt, dto.UpdatedAt);
     }
 }

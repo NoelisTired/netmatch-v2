@@ -23,6 +23,9 @@ public record TransportDto
     /// <summary>Alleen gevuld bij type Vlucht.</summary>
     public string? Airline { get; init; }
 
+    /// <summary>Indicatieve prijs in euro's.</summary>
+    public decimal? Price { get; init; }
+
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; init; }
 }
