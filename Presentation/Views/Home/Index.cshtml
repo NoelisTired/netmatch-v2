@@ -1,46 +1,211 @@
+@using System.Globalization
+@using Logic.Enums
+@model Presentation.Models.DashboardViewModel
 @{
-    ViewData["Title"] = L["Home"];
+    ViewData["Title"] = L["Dashboard"];
+    ViewData["Crumbs"] = new (string, string?)[] { (L["Dashboard"].Value, null) };
+    var today = DateTime.Today.ToString("dddd d MMMM yyyy", CultureInfo.CurrentUICulture);
 }
 
-<section class="card-glass reveal px-7 py-12 sm:px-12 sm:py-14">
-    <div class="max-w-2xl">
-        <p class="eyebrow mb-4">
-            <span class="inline-block h-1.5 w-1.5 rounded-full" style="background:var(--accent);"></span>
-            TourWeb Portal, by NetMatch
-        </p>
-        <h1 class="font-display text-4xl font-bold leading-[1.08] sm:text-5xl">
-            @L["Reisoffertes die"] <span class="text-gradient">@L["indruk maken"]</span>
-        </h1>
-        <p class="mt-5 max-w-xl text-base leading-relaxed sm:text-lg" style="color:var(--text-secondary);">
-            @L["Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht."]
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-            <a asp-controller="Quote" asp-action="Index" class="btn btn-primary">@L["Naar offertes"]</a>
-            <a asp-controller="Quote" asp-action="Create" class="btn btn-ghost">@L["Nieuwe offerte aanmaken"]</a>
-        </div>
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+        <h1 class="text-xl font-semibold" style="color:var(--text-primary);">@L["Dashboard"]</h1>
+        <p class="mt-0.5 text-sm" style="color:var(--text-secondary);">@today</p>
     </div>
-</section>
-
-<div class="mt-5 grid gap-4 sm:grid-cols-3">
-    <a asp-controller="Quote" asp-action="Index"
-       class="card-glass card-glass-hover reveal block p-6" style="animation-delay:.06s;">
-        <span class="grid h-9 w-9 place-items-center rounded-lg font-display text-sm font-bold"
-              style="background:var(--accent-soft); color:var(--accent);">01</span>
-        <div class="mt-4 font-display text-lg font-semibold" style="color:var(--text-primary);">@L["Offertes beheren"]</div>
-        <p class="mt-1 text-sm" style="color:var(--text-secondary);">@L["Bekijk, bewerk en exporteer al je reisoffertes."]</p>
-    </a>
-    <a asp-controller="Quote" asp-action="Create"
-       class="card-glass card-glass-hover reveal block p-6" style="animation-delay:.12s;">
-        <span class="grid h-9 w-9 place-items-center rounded-lg font-display text-sm font-bold"
-              style="background:var(--accent-soft); color:var(--accent);">02</span>
-        <div class="mt-4 font-display text-lg font-semibold" style="color:var(--text-primary);">@L["Nieuwe offerte aanmaken"]</div>
-        <p class="mt-1 text-sm" style="color:var(--text-secondary);">@L["Begin een nieuwe reisofferte van de grond af op."]</p>
-    </a>
-    <a asp-controller="Branding" asp-action="Edit"
-       class="card-glass card-glass-hover reveal block p-6" style="animation-delay:.18s;">
-        <span class="grid h-9 w-9 place-items-center rounded-lg font-display text-sm font-bold"
-              style="background:var(--accent-soft); color:var(--accent);">03</span>
-        <div class="mt-4 font-display text-lg font-semibold" style="color:var(--text-primary);">@L["Huisstijl"]</div>
-        <p class="mt-1 text-sm" style="color:var(--text-secondary);">@L["Stel je logo en kleuren in voor offertes met je eigen huisstijl."]</p>
+    <a asp-controller="Quote" asp-action="Create" class="btn btn-primary">
+        <i data-lucide="plus" class="h-4 w-4"></i>
+        @L["Nieuwe offerte"]
     </a>
 </div>
+
+<div class="grid gap-4 sm:grid-cols-3">
+    <div class="card flex items-center justify-between p-5">
+        <div>
+            <p class="text-sm font-medium" style="color:var(--text-secondary);">@L["Totaal offertes"]</p>
+            <p class="mt-1 text-3xl font-semibold tabular-nums" style="color:var(--text-primary);">@Model.TotalQuotes</p>
+        </div>
+        <span class="grid h-10 w-10 place-items-center rounded-lg" style="background:var(--accent-soft); color:var(--accent);">
+            <i data-lucide="file-text" class="h-5 w-5"></i>
+        </span>
+    </div>
+    <div class="card flex items-center justify-between p-5">
+        <div>
+            <p class="text-sm font-medium" style="color:var(--text-secondary);">@L["Concepten"]</p>
+            <p class="mt-1 text-3xl font-semibold tabular-nums" style="color:var(--text-primary);">@Model.DraftCount</p>
+        </div>
+        <span class="grid h-10 w-10 place-items-center rounded-lg" style="background:var(--warn-bg); color:var(--warn);">
+            <i data-lucide="pencil-line" class="h-5 w-5"></i>
+        </span>
+    </div>
+    <div class="card flex items-center justify-between p-5">
+        <div>
+            <p class="text-sm font-medium" style="color:var(--text-secondary);">@L["Definitief"]</p>
+            <p class="mt-1 text-3xl font-semibold tabular-nums" style="color:var(--text-primary);">@Model.FinalCount</p>
+        </div>
+        <span class="grid h-10 w-10 place-items-center rounded-lg" style="background:var(--ok-bg); color:var(--ok);">
+            <i data-lucide="circle-check-big" class="h-5 w-5"></i>
+        </span>
+    </div>
+</div>
+
+<div class="mt-4 grid gap-4 lg:grid-cols-3">
+    <div class="card lg:col-span-2">
+        <div class="card-header">
+            <span class="card-title">@L["Offertes per maand"]</span>
+            <span class="badge">@L["Laatste 6 maanden"]</span>
+        </div>
+        <div class="p-5">
+            <div class="h-60">
+                <canvas id="quotes-chart" aria-label="@L["Offertes per maand"]"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">@L["Snel naar"]</span>
+        </div>
+        <div class="flex flex-col divide-y">
+            <a asp-controller="Quote" asp-action="Create"
+               class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors hover:bg-(--bg-subtle)"
+               style="color:var(--text-primary); border-color:var(--border);">
+                <span class="grid h-8 w-8 place-items-center rounded-lg" style="background:var(--accent-soft); color:var(--accent);">
+                    <i data-lucide="plus" class="h-4 w-4"></i>
+                </span>
+                <span class="flex-1">@L["Nieuwe offerte aanmaken"]</span>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color:var(--text-tertiary);"></i>
+            </a>
+            <a asp-controller="Quote" asp-action="Index"
+               class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors hover:bg-(--bg-subtle)"
+               style="color:var(--text-primary); border-color:var(--border);">
+                <span class="grid h-8 w-8 place-items-center rounded-lg" style="background:var(--accent-soft); color:var(--accent);">
+                    <i data-lucide="list" class="h-4 w-4"></i>
+                </span>
+                <span class="flex-1">@L["Offertes beheren"]</span>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color:var(--text-tertiary);"></i>
+            </a>
+            <a asp-controller="Branding" asp-action="Edit"
+               class="flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-colors hover:bg-(--bg-subtle)"
+               style="color:var(--text-primary); border-color:var(--border);">
+                <span class="grid h-8 w-8 place-items-center rounded-lg" style="background:var(--accent-soft); color:var(--accent);">
+                    <i data-lucide="palette" class="h-4 w-4"></i>
+                </span>
+                <span class="flex-1">@L["Huisstijl instellen"]</span>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color:var(--text-tertiary);"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <span class="card-title">@L["Recente offertes"]</span>
+        <a asp-controller="Quote" asp-action="Index" class="btn-link text-sm">
+            @L["Alle offertes"]
+            <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i>
+        </a>
+    </div>
+    @if (Model.RecentQuotes.Count == 0)
+    {
+        <div class="flex flex-col items-center gap-3 px-6 py-12 text-center">
+            <span class="grid h-11 w-11 place-items-center rounded-xl border" style="border-color:var(--border); color:var(--text-tertiary); background:var(--bg-subtle);">
+                <i data-lucide="file-plus-2" class="h-5 w-5"></i>
+            </span>
+            <p class="text-sm" style="color:var(--text-secondary);">@L["Er zijn nog geen offertes. Maak je eerste offerte aan."]</p>
+            <a asp-controller="Quote" asp-action="Create" class="btn btn-secondary btn-sm">@L["Nieuwe offerte"]</a>
+        </div>
+    }
+    else
+    {
+        <div class="overflow-x-auto">
+            <table class="table-data">
+                <thead>
+                <tr>
+                    <th>@L["Titel"]</th>
+                    <th>@L["Taal"]</th>
+                    <th>@L["Status"]</th>
+                    <th>@L["Aangemaakt"]</th>
+                    <th class="w-12"><span class="sr-only">@L["Acties"]</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var quote in Model.RecentQuotes)
+                {
+                    var isFinal = quote.Status == StatusType.Definitief;
+                    <tr>
+                        <td class="font-medium" style="color:var(--text-primary);">@quote.Title</td>
+                        <td><span class="badge">@quote.Language.ToCode()</span></td>
+                        <td>
+                            <span class="badge @(isFinal ? "badge-success" : "badge-warning")">
+                                <span class="dot"></span>@quote.Status
+                            </span>
+                        </td>
+                        <td class="tabular-nums">@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <a asp-controller="Quote" asp-action="Details" asp-route-id="@quote.Id"
+                               class="btn-icon" title="@L["Bekijken"]" aria-label="@L["Bekijken"]">
+                                <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/lib/chartjs/chart.umd.min.js" defer></script>
+    <script id="chart-data" type="application/json">@Json.Serialize(Model.QuotesPerMonth)</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var canvas = document.getElementById('quotes-chart');
+            if (!canvas || !window.Chart) return;
+            var rows = JSON.parse(document.getElementById('chart-data').textContent);
+            var chart = null;
+
+            function cssVar(name) {
+                return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            }
+
+            function build() {
+                if (chart) chart.destroy();
+                chart = new Chart(canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: rows.map(function (r) { return r.label; }),
+                        datasets: [{
+                            data: rows.map(function (r) { return r.count; }),
+                            backgroundColor: cssVar('--accent'),
+                            hoverBackgroundColor: cssVar('--accent-strong'),
+                            borderRadius: 5,
+                            maxBarThickness: 34
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                border: { color: cssVar('--border') },
+                                ticks: { color: cssVar('--text-tertiary') }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: cssVar('--border') },
+                                border: { display: false },
+                                ticks: { color: cssVar('--text-tertiary'), precision: 0, stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            }
+
+            build();
+            window.addEventListener('tw:theme', build);
+        });
+    </script>
+}

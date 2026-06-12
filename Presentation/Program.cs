@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Localization;
 using Presentation.Infrastructure;
 using QuestPDF.Infrastructure;
 
-// QuestPDF Community-licentie (gratis voor dit gebruik) — FR-11 PDF-generatie.
+// QuestPDF Community-licentie (gratis voor dit gebruik), FR-11 PDF-generatie.
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,7 +59,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Quote}/{action=Index}/{id?}")
+        pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 
