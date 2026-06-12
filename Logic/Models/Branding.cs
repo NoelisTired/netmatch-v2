@@ -17,8 +17,8 @@ public partial class Branding
     {
         TravelAgentId = travelAgentId;
         LogoPath = string.IsNullOrWhiteSpace(logoPath) ? null : logoPath.Trim();
-        PrimaryColor = NormalizeColor(primaryColor, "#0d6efd");
-        AccentColor = NormalizeColor(accentColor, "#6c757d");
+        PrimaryColor = NormalizeColor(primaryColor, "#008fd1");
+        AccentColor = NormalizeColor(accentColor, "#ff6800");
     }
 
     private static string NormalizeColor(string? color, string fallback)

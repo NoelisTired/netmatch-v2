@@ -3,7 +3,12 @@
     ViewData["Title"] = L["Huisstijl"];
 }
 
-<h1 class="h3 mb-3">@L["Huisstijl"]</h1>
+<div class="nm-page-head">
+    <div>
+        <p class="nm-eyebrow mb-1">TourWeb Portal</p>
+        <h1>@L["Huisstijl"]</h1>
+    </div>
+</div>
 
 @if (TempData["BrandingSaved"] is string saved)
 {
@@ -12,36 +17,122 @@
 
 <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data" class="col-md-6">
-    <div class="mb-3">
-        <label class="form-label">@L["Huidig logo"]</label>
-        <div>
-            @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
-            {
-                <img src="@Model.LogoPath" alt="@L["Huidig logo"]" style="max-height:64px;" class="border rounded p-1" />
-            }
-            else
-            {
-                <span class="text-muted">@L["Nog geen logo ingesteld."]</span>
-            }
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="nm-surface p-4">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">@L["Huidig logo"]</label>
+                    <div>
+                        @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
+                        {
+                            <img src="@Model.LogoPath" alt="@L["Huidig logo"]" style="max-height:64px;" class="border rounded p-1" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">@L["Nog geen logo ingesteld."]</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Logo" class="form-label">@L["Nieuw logo"] <span class="text-muted">(PNG, JPG / SVG, max 2 MB)</span></label>
+                    <input asp-for="Logo" type="file" accept=".png,.jpg,.jpeg,.svg" class="form-control" id="logoInput" />
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-sm-6 mb-3">
+                        <label asp-for="PrimaryColor" class="form-label">@L["Primaire kleur"]</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input asp-for="PrimaryColor" type="color" class="form-control form-control-color" id="primaryColor" />
+                            <code class="text-muted" id="primaryColorHex">@Model.PrimaryColor</code>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <label asp-for="AccentColor" class="form-label">@L["Accentkleur"]</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input asp-for="AccentColor" type="color" class="form-control form-control-color" id="accentColor" />
+                            <code class="text-muted" id="accentColorHex">@Model.AccentColor</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-2">
+                    <button type="submit" class="btn btn-primary">@L["Opslaan"]</button>
+                    <a asp-controller="Quote" asp-action="Index" class="btn btn-link">@L["Terug naar offertes"]</a>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Logo" class="form-label">@L["Nieuw logo"] <span class="text-muted">(PNG, JPG / SVG, max 2 MB)</span></label>
-        <input asp-for="Logo" type="file" accept=".png,.jpg,.jpeg,.svg" class="form-control" />
-    </div>
+    <div class="col-lg-6">
+        <div class="nm-surface p-4 h-100">
+            <p class="nm-eyebrow mb-3">@L["Voorbeeld"]</p>
 
-    <div class="mb-3">
-        <label asp-for="PrimaryColor" class="form-label">@L["Primaire kleur"]</label>
-        <input asp-for="PrimaryColor" type="color" class="form-control form-control-color" />
-    </div>
+            <div class="d-flex justify-content-between align-items-center p-3 rounded mb-3"
+                 id="brandPreviewHeader"
+                 style="border-left:6px solid @Model.PrimaryColor; background:#f8f9fa;">
+                <div class="d-flex align-items-center gap-3">
+                    <img id="brandPreviewLogo"
+                         src="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "" : Model.LogoPath)"
+                         alt="logo"
+                         style="max-height:40px; @(string.IsNullOrWhiteSpace(Model.LogoPath) ? "display:none;" : "")" />
+                    <div>
+                        <strong id="brandPreviewTitle" style="color:@Model.PrimaryColor;">@L["Voorbeeldofferte"]</strong>
+                        <div class="text-muted small">NL · @L["Voorbeeld"]</div>
+                    </div>
+                </div>
+                <span class="badge" id="brandPreviewBadge" style="background:@Model.AccentColor; color:#fff;">concept</span>
+            </div>
 
-    <div class="mb-3">
-        <label asp-for="AccentColor" class="form-label">@L["Accentkleur"]</label>
-        <input asp-for="AccentColor" type="color" class="form-control form-control-color" />
-    </div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="btn btn-sm" id="brandPreviewBtnPrimary"
+                      style="background:@Model.PrimaryColor; color:#fff;">@L["Dag toevoegen"]</span>
+                <span class="btn btn-sm" id="brandPreviewBtnAccent"
+                      style="background:@Model.AccentColor; color:#fff;">@L["Download PDF"]</span>
+            </div>
 
-    <button type="submit" class="btn btn-primary">@L["Opslaan"]</button>
-    <a asp-controller="Quote" asp-action="Index" class="btn btn-link">@L["Terug naar offertes"]</a>
-</form>
+            <p class="text-muted small mb-0 mt-3">@L["Zo zien je kleuren en logo eruit op een offerte voor je klant."]</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const primary = document.getElementById('primaryColor');
+            const accent = document.getElementById('accentColor');
+            const primaryHex = document.getElementById('primaryColorHex');
+            const accentHex = document.getElementById('accentColorHex');
+            const header = document.getElementById('brandPreviewHeader');
+            const title = document.getElementById('brandPreviewTitle');
+            const badge = document.getElementById('brandPreviewBadge');
+            const btnPrimary = document.getElementById('brandPreviewBtnPrimary');
+            const btnAccent = document.getElementById('brandPreviewBtnAccent');
+            const logoInput = document.getElementById('logoInput');
+            const logoImg = document.getElementById('brandPreviewLogo');
+
+            function applyPrimary() {
+                header.style.borderLeftColor = primary.value;
+                title.style.color = primary.value;
+                btnPrimary.style.background = primary.value;
+                primaryHex.textContent = primary.value;
+            }
+            function applyAccent() {
+                badge.style.background = accent.value;
+                btnAccent.style.background = accent.value;
+                accentHex.textContent = accent.value;
+            }
+            primary.addEventListener('input', applyPrimary);
+            accent.addEventListener('input', applyAccent);
+
+            logoInput.addEventListener('change', function () {
+                const file = this.files && this.files[0];
+                if (!file) return;
+                const url = URL.createObjectURL(file);
+                logoImg.src = url;
+                logoImg.style.display = '';
+            });
+        })();
+    </script>
+}

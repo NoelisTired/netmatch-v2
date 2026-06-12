@@ -14,6 +14,6 @@ public class BrandingViewModel
     /// <summary>Nieuw logo (optioneel; PNG/JPG/SVG, max 2 MB).</summary>
     public IFormFile? Logo { get; set; }
 
-    public string PrimaryColor { get; set; } = "#0d6efd";
-    public string AccentColor { get; set; } = "#6c757d";
+    public string PrimaryColor { get; set; } = "#008fd1";
+    public string AccentColor { get; set; } = "#ff6800";
 }

@@ -4,24 +4,25 @@
     var quoteId = Model.Quote.Id;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded"
-     style="border-left: 6px solid @Model.Branding.PrimaryColor; background:#f8f9fa;">
+<div class="nm-quote"
+     style="--quote-primary:@Model.Branding.PrimaryColor; --quote-accent:@Model.Branding.AccentColor;">
+<div class="nm-quote-header d-flex justify-content-between align-items-center mb-3 p-3">
     <div class="d-flex align-items-center gap-3">
         @if (!string.IsNullOrWhiteSpace(Model.Branding.LogoPath))
         {
             <img src="@Model.Branding.LogoPath" alt="Logo reisbureau" style="max-height:48px;" />
         }
         <div>
-            <h1 class="h3 mb-1" style="color:@Model.Branding.PrimaryColor;">@Model.Quote.Title</h1>
+            <h1 class="mb-1" style="color:@Model.Branding.PrimaryColor;">@Model.Quote.Title</h1>
             <span class="text-muted">@Model.Quote.Language · aangemaakt @Model.Quote.CreatedAt.ToString("dd-MM-yyyy")</span>
         </div>
     </div>
-    <span class="badge align-self-center" style="background:@Model.Branding.AccentColor;">@Model.Quote.Status</span>
+    <span class="badge align-self-center fs-6" style="background:@Model.Branding.AccentColor; color:#fff;">@Model.Quote.Status</span>
 </div>
 
 <div class="d-flex flex-wrap gap-2 mb-4">
     <a asp-action="Edit" asp-route-id="@quoteId" class="btn btn-sm btn-outline-primary">@L["Offerte bewerken"]</a>
-    <a asp-controller="Day" asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-sm btn-primary">@L["Dag toevoegen"]</a>
+    <a asp-controller="Day" asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-sm nm-btn-brand">@L["Dag toevoegen"]</a>
     <a asp-action="Pdf" asp-route-id="@quoteId" class="btn btn-sm btn-outline-dark" target="_blank">@L["Download PDF"]</a>
     <a asp-controller="Branding" asp-action="Edit" class="btn btn-sm btn-outline-secondary">@L["Huisstijl"]</a>
     <a asp-action="Index" class="btn btn-sm btn-link">@L["Terug naar overzicht"]</a>
@@ -157,8 +158,9 @@
 
 @if (Model.IndicativeAccommodationTotal > 0)
 {
-    <p class="text-muted">
-        Indicatie accommodatie (goedkoopste kamer per accommodatie):
-        <strong>&euro; @Model.IndicativeAccommodationTotal.ToString("0.00")</strong> per nacht
-    </p>
+    <div class="nm-price-callout d-flex justify-content-between align-items-center p-3">
+        <span class="text-muted">Indicatie accommodatie (goedkoopste kamer per accommodatie)</span>
+        <span class="fs-5"><strong>&euro; @Model.IndicativeAccommodationTotal.ToString("0.00")</strong> <span class="text-muted fs-6">per nacht</span></span>
+    </div>
 }
+</div>@* /.nm-quote *@

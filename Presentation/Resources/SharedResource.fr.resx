@@ -63,4 +63,7 @@
   <data name="Bekijk, bewerk en exporteer al je reisoffertes." xml:space="preserve"><value>Consultez, modifiez et exportez tous vos devis de voyage.</value></data>
   <data name="Begin een nieuwe reisofferte van de grond af op." xml:space="preserve"><value>Créez un nouveau devis de voyage à partir de zéro.</value></data>
   <data name="Stel je logo en kleuren in voor offertes met je eigen huisstijl." xml:space="preserve"><value>Définissez votre logo et vos couleurs pour des devis à votre image.</value></data>
+  <data name="Voorbeeld" xml:space="preserve"><value>Aperçu</value></data>
+  <data name="Voorbeeldofferte" xml:space="preserve"><value>Devis exemple</value></data>
+  <data name="Zo zien je kleuren en logo eruit op een offerte voor je klant." xml:space="preserve"><value>Voici comment vos couleurs et votre logo apparaissent sur un devis pour votre client.</value></data>
 </root>

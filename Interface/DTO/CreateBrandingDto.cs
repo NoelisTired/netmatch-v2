@@ -8,6 +8,6 @@ public record CreateBrandingDto
 {
     public int TravelAgentId { get; init; }
     public string? LogoPath { get; init; }
-    public string PrimaryColor { get; init; } = "#0d6efd";
-    public string AccentColor { get; init; } = "#6c757d";
+    public string PrimaryColor { get; init; } = "#008fd1";
+    public string AccentColor { get; init; } = "#ff6800";
 }

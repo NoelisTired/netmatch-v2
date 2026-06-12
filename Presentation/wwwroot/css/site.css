@@ -370,6 +370,18 @@ a:hover { color: var(--nm-blue-600); }
   border: 1px solid var(--nm-line);
 }
 
+/* Quote status badges */
+.nm-badge-draft {
+  background-color: var(--nm-bg-tint);
+  color: var(--nm-navy);
+  border: 1px solid #cfe0f0;
+}
+.nm-badge-final {
+  background-color: #e7f7ee;
+  color: #146c43;
+  border: 1px solid #bfe8d0;
+}
+
 /* --------------------------------------------------------------------------
    Forms
    -------------------------------------------------------------------------- */
@@ -464,6 +476,48 @@ a:hover { color: var(--nm-blue-600); }
   background: var(--nm-bg-tint); color: var(--nm-blue);
   margin-bottom: .7rem; font-size: 1.2rem;
 }
+
+/* --------------------------------------------------------------------------
+   Whitelabel quote scope — each quote inherits the travel agency's own
+   brand colours via the --quote-primary / --quote-accent custom properties
+   set inline on .nm-quote in Quote/Details.
+   -------------------------------------------------------------------------- */
+.nm-quote {
+  --quote-primary: var(--nm-blue);
+  --quote-accent: var(--nm-orange);
+}
+.nm-quote-header {
+  border-left: 6px solid var(--quote-primary);
+  border-radius: var(--nm-radius);
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--quote-primary) 8%, #fff) 0%,
+      #fff 60%);
+  box-shadow: var(--nm-shadow-sm);
+}
+.nm-quote-header h1 { font-size: 2rem; margin-bottom: .2rem; }
+
+/* Primary action inside a quote takes the agency's brand colour */
+.nm-btn-brand {
+  background-color: var(--quote-primary);
+  border-color: var(--quote-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--quote-primary) 35%, transparent);
+}
+.nm-btn-brand:hover {
+  background-color: color-mix(in srgb, var(--quote-primary) 85%, #000);
+  border-color: color-mix(in srgb, var(--quote-primary) 85%, #000);
+  color: #fff;
+}
+
+.nm-price-callout {
+  border: 1px solid var(--nm-line);
+  border-left: 6px solid var(--quote-accent);
+  border-radius: var(--nm-radius);
+  background: var(--nm-surface);
+  box-shadow: var(--nm-shadow-sm);
+}
+.nm-price-callout strong { color: var(--nm-navy); }
 
 .form-floating > .form-control-plaintext::placeholder,
 .form-floating > .form-control::placeholder {

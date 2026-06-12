@@ -63,4 +63,7 @@
   <data name="Bekijk, bewerk en exporteer al je reisoffertes." xml:space="preserve"><value>Alle Reiseangebote ansehen, bearbeiten und exportieren.</value></data>
   <data name="Begin een nieuwe reisofferte van de grond af op." xml:space="preserve"><value>Erstellen Sie ein neues Reiseangebot von Grund auf.</value></data>
   <data name="Stel je logo en kleuren in voor offertes met je eigen huisstijl." xml:space="preserve"><value>Legen Sie Logo und Farben fest, damit Angebote Ihr eigenes Branding tragen.</value></data>
+  <data name="Voorbeeld" xml:space="preserve"><value>Vorschau</value></data>
+  <data name="Voorbeeldofferte" xml:space="preserve"><value>Beispielangebot</value></data>
+  <data name="Zo zien je kleuren en logo eruit op een offerte voor je klant." xml:space="preserve"><value>So erscheinen Ihre Farben und Ihr Logo auf einem Angebot für Ihren Kunden.</value></data>
 </root>
