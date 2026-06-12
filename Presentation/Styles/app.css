@@ -5,8 +5,9 @@
 @source "../wwwroot/js/**/*.js";
 
 /*
-  TourWeb Portal - thema in de stijl van noelp.dev
-  Dark-first met light variant, geanimeerd, glassmorphism en gradient-accenten.
+  TourWeb Portal - zakelijk thema.
+  Een rustige neutrale schil met een enkel blauw merkaccent. Lichte,
+  ingetogen animaties (fade, hover, onderstreep). Geen gradienten, geen neon.
   Class-based dark mode: de <html> krijgt class "dark" via de toggle.
 */
 @variant dark (&:where(.dark, .dark *));
@@ -15,55 +16,57 @@
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
 
-  /* Accent-gradient palet van noelp.dev */
-  --color-cyan: #32c5ff;
-  --color-violet: #b620e0;
-  --color-amber: #f7b500;
-  --color-magenta: #d946ef;
-  --color-pink: #ec4899;
-
-  /* Merkkleuren (TourWeb / NetMatch) blijven beschikbaar als accent */
+  /* Enig merkaccent: NetMatch-blauw */
   --color-brand: #008fd1;
-  --color-brand-deep: #002855;
+  --color-brand-600: #0079b4;
+  --color-brand-700: #006497;
 
-  /* Neutrale donkere schil */
-  --color-ink-950: #0a0e27;
-  --color-ink-900: #11163a;
-  --color-ink-850: #1a1f3a;
-  --color-ink-800: #252b4a;
-
-  --radius-xl2: 1.25rem;
-
-  --animate-float: float 3s ease-in-out infinite;
-  --animate-glow: glow 2.4s ease-in-out infinite;
-  --animate-gradient: gradient 6s ease infinite;
+  --radius-card: 0.875rem;
 }
 
 /* ------------------------------------------------------------------ */
 /* Thema-variabelen per modus                                          */
 /* ------------------------------------------------------------------ */
 :root {
-  --bg-primary: #f6f7f9;
-  --bg-accent: #ffffff;
-  --bg-accent-light: #f0f2f5;
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --card-border: rgba(226, 232, 240, 0.9);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --glow-alpha: 0.06;
-  --grid-line: rgba(15, 23, 42, 0.04);
+  --bg-primary: #f7f8fa;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f4f8;
+  --card-bg: #ffffff;
+  --card-border: #e3e8ef;
+  --text-primary: #14213a;
+  --text-secondary: #5b6b82;
+  --accent: var(--color-brand);
+  --accent-strong: var(--color-brand-600);
+  --accent-soft: rgba(0, 143, 209, 0.08);
+  --shadow-card: 0 1px 2px rgba(20, 33, 58, 0.04), 0 4px 14px -8px rgba(20, 33, 58, 0.12);
+  --shadow-card-hover: 0 2px 4px rgba(20, 33, 58, 0.05), 0 12px 28px -12px rgba(20, 33, 58, 0.2);
+  --ok: #15803d;
+  --ok-bg: #ecfdf3;
+  --ok-border: #abefc6;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+  --danger-border: #fecdca;
 }
 
 .dark {
-  --bg-primary: #0a0e27;
-  --bg-accent: #1a1f3a;
-  --bg-accent-light: #252b4a;
-  --card-bg: rgba(26, 31, 58, 0.8);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --text-primary: #ffffff;
+  --bg-primary: #0c1322;
+  --bg-surface: #141d30;
+  --bg-subtle: #1b2740;
+  --card-bg: #141d30;
+  --card-border: #25324b;
+  --text-primary: #eef2f8;
   --text-secondary: #94a3b8;
-  --glow-alpha: 0.18;
-  --grid-line: rgba(255, 255, 255, 0.04);
+  --accent: #36a8e6;
+  --accent-strong: #5cbcf0;
+  --accent-soft: rgba(54, 168, 230, 0.12);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 36px -14px rgba(0, 0, 0, 0.6);
+  --ok: #4ade80;
+  --ok-bg: rgba(34, 197, 94, 0.12);
+  --ok-border: rgba(34, 197, 94, 0.3);
+  --danger: #fca5a5;
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  --danger-border: rgba(239, 68, 68, 0.3);
 }
 
 /* ------------------------------------------------------------------ */
@@ -80,50 +83,31 @@
     color: var(--text-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
 
   ::selection {
-    background: var(--color-cyan);
-    color: #04122a;
+    background: var(--accent-soft);
+    color: var(--text-primary);
   }
 
-  /* Geanimeerde achtergrond: zacht raster + twee drijvende gloed-orbs */
+  /* Rustige achtergrond: effen vlak met een nauwelijks zichtbaar raster. */
   .app-bg {
     position: fixed;
     inset: 0;
     z-index: -1;
-    overflow: hidden;
     background-color: var(--bg-primary);
     background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-  .app-bg::before,
-  .app-bg::after {
-    content: "";
-    position: absolute;
-    border-radius: 9999px;
-    filter: blur(80px);
-    opacity: var(--glow-alpha);
-  }
-  .app-bg::before {
-    width: 42rem; height: 42rem;
-    top: -10rem; left: -8rem;
-    background: radial-gradient(circle, var(--color-cyan), transparent 70%);
-    animation: float 11s ease-in-out infinite;
-  }
-  .app-bg::after {
-    width: 38rem; height: 38rem;
-    bottom: -12rem; right: -8rem;
-    background: radial-gradient(circle, var(--color-violet), transparent 70%);
-    animation: float 14s ease-in-out infinite reverse;
+      linear-gradient(var(--card-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--card-border) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.4;
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, #000 30%, transparent 75%);
   }
 }
 
@@ -131,30 +115,22 @@
 /* Componenten                                                         */
 /* ------------------------------------------------------------------ */
 @layer components {
-  /* Glass-card */
+  /* Kaart */
   .card-glass {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: var(--radius-xl2);
-    backdrop-filter: blur(14px);
-    box-shadow: 0 18px 40px -24px rgba(2, 8, 40, 0.55);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   }
   .card-glass-hover:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--color-cyan) 45%, var(--card-border));
-    box-shadow: 0 26px 60px -28px rgba(8, 18, 60, 0.7);
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--card-border));
+    box-shadow: var(--shadow-card-hover);
   }
 
-  /* Gradient tekst */
-  .text-gradient {
-    background-image: linear-gradient(110deg, var(--color-cyan), var(--color-violet) 55%, var(--color-magenta));
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: var(--animate-gradient);
-  }
+  /* Accent-tekst (effen, geen gradient) */
+  .text-gradient { color: var(--accent); }
 
   /* Knoppen */
   .btn {
@@ -165,67 +141,69 @@
     font-weight: 600;
     font-size: 0.9rem;
     line-height: 1;
-    padding: 0.65rem 1.15rem;
-    border-radius: 0.75rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.6rem;
     border: 1px solid transparent;
     cursor: pointer;
-    transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
     text-decoration: none;
   }
-  .btn:active { transform: translateY(1px) scale(0.99); }
-  .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; border-radius: 0.6rem; }
+  .btn:active { transform: translateY(0.5px); }
+  .btn-sm { padding: 0.38rem 0.72rem; font-size: 0.8rem; border-radius: 0.5rem; }
 
   .btn-primary {
-    color: #04122a;
-    background-image: linear-gradient(110deg, var(--color-cyan), #1fa8e8);
-    box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--color-cyan) 70%, transparent);
+    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
   }
-  .btn-primary:hover { box-shadow: 0 14px 30px -8px color-mix(in srgb, var(--color-cyan) 80%, transparent); transform: translateY(-1px); }
+  .btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
 
+  /* Accent verwijst nu naar dezelfde primaire stijl: een knop, een kleur */
   .btn-accent {
     color: #fff;
-    background-image: linear-gradient(110deg, var(--color-violet), var(--color-magenta));
-    box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--color-violet) 70%, transparent);
+    background: var(--accent);
+    border-color: var(--accent);
   }
-  .btn-accent:hover { transform: translateY(-1px); }
+  .btn-accent:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
 
   .btn-ghost {
     color: var(--text-primary);
     border-color: var(--card-border);
-    background: color-mix(in srgb, var(--card-bg) 40%, transparent);
+    background: var(--card-bg);
   }
-  .btn-ghost:hover { border-color: var(--color-cyan); color: var(--color-cyan); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 
   .btn-danger {
-    color: #fecaca;
-    border-color: rgba(248, 113, 113, 0.35);
-    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border-color: var(--danger-border);
+    background: var(--danger-bg);
   }
-  .btn-danger:hover { background: rgba(239, 68, 68, 0.22); color: #fff; border-color: rgba(248, 113, 113, 0.6); }
+  .btn-danger:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
 
   .btn-link {
-    color: var(--color-cyan);
+    color: var(--accent);
     padding-left: 0; padding-right: 0;
     background: none;
+    font-weight: 600;
   }
-  .btn-link:hover { color: var(--color-violet); }
+  .btn-link:hover { color: var(--accent-strong); text-decoration: underline; }
 
   /* Inputs */
   .field {
     width: 100%;
-    background: var(--bg-accent);
+    background: var(--bg-surface);
     border: 1px solid var(--card-border);
-    border-radius: 0.75rem;
-    padding: 0.6rem 0.85rem;
+    border-radius: 0.6rem;
+    padding: 0.58rem 0.8rem;
     color: var(--text-primary);
     font-size: 0.92rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
   .field::placeholder { color: color-mix(in srgb, var(--text-secondary) 70%, transparent); }
   .field:focus {
     outline: none;
-    border-color: var(--color-cyan);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-cyan) 25%, transparent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
   .field-label {
     display: block;
@@ -233,7 +211,6 @@
     font-weight: 600;
     color: var(--text-secondary);
     margin-bottom: 0.4rem;
-    letter-spacing: 0.01em;
   }
 
   /* Eyebrow */
@@ -243,9 +220,9 @@
     gap: 0.45rem;
     font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-cyan);
+    color: var(--text-secondary);
   }
 
   /* Tabel */
@@ -257,24 +234,21 @@
   .table-glass thead th {
     text-align: left;
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     color: var(--text-secondary);
-    padding: 0.75rem 1rem;
+    background: var(--bg-subtle);
+    padding: 0.7rem 1rem;
     border-bottom: 1px solid var(--card-border);
   }
   .table-glass tbody td {
-    padding: 0.8rem 1rem;
+    padding: 0.78rem 1rem;
     border-bottom: 1px solid var(--card-border);
     font-size: 0.9rem;
   }
-  .table-glass tbody tr {
-    transition: background 0.18s ease;
-  }
-  .table-glass tbody tr:hover td {
-    background: color-mix(in srgb, var(--color-cyan) 7%, transparent);
-  }
+  .table-glass tbody tr { transition: background 0.15s ease; }
+  .table-glass tbody tr:hover td { background: var(--accent-soft); }
   .table-glass tbody tr:last-child td { border-bottom: 0; }
 
   /* Status pill */
@@ -284,19 +258,19 @@
     gap: 0.35rem;
     font-size: 0.72rem;
     font-weight: 600;
-    padding: 0.25rem 0.7rem;
+    padding: 0.22rem 0.65rem;
     border-radius: 9999px;
     border: 1px solid transparent;
   }
   .pill-draft {
-    color: var(--color-cyan);
-    background: color-mix(in srgb, var(--color-cyan) 12%, transparent);
-    border-color: color-mix(in srgb, var(--color-cyan) 30%, transparent);
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border-color: var(--card-border);
   }
   .pill-final {
-    color: #34d399;
-    background: rgba(16, 185, 129, 0.12);
-    border-color: rgba(16, 185, 129, 0.3);
+    color: var(--ok);
+    background: var(--ok-bg);
+    border-color: var(--ok-border);
   }
 
   /* Nav links */
@@ -306,7 +280,7 @@
     font-weight: 500;
     color: var(--text-secondary);
     padding: 0.4rem 0.15rem;
-    transition: color 0.2s ease;
+    transition: color 0.18s ease;
   }
   .nav-link:hover { color: var(--text-primary); }
   .nav-link::after {
@@ -314,66 +288,53 @@
     position: absolute;
     left: 0; bottom: -2px;
     height: 2px; width: 0;
-    background-image: linear-gradient(90deg, var(--color-cyan), var(--color-violet));
+    background: var(--accent);
     border-radius: 2px;
-    transition: width 0.25s ease;
+    transition: width 0.2s ease;
   }
   .nav-link:hover::after { width: 100%; }
   .nav-link.is-active { color: var(--text-primary); }
   .nav-link.is-active::after { width: 100%; }
 
-  /* Reveal-on-load helper */
-  .reveal { opacity: 0; animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+  /* Reveal-on-load: ingetogen fade met kleine verschuiving */
+  .reveal { opacity: 0; animation: rise 0.5s ease-out forwards; }
 
   /* Whitelabel: per-offerte merkkleuren van het reisbureau */
   .nm-quote {
-    --quote-primary: var(--color-brand);
-    --quote-accent: var(--color-violet);
+    --quote-primary: var(--accent);
+    --quote-accent: var(--accent-strong);
   }
   .nm-btn-brand {
     color: #fff;
-    background-image: linear-gradient(110deg,
-      var(--quote-primary),
-      color-mix(in srgb, var(--quote-primary) 70%, #000));
-    box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--quote-primary) 70%, transparent);
+    background: var(--quote-primary);
+    border-color: var(--quote-primary);
   }
-  .nm-btn-brand:hover { transform: translateY(-1px); }
+  .nm-btn-brand:hover { filter: brightness(0.93); }
 
   .alert {
-    border-radius: 1rem;
-    padding: 0.9rem 1.1rem;
+    border-radius: 0.75rem;
+    padding: 0.85rem 1.05rem;
     font-size: 0.9rem;
     border: 1px solid var(--card-border);
     background: var(--card-bg);
+    color: var(--text-primary);
   }
-  .alert-info { border-color: color-mix(in srgb, var(--color-cyan) 35%, transparent); }
-  .alert-success { border-color: rgba(16, 185, 129, 0.4); color: #34d399; }
+  .alert-info { border-color: color-mix(in srgb, var(--accent) 30%, var(--card-border)); background: var(--accent-soft); }
+  .alert-success { border-color: var(--ok-border); background: var(--ok-bg); color: var(--ok); }
 }
 
 /* ------------------------------------------------------------------ */
 /* Keyframes                                                           */
 /* ------------------------------------------------------------------ */
-@keyframes float {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-22px) translateX(10px); }
-}
-@keyframes glow {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-cyan) 0%, transparent); }
-  50% { box-shadow: 0 0 26px 2px color-mix(in srgb, var(--color-cyan) 45%, transparent); }
-}
-@keyframes gradient {
-  0% { background-position: 0% center; }
-  50% { background-position: 100% center; }
-  100% { background-position: 0% center; }
-}
 @keyframes rise {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, .app-bg::before, .app-bg::after, .reveal, .text-gradient {
+  *, .reveal {
     animation: none !important;
     transition: none !important;
   }
+  .reveal { opacity: 1; }
 }
