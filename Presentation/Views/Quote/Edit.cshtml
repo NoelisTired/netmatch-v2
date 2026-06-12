@@ -3,36 +3,42 @@
     ViewData["Title"] = "Offerte bewerken";
 }
 
-<h1 class="h3 mb-3">Offerte bewerken</h1>
+<div class="nm-page-head">
+    <h1>Offerte bewerken</h1>
+</div>
 
-<div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div class="nm-surface p-4 col-lg-6">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-<form asp-action="Edit" method="post" class="col-md-6">
-    <input type="hidden" asp-for="Id" />
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
 
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label">Titel</label>
-        <input asp-for="Title" class="form-control" />
-    </div>
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Titel</label>
+            <input asp-for="Title" class="form-control" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Language" class="form-label">Taal</label>
-        <select asp-for="Language" class="form-select">
-            <option value="NL">Nederlands</option>
-            <option value="EN">Engels</option>
-            <option value="DE">Duits</option>
-            <option value="FR">Frans</option>
-        </select>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Language" class="form-label">Taal</label>
+            <select asp-for="Language" class="form-select">
+                <option value="NL">Nederlands</option>
+                <option value="EN">Engels</option>
+                <option value="DE">Duits</option>
+                <option value="FR">Frans</option>
+            </select>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Status" class="form-label">Status</label>
-        <select asp-for="Status" class="form-select">
-            <option value="concept">Concept</option>
-            <option value="definitief">Definitief</option>
-        </select>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label">Status</label>
+            <select asp-for="Status" class="form-select">
+                <option value="concept">Concept</option>
+                <option value="definitief">Definitief</option>
+            </select>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Opslaan</button>
-    <a asp-action="Index" class="btn btn-link">Annuleren</a>
-</form>
+        <div class="d-flex gap-2 mt-2">
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <a asp-action="Index" class="btn btn-link">Annuleren</a>
+        </div>
+    </form>
+</div>

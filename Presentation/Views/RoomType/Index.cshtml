@@ -6,9 +6,9 @@
     ViewData["Title"] = "Kamertypes";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="nm-page-head">
     <div>
-        <h1 class="h3 mb-0">Kamertypes</h1>
+        <h1>Kamertypes</h1>
         <small class="text-muted">@ViewBag.AccommodationName</small>
     </div>
     <a asp-action="Create" asp-route-accommodationId="@accommodationId" class="btn btn-primary">Kamertype toevoegen</a>
@@ -20,34 +20,36 @@
 }
 else
 {
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Naam</th>
-                <th>Prijs per nacht</th>
-                <th>Capaciteit</th>
-                <th class="text-end">Acties</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var roomType in Model)
-            {
+    <div class="nm-surface p-0 overflow-hidden">
+        <table class="table table-hover align-middle">
+            <thead>
                 <tr>
-                    <td>@roomType.Name</td>
-                    <td>&euro; @roomType.PricePerNight.ToString("0.00")</td>
-                    <td>@roomType.Capacity p.</td>
-                    <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@roomType.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
-                        <form asp-action="Delete" asp-route-id="@roomType.Id" asp-route-accommodationId="@accommodationId"
-                              method="post" class="d-inline"
-                              onsubmit="return confirm('Dit kamertype verwijderen?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
-                        </form>
-                    </td>
+                    <th>Naam</th>
+                    <th>Prijs per nacht</th>
+                    <th>Capaciteit</th>
+                    <th class="text-end">Acties</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var roomType in Model)
+                {
+                    <tr>
+                        <td>@roomType.Name</td>
+                        <td>&euro; @roomType.PricePerNight.ToString("0.00")</td>
+                        <td>@roomType.Capacity p.</td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@roomType.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
+                            <form asp-action="Delete" asp-route-id="@roomType.Id" asp-route-accommodationId="@accommodationId"
+                                  method="post" class="d-inline"
+                                  onsubmit="return confirm('Dit kamertype verwijderen?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 <a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@dayId" class="btn btn-link">Terug naar accommodatie</a>

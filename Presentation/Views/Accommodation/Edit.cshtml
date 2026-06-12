@@ -3,42 +3,46 @@
     ViewData["Title"] = "Accommodatie bewerken";
 }
 
-<h1 class="h3 mb-3">Accommodatie bewerken</h1>
+<div class="nm-page-head">
+    <h1>Accommodatie bewerken</h1>
+</div>
 
-<div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div class="nm-surface p-4 col-lg-6">
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data" class="col-md-6">
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="DayId" />
-    <input type="hidden" asp-for="ImagePath" />
+    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="DayId" />
+        <input type="hidden" asp-for="ImagePath" />
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label">Naam</label>
-        <input asp-for="Name" class="form-control" />
-    </div>
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Naam</label>
+            <input asp-for="Name" class="form-control" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Address" class="form-label">Adres <span class="text-muted">(optioneel)</span></label>
-        <input asp-for="Address" class="form-control" />
-    </div>
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Adres <span class="text-muted">(optioneel)</span></label>
+            <input asp-for="Address" class="form-control" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Image" class="form-label">Afbeelding <span class="text-muted">(optioneel, max 5 MB)</span></label>
-        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
-        {
-            <div class="mb-2">
-                <img src="@Model.ImagePath" alt="Huidige afbeelding" class="img-thumbnail" style="max-height: 150px;" />
-            </div>
-        }
-        <input asp-for="Image" type="file" class="form-control" accept="image/png,image/jpeg,image/webp" />
-        <div class="form-text">Laat leeg om de huidige afbeelding te behouden.</div>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Image" class="form-label">Afbeelding <span class="text-muted">(optioneel, max 5 MB)</span></label>
+            @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+            {
+                <div class="mb-2">
+                    <img src="@Model.ImagePath" alt="Huidige afbeelding" class="img-thumbnail" style="max-height: 150px;" />
+                </div>
+            }
+            <input asp-for="Image" type="file" class="form-control" accept="image/png,image/jpeg,image/webp" />
+            <div class="form-text">Laat leeg om de huidige afbeelding te behouden.</div>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Opslaan</button>
-    <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn btn-link">Annuleren</a>
-</form>
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+        <a asp-action="Index" asp-route-dayId="@Model.DayId" class="btn btn-link">Annuleren</a>
+    </form>
+</div>

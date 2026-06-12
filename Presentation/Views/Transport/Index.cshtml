@@ -6,9 +6,9 @@
     ViewData["Title"] = "Transport";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="nm-page-head">
     <div>
-        <h1 class="h3 mb-0">Transport</h1>
+        <h1>Transport</h1>
         <small class="text-muted">Dag @ViewBag.DayNumber</small>
     </div>
     <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-primary">Transport toevoegen</a>
@@ -20,45 +20,47 @@
 }
 else
 {
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Van</th>
-                <th>Naar</th>
-                <th>Vlucht</th>
-                <th class="text-end">Acties</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var transport in Model)
-            {
+    <div class="nm-surface p-0 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
                 <tr>
-                    <td>@transport.Type</td>
-                    <td>@transport.DepartureLocation</td>
-                    <td>@transport.ArrivalLocation</td>
-                    <td>
-                        @if (transport.FlightNumber is not null)
-                        {
-                            <text>@transport.FlightNumber – @transport.Airline</text>
-                        }
-                        else
-                        {
-                            <span class="text-muted">–</span>
-                        }
-                    </td>
-                    <td class="text-end">
-                        <a asp-action="Edit" asp-route-id="@transport.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
-                        <form asp-action="Delete" asp-route-id="@transport.Id" asp-route-dayId="@dayId"
-                              method="post" class="d-inline"
-                              onsubmit="return confirm('Dit transport verwijderen?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
-                        </form>
-                    </td>
+                    <th>Type</th>
+                    <th>Van</th>
+                    <th>Naar</th>
+                    <th>Vlucht</th>
+                    <th class="text-end">Acties</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var transport in Model)
+                {
+                    <tr>
+                        <td>@transport.Type</td>
+                        <td>@transport.DepartureLocation</td>
+                        <td>@transport.ArrivalLocation</td>
+                        <td>
+                            @if (transport.FlightNumber is not null)
+                            {
+                                <text>@transport.FlightNumber – @transport.Airline</text>
+                            }
+                            else
+                            {
+                                <span class="text-muted">–</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@transport.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
+                            <form asp-action="Delete" asp-route-id="@transport.Id" asp-route-dayId="@dayId"
+                                  method="post" class="d-inline"
+                                  onsubmit="return confirm('Dit transport verwijderen?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 <a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn btn-link">Terug naar dag-tot-dag</a>

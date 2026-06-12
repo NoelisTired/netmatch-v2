@@ -1,12 +1,16 @@
 @using Logic.Models
+@using Logic.Enums
 @model IEnumerable<Quote>
 @{
     ViewData["Title"] = L["Offertes"];
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0">@L["Offertes"]</h1>
-    <a asp-action="Create" class="btn btn-primary">@L["Nieuwe offerte"]</a>
+<div class="nm-page-head">
+    <div>
+        <p class="nm-eyebrow mb-1">TourWeb Portal</p>
+        <h1>@L["Offertes"]</h1>
+    </div>
+    <a asp-action="Create" class="btn btn-accent">@L["Nieuwe offerte"]</a>
 </div>
 
 @if (!Model.Any())
@@ -15,36 +19,39 @@
 }
 else
 {
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>@L["Titel"]</th>
-                <th>@L["Taal"]</th>
-                <th>@L["Status"]</th>
-                <th>@L["Aangemaakt"]</th>
-                <th class="text-end">@L["Acties"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var quote in Model)
-            {
+    <div class="nm-surface p-0 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
                 <tr>
-                    <td>@quote.Title</td>
-                    <td>@quote.Language</td>
-                    <td>
-                        <span class="badge bg-secondary">@quote.Status</span>
-                    </td>
-                    <td>@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
-                    <td class="text-end">
-                        <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-secondary">@L["Bekijken"]</a>
-                        <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
-                        <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="d-inline"
-                              onsubmit="return confirm('@L["Deze offerte verwijderen?"]');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
-                        </form>
-                    </td>
+                    <th>@L["Titel"]</th>
+                    <th>@L["Taal"]</th>
+                    <th>@L["Status"]</th>
+                    <th>@L["Aangemaakt"]</th>
+                    <th class="text-end">@L["Acties"]</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var quote in Model)
+                {
+                    var isFinal = quote.Status == StatusType.Definitief;
+                    <tr>
+                        <td class="fw-semibold">@quote.Title</td>
+                        <td>@quote.Language</td>
+                        <td>
+                            <span class="badge @(isFinal ? "nm-badge-final" : "nm-badge-draft")">@quote.Status</span>
+                        </td>
+                        <td>@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-secondary">@L["Bekijken"]</a>
+                            <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
+                            <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('@L["Deze offerte verwijderen?"]');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

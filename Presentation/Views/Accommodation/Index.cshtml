@@ -6,9 +6,9 @@
     ViewData["Title"] = "Accommodatie";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="nm-page-head">
     <div>
-        <h1 class="h3 mb-0">Accommodatie</h1>
+        <h1>Accommodatie</h1>
         <small class="text-muted">Dag @ViewBag.DayNumber</small>
     </div>
     <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-primary">Accommodatie toevoegen</a>
@@ -20,33 +20,35 @@
 }
 else
 {
-    <table class="table table-hover align-middle">
-        <thead>
-            <tr>
-                <th>Naam</th>
-                <th>Adres</th>
-                <th class="text-end">Acties</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var accommodation in Model)
-            {
+    <div class="nm-surface p-0 overflow-hidden">
+        <table class="table table-hover align-middle">
+            <thead>
                 <tr>
-                    <td>@accommodation.Name</td>
-                    <td>@(accommodation.Address ?? "–")</td>
-                    <td class="text-end">
-                        <a asp-controller="RoomType" asp-action="Index" asp-route-accommodationId="@accommodation.Id" class="btn btn-sm btn-outline-secondary">Kamertypes</a>
-                        <a asp-action="Edit" asp-route-id="@accommodation.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
-                        <form asp-action="Delete" asp-route-id="@accommodation.Id" asp-route-dayId="@dayId"
-                              method="post" class="d-inline"
-                              onsubmit="return confirm('Deze accommodatie verwijderen?');">
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
-                        </form>
-                    </td>
+                    <th>Naam</th>
+                    <th>Adres</th>
+                    <th class="text-end">Acties</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var accommodation in Model)
+                {
+                    <tr>
+                        <td>@accommodation.Name</td>
+                        <td>@(accommodation.Address ?? "–")</td>
+                        <td class="text-end">
+                            <a asp-controller="RoomType" asp-action="Index" asp-route-accommodationId="@accommodation.Id" class="btn btn-sm btn-outline-secondary">Kamertypes</a>
+                            <a asp-action="Edit" asp-route-id="@accommodation.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
+                            <form asp-action="Delete" asp-route-id="@accommodation.Id" asp-route-dayId="@dayId"
+                                  method="post" class="d-inline"
+                                  onsubmit="return confirm('Deze accommodatie verwijderen?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 <a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn btn-link">Terug naar dag-tot-dag</a>
