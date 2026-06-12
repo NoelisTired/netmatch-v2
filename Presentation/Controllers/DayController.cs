@@ -54,6 +54,8 @@ public class DayController : Controller
             return View(model);
         }
 
+        TempData["Toast"] = "Dag toegevoegd.";
+        TempData["Toast"] = "Dag opgeslagen.";
         return RedirectToAction("Details", "Quote", new { id = model.QuoteId });
     }
 
@@ -97,6 +99,7 @@ public class DayController : Controller
     public IActionResult Delete(int id, int quoteId)
     {
         _dayService.DeleteDay(id);
+        TempData["Toast"] = "Dag verwijderd.";
         return RedirectToAction("Details", "Quote", new { id = quoteId });
     }
 }

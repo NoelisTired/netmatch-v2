@@ -58,6 +58,8 @@ public class RoomTypeController : Controller
             return View(model);
         }
 
+        TempData["Toast"] = "Kamertype toegevoegd.";
+        TempData["Toast"] = "Kamertype opgeslagen.";
         return BackToQuote(model.AccommodationId);
     }
 
@@ -100,6 +102,7 @@ public class RoomTypeController : Controller
     public IActionResult Delete(int id, int accommodationId)
     {
         _roomTypeService.DeleteRoomType(id);
+        TempData["Toast"] = "Kamertype verwijderd.";
         return BackToQuote(accommodationId);
     }
 

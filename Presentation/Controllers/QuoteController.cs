@@ -138,6 +138,7 @@ public class QuoteController : Controller
             return View(model);
         }
 
+        TempData["Toast"] = "Offerte aangemaakt.";
         return RedirectToAction(nameof(Details), new { id });
     }
 
@@ -170,6 +171,7 @@ public class QuoteController : Controller
             return View(model);
         }
 
+        TempData["Toast"] = "Offerte opgeslagen.";
         return RedirectToAction(nameof(Details), new { id = model.Id });
     }
 
@@ -178,6 +180,7 @@ public class QuoteController : Controller
     public IActionResult Delete(int id)
     {
         _quoteService.DeleteQuote(id);
+        TempData["Toast"] = "Offerte verwijderd.";
         return RedirectToAction(nameof(Index));
     }
 }

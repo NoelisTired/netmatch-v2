@@ -57,6 +57,8 @@ public class TransportController : Controller
             return View(model);
         }
 
+        TempData["Toast"] = "Transport toegevoegd.";
+        TempData["Toast"] = "Transport opgeslagen.";
         return BackToQuote(model.DayId);
     }
 
@@ -103,6 +105,7 @@ public class TransportController : Controller
     public IActionResult Delete(int id, int dayId)
     {
         _transportService.DeleteTransport(id);
+        TempData["Toast"] = "Transport verwijderd.";
         return BackToQuote(dayId);
     }
 

@@ -70,7 +70,7 @@ public class BrandingController : Controller
             return View(model);
         }
 
-        TempData["BrandingSaved"] = "Huisstijl opgeslagen.";
+        TempData["Toast"] = "Huisstijl opgeslagen.";
         return RedirectToAction(nameof(Edit));
     }
 

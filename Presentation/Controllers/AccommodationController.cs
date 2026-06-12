@@ -69,6 +69,8 @@ public class AccommodationController : Controller
             return View(model);
         }
 
+        TempData["Toast"] = "Accommodatie toegevoegd.";
+        TempData["Toast"] = "Accommodatie opgeslagen.";
         return BackToQuote(model.DayId);
     }
 
@@ -125,6 +127,7 @@ public class AccommodationController : Controller
     public IActionResult Delete(int id, int dayId)
     {
         _accommodationService.DeleteAccommodation(id);
+        TempData["Toast"] = "Accommodatie verwijderd.";
         return BackToQuote(dayId);
     }
 
