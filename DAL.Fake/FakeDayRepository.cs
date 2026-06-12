@@ -11,7 +11,7 @@ public class FakeDayRepository : IDayRepository
 {
     private readonly List<DayDto> _days = new()
     {
-        // Offerte 1 — Rondreis Toscane (4 dagen)
+        // Offerte 1: Rondreis Toscane (4 dagen)
         new DayDto
         {
             Id = 1, QuoteId = 1, DayNumber = 1, Date = DateTime.Today.AddDays(14),
@@ -25,7 +25,7 @@ public class FakeDayRepository : IDayRepository
         new DayDto
         {
             Id = 2, QuoteId = 1, DayNumber = 2, Date = DateTime.Today.AddDays(15),
-            Title = "Florence — kunst & cultuur",
+            Title = "Florence: kunst en cultuur",
             Description = "Ochtend: skip-the-line toegang tot de Galleria degli Uffizi met " +
                           "Engelstalige gids (ca. 2,5 uur). Lunch in de wijk San Lorenzo. " +
                           "Middag: beklimming van de Duomo-koepel van Brunelleschi (463 treden) " +
@@ -52,7 +52,7 @@ public class FakeDayRepository : IDayRepository
             CreatedAt = DateTime.Now.AddDays(-9), UpdatedAt = DateTime.Now.AddDays(-9)
         },
 
-        // Offerte 2 — City trip Barcelona (2 dagen)
+        // Offerte 2: City trip Barcelona (2 dagen)
         new DayDto
         {
             Id = 5, QuoteId = 2, DayNumber = 1, Date = DateTime.Today.AddDays(30),
