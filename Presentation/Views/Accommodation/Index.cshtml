@@ -6,27 +6,27 @@
     ViewData["Title"] = "Accommodatie";
 }
 
-<div class="nm-page-head">
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
     <div>
-        <h1>Accommodatie</h1>
-        <small class="text-muted">Dag @ViewBag.DayNumber</small>
+        <p class="eyebrow mb-2">Dag @ViewBag.DayNumber</p>
+        <h1 class="font-display text-3xl font-bold sm:text-4xl">Accommodatie</h1>
     </div>
-    <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-primary">Accommodatie toevoegen</a>
+    <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-accent">Accommodatie toevoegen</a>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">Deze dag heeft nog geen accommodatie.</div>
+    <div class="alert alert-info reveal">Deze dag heeft nog geen accommodatie.</div>
 }
 else
 {
-    <div class="nm-surface p-0 overflow-hidden">
-        <table class="table table-hover align-middle">
+    <div class="card-glass reveal overflow-hidden">
+        <table class="table-glass">
             <thead>
                 <tr>
                     <th>Naam</th>
                     <th>Adres</th>
-                    <th class="text-end">Acties</th>
+                    <th class="text-right">Acties</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,15 +34,17 @@ else
                 {
                     <tr>
                         <td>@accommodation.Name</td>
-                        <td>@(accommodation.Address ?? "–")</td>
-                        <td class="text-end">
-                            <a asp-controller="RoomType" asp-action="Index" asp-route-accommodationId="@accommodation.Id" class="btn btn-sm btn-outline-secondary">Kamertypes</a>
-                            <a asp-action="Edit" asp-route-id="@accommodation.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
-                            <form asp-action="Delete" asp-route-id="@accommodation.Id" asp-route-dayId="@dayId"
-                                  method="post" class="d-inline"
-                                  onsubmit="return confirm('Deze accommodatie verwijderen?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
-                            </form>
+                        <td>@(accommodation.Address ?? "-")</td>
+                        <td>
+                            <div class="flex flex-wrap justify-end gap-2">
+                                <a asp-controller="RoomType" asp-action="Index" asp-route-accommodationId="@accommodation.Id" class="btn btn-ghost btn-sm">Kamertypes</a>
+                                <a asp-action="Edit" asp-route-id="@accommodation.Id" class="btn btn-primary btn-sm">Bewerken</a>
+                                <form asp-action="Delete" asp-route-id="@accommodation.Id" asp-route-dayId="@dayId"
+                                      method="post" class="inline"
+                                      onsubmit="return confirm('Deze accommodatie verwijderen?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Verwijderen</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -51,4 +53,4 @@ else
     </div>
 }
 
-<a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn btn-link">Terug naar dag-tot-dag</a>
+<a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar dag-tot-dag</a>

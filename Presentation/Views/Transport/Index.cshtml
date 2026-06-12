@@ -6,29 +6,29 @@
     ViewData["Title"] = "Transport";
 }
 
-<div class="nm-page-head">
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
     <div>
-        <h1>Transport</h1>
-        <small class="text-muted">Dag @ViewBag.DayNumber</small>
+        <p class="eyebrow mb-2">Dag @ViewBag.DayNumber</p>
+        <h1 class="font-display text-3xl font-bold sm:text-4xl">Transport</h1>
     </div>
-    <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-primary">Transport toevoegen</a>
+    <a asp-action="Create" asp-route-dayId="@dayId" class="btn btn-accent">Transport toevoegen</a>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">Deze dag heeft nog geen transport.</div>
+    <div class="alert alert-info reveal">Deze dag heeft nog geen transport.</div>
 }
 else
 {
-    <div class="nm-surface p-0 overflow-hidden">
-        <table class="table table-hover align-middle mb-0">
+    <div class="card-glass reveal overflow-hidden">
+        <table class="table-glass">
             <thead>
                 <tr>
                     <th>Type</th>
                     <th>Van</th>
                     <th>Naar</th>
                     <th>Vlucht</th>
-                    <th class="text-end">Acties</th>
+                    <th class="text-right">Acties</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,20 +41,22 @@ else
                         <td>
                             @if (transport.FlightNumber is not null)
                             {
-                                <text>@transport.FlightNumber – @transport.Airline</text>
+                                <text>@transport.FlightNumber, @transport.Airline</text>
                             }
                             else
                             {
-                                <span class="text-muted">–</span>
+                                <span style="color:var(--text-secondary);">-</span>
                             }
                         </td>
-                        <td class="text-end">
-                            <a asp-action="Edit" asp-route-id="@transport.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
-                            <form asp-action="Delete" asp-route-id="@transport.Id" asp-route-dayId="@dayId"
-                                  method="post" class="d-inline"
-                                  onsubmit="return confirm('Dit transport verwijderen?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
-                            </form>
+                        <td class="text-right">
+                            <div class="flex flex-wrap justify-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@transport.Id" class="btn btn-ghost btn-sm">Bewerken</a>
+                                <form asp-action="Delete" asp-route-id="@transport.Id" asp-route-dayId="@dayId"
+                                      method="post" class="inline"
+                                      onsubmit="return confirm('Dit transport verwijderen?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Verwijderen</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -63,4 +65,4 @@ else
     </div>
 }
 
-<a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn btn-link">Terug naar dag-tot-dag</a>
+<a asp-controller="Day" asp-action="Index" asp-route-quoteId="@quoteId" class="btn-link">Terug naar dag-tot-dag</a>

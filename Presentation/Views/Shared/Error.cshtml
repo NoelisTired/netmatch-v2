@@ -3,15 +3,19 @@
     ViewData["Title"] = "Fout";
 }
 
-<h1 class="h3 mb-3 text-danger">Er is een fout opgetreden</h1>
+<div class="mb-8 reveal">
+    <h1 class="font-display text-3xl font-bold" style="color:#f87171;">Er is een fout opgetreden</h1>
+</div>
 
-<p class="text-muted">Er ging iets mis bij het verwerken van je verzoek. Probeer het opnieuw.</p>
+<div class="card-glass reveal p-6">
+    <p style="color:var(--text-secondary);">Er ging iets mis bij het verwerken van je verzoek. Probeer het opnieuw.</p>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+    @if (Model.ShowRequestId)
+    {
+        <p style="color:var(--text-secondary);">
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
 
-<a asp-controller="Quote" asp-action="Index" class="btn btn-link">Terug naar offertes</a>
+    <a asp-controller="Quote" asp-action="Index" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar offertes</a>
+</div>

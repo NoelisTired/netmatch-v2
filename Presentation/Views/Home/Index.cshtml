@@ -2,39 +2,45 @@
     ViewData["Title"] = L["Home"];
 }
 
-<section class="nm-hero mb-4">
-    <div class="accent-bar"></div>
-    <p class="nm-eyebrow text-white-50 mb-2" style="letter-spacing:.18em;">TourWeb Portal · by NetMatch</p>
-    <h1>@L["Reisoffertes die indruk maken"]</h1>
-    <p class="lead mb-4">
-        @L["Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht."]
-    </p>
-    <div class="d-flex flex-wrap gap-2">
-        <a asp-controller="Quote" asp-action="Index" class="btn btn-accent">@L["Naar offertes"]</a>
-        <a asp-controller="Quote" asp-action="Create" class="btn btn-outline-light">@L["Nieuwe offerte aanmaken"]</a>
+<section class="relative overflow-hidden card-glass reveal px-7 py-14 sm:px-12 sm:py-16">
+    <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-40 blur-3xl"
+         style="background:radial-gradient(circle, var(--color-violet), transparent 70%);"></div>
+    <div class="relative max-w-2xl">
+        <p class="eyebrow mb-4">
+            <span class="inline-block h-1.5 w-1.5 rounded-full" style="background:var(--color-cyan);"></span>
+            TourWeb Portal, by NetMatch
+        </p>
+        <h1 class="font-display text-4xl font-bold leading-[1.05] sm:text-6xl">
+            @L["Reisoffertes die"]
+            <span class="text-gradient">@L["indruk maken"]</span>
+        </h1>
+        <p class="mt-5 max-w-xl text-base leading-relaxed sm:text-lg" style="color:var(--text-secondary);">
+            @L["Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht."]
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+            <a asp-controller="Quote" asp-action="Index" class="btn btn-primary">@L["Naar offertes"]</a>
+            <a asp-controller="Quote" asp-action="Create" class="btn btn-ghost">@L["Nieuwe offerte aanmaken"]</a>
+        </div>
     </div>
 </section>
 
-<div class="row g-3">
-    <div class="col-md-4">
-        <a asp-controller="Quote" asp-action="Index" class="nm-tile text-decoration-none">
-            <span class="nm-tile-icon">📋</span>
-            <div class="nm-tile-title">@L["Offertes beheren"]</div>
-            <p class="text-muted small mb-0">@L["Bekijk, bewerk en exporteer al je reisoffertes."]</p>
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a asp-controller="Quote" asp-action="Create" class="nm-tile text-decoration-none">
-            <span class="nm-tile-icon">✨</span>
-            <div class="nm-tile-title">@L["Nieuwe offerte aanmaken"]</div>
-            <p class="text-muted small mb-0">@L["Begin een nieuwe reisofferte van de grond af op."]</p>
-        </a>
-    </div>
-    <div class="col-md-4">
-        <a asp-controller="Branding" asp-action="Edit" class="nm-tile text-decoration-none">
-            <span class="nm-tile-icon">🎨</span>
-            <div class="nm-tile-title">@L["Huisstijl"]</div>
-            <p class="text-muted small mb-0">@L["Stel je logo en kleuren in voor offertes met je eigen huisstijl."]</p>
-        </a>
-    </div>
+<div class="mt-6 grid gap-4 sm:grid-cols-3">
+    <a asp-controller="Quote" asp-action="Index"
+       class="card-glass card-glass-hover reveal block p-6" style="animation-delay:.08s;">
+        <span class="font-display text-2xl font-bold text-gradient">01</span>
+        <div class="mt-3 font-display text-lg font-semibold" style="color:var(--text-primary);">@L["Offertes beheren"]</div>
+        <p class="mt-1 text-sm" style="color:var(--text-secondary);">@L["Bekijk, bewerk en exporteer al je reisoffertes."]</p>
+    </a>
+    <a asp-controller="Quote" asp-action="Create"
+       class="card-glass card-glass-hover reveal block p-6" style="animation-delay:.16s;">
+        <span class="font-display text-2xl font-bold text-gradient">02</span>
+        <div class="mt-3 font-display text-lg font-semibold" style="color:var(--text-primary);">@L["Nieuwe offerte aanmaken"]</div>
+        <p class="mt-1 text-sm" style="color:var(--text-secondary);">@L["Begin een nieuwe reisofferte van de grond af op."]</p>
+    </a>
+    <a asp-controller="Branding" asp-action="Edit"
+       class="card-glass card-glass-hover reveal block p-6" style="animation-delay:.24s;">
+        <span class="font-display text-2xl font-bold text-gradient">03</span>
+        <div class="mt-3 font-display text-lg font-semibold" style="color:var(--text-primary);">@L["Huisstijl"]</div>
+        <p class="mt-1 text-sm" style="color:var(--text-secondary);">@L["Stel je logo en kleuren in voor offertes met je eigen huisstijl."]</p>
+    </a>
 </div>

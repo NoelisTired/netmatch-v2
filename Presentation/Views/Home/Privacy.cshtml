@@ -2,16 +2,19 @@
     ViewData["Title"] = "Privacy";
 }
 
-<div class="nm-page-head">
-    <h1>Privacy</h1>
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
+    <div>
+        <p class="eyebrow mb-2">TourWeb Portal</p>
+        <h1 class="font-display text-3xl font-bold sm:text-4xl">Privacy</h1>
+    </div>
 </div>
 
-<div class="nm-surface p-4 col-lg-8">
-    <p class="text-muted mb-4">
+<div class="card-glass reveal max-w-2xl p-6 sm:p-8">
+    <p style="color:var(--text-secondary);">
         TourWeb Portal verwerkt uitsluitend de gegevens die nodig zijn om reisoffertes
         samen te stellen. Offertegegevens zijn alleen zichtbaar voor het reisbureau
         dat ze heeft aangemaakt en worden niet met derden gedeeld.
     </p>
 
-    <a asp-controller="Home" asp-action="Index" class="btn btn-link p-0">← Terug naar home</a>
+    <a asp-controller="Home" asp-action="Index" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar home</a>
 </div>

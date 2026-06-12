@@ -6,161 +6,195 @@
 
 <div class="nm-quote"
      style="--quote-primary:@Model.Branding.PrimaryColor; --quote-accent:@Model.Branding.AccentColor;">
-<div class="nm-quote-header d-flex justify-content-between align-items-center mb-3 p-3">
-    <div class="d-flex align-items-center gap-3">
-        @if (!string.IsNullOrWhiteSpace(Model.Branding.LogoPath))
-        {
-            <img src="@Model.Branding.LogoPath" alt="Logo reisbureau" style="max-height:48px;" />
-        }
-        <div>
-            <h1 class="mb-1" style="color:@Model.Branding.PrimaryColor;">@Model.Quote.Title</h1>
-            <span class="text-muted">@Model.Quote.Language · aangemaakt @Model.Quote.CreatedAt.ToString("dd-MM-yyyy")</span>
-        </div>
-    </div>
-    <span class="badge align-self-center fs-6" style="background:@Model.Branding.AccentColor; color:#fff;">@Model.Quote.Status</span>
-</div>
 
-<div class="d-flex flex-wrap gap-2 mb-4">
-    <a asp-action="Edit" asp-route-id="@quoteId" class="btn btn-sm btn-outline-primary">@L["Offerte bewerken"]</a>
-    <a asp-controller="Day" asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-sm nm-btn-brand">@L["Dag toevoegen"]</a>
-    <a asp-action="Pdf" asp-route-id="@quoteId" class="btn btn-sm btn-outline-dark" target="_blank">@L["Download PDF"]</a>
-    <a asp-controller="Branding" asp-action="Edit" class="btn btn-sm btn-outline-secondary">@L["Huisstijl"]</a>
-    <a asp-action="Index" class="btn btn-sm btn-link">@L["Terug naar overzicht"]</a>
-</div>
-
-@if (Model.Days.Count == 0)
-{
-    <div class="alert alert-info">@L["Deze offerte heeft nog geen dagen. Voeg de eerste dag toe."]</div>
-}
-
-@foreach (var block in Model.Days)
-{
-    <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-glass reveal mb-5 flex flex-wrap items-center justify-between gap-4 p-5"
+         style="border-left:5px solid var(--quote-primary);">
+        <div class="flex items-center gap-4">
+            @if (!string.IsNullOrWhiteSpace(Model.Branding.LogoPath))
+            {
+                <img src="@Model.Branding.LogoPath" alt="Logo reisbureau" class="max-h-12 rounded-lg" />
+            }
             <div>
-                <strong>@L["Dag"] @block.Day.DayNumber</strong>
-                <span class="text-muted">· @block.Day.Date.ToString("dd-MM-yyyy")</span>
-                @if (!string.IsNullOrWhiteSpace(block.Day.Title))
-                {
-                    <span>– @block.Day.Title</span>
-                }
-            </div>
-            <div class="d-flex gap-2">
-                <a asp-controller="Day" asp-action="Edit" asp-route-id="@block.Day.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
-                <form asp-controller="Day" asp-action="Delete" asp-route-id="@block.Day.Id" asp-route-quoteId="@quoteId"
-                      method="post" onsubmit="return confirm('Deze dag verwijderen?');">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
-                </form>
+                <h1 class="font-display text-2xl font-bold sm:text-3xl" style="color:var(--quote-primary);">@Model.Quote.Title</h1>
+                <span class="text-sm" style="color:var(--text-secondary);">@Model.Quote.Language, aangemaakt @Model.Quote.CreatedAt.ToString("dd-MM-yyyy")</span>
             </div>
         </div>
-        <div class="card-body">
-            @if (!string.IsNullOrWhiteSpace(block.Day.Description))
-            {
-                <p class="text-muted">@block.Day.Description</p>
-            }
+        <span class="pill text-sm" style="background:var(--quote-accent); color:#fff; border-color:transparent;">@Model.Quote.Status</span>
+    </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <h2 class="h6 mb-0">@L["Transport"]</h2>
-                <a asp-controller="Transport" asp-action="Create" asp-route-dayId="@block.Day.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-secondary">@L["Transport toevoegen"]</a>
-            </div>
-            @if (block.Transports.Count == 0)
-            {
-                <p class="text-muted small mb-3">@L["Geen transport."]</p>
-            }
-            else
-            {
-                <table class="table table-sm align-middle mb-3">
-                    <tbody>
-                        @foreach (var t in block.Transports)
-                        {
-                            <tr>
-                                <td style="width:7rem">@t.Type</td>
-                                <td>@t.DepartureLocation → @t.ArrivalLocation
-                                    @if (t.FlightNumber is not null)
-                                    {
-                                        <span class="text-muted">(@t.FlightNumber · @t.Airline)</span>
-                                    }
-                                </td>
-                                <td class="text-end" style="width:11rem">
-                                    <a asp-controller="Transport" asp-action="Edit" asp-route-id="@t.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
-                                    <form asp-controller="Transport" asp-action="Delete" asp-route-id="@t.Id" asp-route-dayId="@block.Day.Id"
-                                          method="post" class="d-inline" onsubmit="return confirm('Dit transport verwijderen?');">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+    <div class="mb-8 flex flex-wrap gap-2">
+        <a asp-action="Edit" asp-route-id="@quoteId" class="btn btn-ghost btn-sm">@L["Offerte bewerken"]</a>
+        <a asp-controller="Day" asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-sm nm-btn-brand">@L["Dag toevoegen"]</a>
+        <a asp-action="Pdf" asp-route-id="@quoteId" class="btn btn-ghost btn-sm" target="_blank">@L["Download PDF"]</a>
+        <a asp-controller="Branding" asp-action="Edit" class="btn btn-ghost btn-sm">@L["Huisstijl"]</a>
+        <a asp-action="Index" class="btn-link btn-sm self-center">@L["Terug naar overzicht"]</a>
+    </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-1">
-                <h2 class="h6 mb-0">@L["Accommodatie"]</h2>
-                <a asp-controller="Accommodation" asp-action="Create" asp-route-dayId="@block.Day.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-secondary">@L["Accommodatie toevoegen"]</a>
+    @if (Model.Days.Count == 0)
+    {
+        <div class="alert alert-info">@L["Deze offerte heeft nog geen dagen. Voeg de eerste dag toe."]</div>
+    }
+
+    @foreach (var block in Model.Days)
+    {
+        <div class="card-glass reveal mb-4 overflow-hidden">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4" style="border-color:var(--card-border);">
+                <div class="font-display font-semibold" style="color:var(--text-primary);">
+                    @L["Dag"] @block.Day.DayNumber
+                    <span class="font-sans text-sm font-normal" style="color:var(--text-secondary);">@block.Day.Date.ToString("dd-MM-yyyy")</span>
+                    @if (!string.IsNullOrWhiteSpace(block.Day.Title))
+                    {
+                        <span class="font-sans text-sm font-normal" style="color:var(--text-secondary);">, @block.Day.Title</span>
+                    }
+                </div>
+                <div class="flex gap-2">
+                    <a asp-controller="Day" asp-action="Edit" asp-route-id="@block.Day.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Bewerken"]</a>
+                    <form asp-controller="Day" asp-action="Delete" asp-route-id="@block.Day.Id" asp-route-quoteId="@quoteId"
+                          method="post" onsubmit="return confirm('Deze dag verwijderen?');">
+                        <button type="submit" class="btn btn-danger btn-sm">@L["Verwijderen"]</button>
+                    </form>
+                </div>
             </div>
-            @if (block.Accommodations.Count == 0)
-            {
-                <p class="text-muted small mb-0">@L["Geen accommodatie."]</p>
-            }
-            else
-            {
-                @foreach (var acc in block.Accommodations)
+
+            <div class="space-y-5 p-5">
+                @if (!string.IsNullOrWhiteSpace(block.Day.Description))
                 {
-                    <div class="border rounded p-2 mb-2">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <strong>@acc.Accommodation.Name</strong>
-                                @if (!string.IsNullOrWhiteSpace(acc.Accommodation.Address))
-                                {
-                                    <div class="text-muted small">@acc.Accommodation.Address</div>
-                                }
-                            </div>
-                            <div class="d-flex gap-2">
-                                <a asp-controller="RoomType" asp-action="Create" asp-route-accommodationId="@acc.Accommodation.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-secondary">@L["Kamertype toevoegen"]</a>
-                                <a asp-controller="Accommodation" asp-action="Edit" asp-route-id="@acc.Accommodation.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
-                                <form asp-controller="Accommodation" asp-action="Delete" asp-route-id="@acc.Accommodation.Id" asp-route-dayId="@block.Day.Id"
-                                      method="post" onsubmit="return confirm('Deze accommodatie verwijderen?');">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
-                                </form>
-                            </div>
-                        </div>
-                        @if (acc.RoomTypes.Count > 0)
-                        {
-                            <table class="table table-sm mb-0 mt-2">
-                                <thead>
-                                    <tr><th>@L["Kamertype"]</th><th>@L["Prijs/nacht"]</th><th>@L["Capaciteit"]</th><th class="text-end">@L["Acties"]</th></tr>
-                                </thead>
+                    <p class="text-sm" style="color:var(--text-secondary);">@block.Day.Description</p>
+                }
+
+                <div>
+                    <div class="mb-2 flex items-center justify-between">
+                        <h2 class="font-display text-sm font-semibold uppercase tracking-wide" style="color:var(--text-secondary);">@L["Transport"]</h2>
+                        <a asp-controller="Transport" asp-action="Create" asp-route-dayId="@block.Day.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Transport toevoegen"]</a>
+                    </div>
+                    @if (block.Transports.Count == 0)
+                    {
+                        <p class="text-sm" style="color:var(--text-secondary);">@L["Geen transport."]</p>
+                    }
+                    else
+                    {
+                        <div class="overflow-hidden rounded-xl border" style="border-color:var(--card-border);">
+                            <table class="table-glass">
                                 <tbody>
-                                    @foreach (var rt in acc.RoomTypes)
+                                    @foreach (var t in block.Transports)
                                     {
                                         <tr>
-                                            <td>@rt.Name</td>
-                                            <td>&euro; @rt.PricePerNight.ToString("0.00")</td>
-                                            <td>@rt.Capacity p.</td>
-                                            <td class="text-end" style="width:11rem">
-                                                <a asp-controller="RoomType" asp-action="Edit" asp-route-id="@rt.Id" asp-route-quoteId="@quoteId" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
-                                                <form asp-controller="RoomType" asp-action="Delete" asp-route-id="@rt.Id" asp-route-accommodationId="@acc.Accommodation.Id"
-                                                      method="post" class="d-inline" onsubmit="return confirm('Dit kamertype verwijderen?');">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
-                                                </form>
+                                            <td class="w-28 font-medium" style="color:var(--text-primary);">@t.Type</td>
+                                            <td style="color:var(--text-secondary);">
+                                                @t.DepartureLocation naar @t.ArrivalLocation
+                                                @if (t.FlightNumber is not null)
+                                                {
+                                                    <span class="opacity-70">(@t.FlightNumber, @t.Airline)</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="flex justify-end gap-2">
+                                                    <a asp-controller="Transport" asp-action="Edit" asp-route-id="@t.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Bewerken"]</a>
+                                                    <form asp-controller="Transport" asp-action="Delete" asp-route-id="@t.Id" asp-route-dayId="@block.Day.Id"
+                                                          method="post" class="inline" onsubmit="return confirm('Dit transport verwijderen?');">
+                                                        <button type="submit" class="btn btn-danger btn-sm">@L["Verwijderen"]</button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     }
                                 </tbody>
                             </table>
-                        }
+                        </div>
+                    }
+                </div>
+
+                <div>
+                    <div class="mb-2 flex items-center justify-between">
+                        <h2 class="font-display text-sm font-semibold uppercase tracking-wide" style="color:var(--text-secondary);">@L["Accommodatie"]</h2>
+                        <a asp-controller="Accommodation" asp-action="Create" asp-route-dayId="@block.Day.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Accommodatie toevoegen"]</a>
                     </div>
-                }
+                    @if (block.Accommodations.Count == 0)
+                    {
+                        <p class="text-sm" style="color:var(--text-secondary);">@L["Geen accommodatie."]</p>
+                    }
+                    else
+                    {
+                        @foreach (var acc in block.Accommodations)
+                        {
+                            <div class="mb-3 rounded-xl border p-4" style="border-color:var(--card-border);">
+                                <div class="flex flex-wrap items-start justify-between gap-3">
+                                    <div>
+                                        <strong style="color:var(--text-primary);">@acc.Accommodation.Name</strong>
+                                        @if (!string.IsNullOrWhiteSpace(acc.Accommodation.Address))
+                                        {
+                                            <div class="text-sm" style="color:var(--text-secondary);">@acc.Accommodation.Address</div>
+                                        }
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        <a asp-controller="RoomType" asp-action="Create" asp-route-accommodationId="@acc.Accommodation.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Kamertype toevoegen"]</a>
+                                        <a asp-controller="Accommodation" asp-action="Edit" asp-route-id="@acc.Accommodation.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Bewerken"]</a>
+                                        <form asp-controller="Accommodation" asp-action="Delete" asp-route-id="@acc.Accommodation.Id" asp-route-dayId="@block.Day.Id"
+                                              method="post" onsubmit="return confirm('Deze accommodatie verwijderen?');">
+                                            <button type="submit" class="btn btn-danger btn-sm">@L["Verwijderen"]</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                @if (acc.RoomTypes.Count > 0)
+                                {
+                                    <div class="mt-3 overflow-hidden rounded-lg border" style="border-color:var(--card-border);">
+                                        <table class="table-glass">
+                                            <thead>
+                                                <tr>
+                                                    <th>@L["Kamertype"]</th>
+                                                    <th>@L["Prijs/nacht"]</th>
+                                                    <th>@L["Capaciteit"]</th>
+                                                    <th class="text-right">@L["Acties"]</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var rt in acc.RoomTypes)
+                                                {
+                                                    <tr>
+                                                        <td style="color:var(--text-primary);">@rt.Name</td>
+                                                        <td style="color:var(--text-secondary);">&euro; @rt.PricePerNight.ToString("0.00")</td>
+                                                        <td style="color:var(--text-secondary);">@rt.Capacity p.</td>
+                                                        <td>
+                                                            <div class="flex justify-end gap-2">
+                                                                <a asp-controller="RoomType" asp-action="Edit" asp-route-id="@rt.Id" asp-route-quoteId="@quoteId" class="btn btn-ghost btn-sm">@L["Bewerken"]</a>
+                                                                <form asp-controller="RoomType" asp-action="Delete" asp-route-id="@rt.Id" asp-route-accommodationId="@acc.Accommodation.Id"
+                                                                      method="post" class="inline" onsubmit="return confirm('Dit kamertype verwijderen?');">
+                                                                    <button type="submit" class="btn btn-danger btn-sm">@L["Verwijderen"]</button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.IndicativeAccommodationTotal > 0 || Model.IndicativeTransportTotal > 0)
+    {
+        <div class="card-glass reveal mt-6 p-5" style="border-left:5px solid var(--quote-accent);">
+            <p class="eyebrow mb-3">Indicatie</p>
+            @if (Model.IndicativeTransportTotal > 0)
+            {
+                <div class="flex items-center justify-between py-1">
+                    <span class="text-sm" style="color:var(--text-secondary);">Transport (som van alle ritten)</span>
+                    <span class="font-display text-lg font-semibold" style="color:var(--text-primary);">&euro; @Model.IndicativeTransportTotal.ToString("0.00")</span>
+                </div>
+            }
+            @if (Model.IndicativeAccommodationTotal > 0)
+            {
+                <div class="flex items-center justify-between py-1">
+                    <span class="text-sm" style="color:var(--text-secondary);">Accommodatie (goedkoopste kamer per accommodatie, per nacht)</span>
+                    <span class="font-display text-lg font-semibold" style="color:var(--text-primary);">&euro; @Model.IndicativeAccommodationTotal.ToString("0.00")</span>
+                </div>
             }
         </div>
-    </div>
-}
-
-@if (Model.IndicativeAccommodationTotal > 0)
-{
-    <div class="nm-price-callout d-flex justify-content-between align-items-center p-3">
-        <span class="text-muted">Indicatie accommodatie (goedkoopste kamer per accommodatie)</span>
-        <span class="fs-5"><strong>&euro; @Model.IndicativeAccommodationTotal.ToString("0.00")</strong> <span class="text-muted fs-6">per nacht</span></span>
-    </div>
-}
-</div>@* /.nm-quote *@
+    }
+</div>

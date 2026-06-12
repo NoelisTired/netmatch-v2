@@ -66,4 +66,6 @@
   <data name="Voorbeeld" xml:space="preserve"><value>Aperçu</value></data>
   <data name="Voorbeeldofferte" xml:space="preserve"><value>Devis exemple</value></data>
   <data name="Zo zien je kleuren en logo eruit op een offerte voor je klant." xml:space="preserve"><value>Voici comment vos couleurs et votre logo apparaissent sur un devis pour votre client.</value></data>
+  <data name="Reisoffertes die" xml:space="preserve"><value>Des devis de voyage qui</value></data>
+  <data name="indruk maken" xml:space="preserve"><value>impressionnent</value></data>
 </root>

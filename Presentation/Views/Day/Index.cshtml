@@ -5,28 +5,28 @@
     ViewData["Title"] = "Dag-tot-dag";
 }
 
-<div class="nm-page-head">
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
     <div>
-        <h1>Dag-tot-dag</h1>
-        <small class="text-muted">@ViewBag.QuoteTitle</small>
+        <p class="eyebrow mb-2">@ViewBag.QuoteTitle</p>
+        <h1 class="font-display text-3xl font-bold sm:text-4xl">Dag-tot-dag</h1>
     </div>
-    <a asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-primary">Dag toevoegen</a>
+    <a asp-action="Create" asp-route-quoteId="@quoteId" class="btn btn-accent">Dag toevoegen</a>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">Deze offerte heeft nog geen dagen.</div>
+    <div class="alert alert-info reveal">Deze offerte heeft nog geen dagen.</div>
 }
 else
 {
-    <div class="nm-surface p-0 overflow-hidden">
-        <table class="table table-hover align-middle mb-0">
+    <div class="card-glass reveal overflow-hidden">
+        <table class="table-glass">
             <thead>
                 <tr>
                     <th>Dag</th>
                     <th>Datum</th>
                     <th>Titel</th>
-                    <th class="text-end">Acties</th>
+                    <th class="text-right">Acties</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,15 +36,17 @@ else
                         <td>@day.DayNumber</td>
                         <td>@day.Date.ToString("dd-MM-yyyy")</td>
                         <td>@day.Title</td>
-                        <td class="text-end">
-                            <a asp-controller="Transport" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-sm btn-outline-secondary">Transport</a>
-                            <a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-sm btn-outline-secondary">Accommodatie</a>
-                            <a asp-action="Edit" asp-route-id="@day.Id" class="btn btn-sm btn-outline-primary">Bewerken</a>
-                            <form asp-action="Delete" asp-route-id="@day.Id" asp-route-quoteId="@quoteId"
-                                  method="post" class="d-inline"
-                                  onsubmit="return confirm('Deze dag verwijderen?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Verwijderen</button>
-                            </form>
+                        <td>
+                            <div class="flex flex-wrap justify-end gap-2">
+                                <a asp-controller="Transport" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-ghost btn-sm">Transport</a>
+                                <a asp-controller="Accommodation" asp-action="Index" asp-route-dayId="@day.Id" class="btn btn-ghost btn-sm">Accommodatie</a>
+                                <a asp-action="Edit" asp-route-id="@day.Id" class="btn btn-primary btn-sm">Bewerken</a>
+                                <form asp-action="Delete" asp-route-id="@day.Id" asp-route-quoteId="@quoteId"
+                                      method="post" class="inline"
+                                      onsubmit="return confirm('Deze dag verwijderen?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Verwijderen</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -53,4 +55,4 @@ else
     </div>
 }
 
-<a asp-controller="Quote" asp-action="Details" asp-route-id="@quoteId" class="btn btn-link">Terug naar offerte</a>
+<a asp-controller="Quote" asp-action="Details" asp-route-id="@quoteId" class="btn-link mt-6 inline-block text-sm font-semibold">Terug naar offerte</a>

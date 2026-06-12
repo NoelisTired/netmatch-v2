@@ -3,38 +3,43 @@
     ViewData["Title"] = "Dag bewerken";
 }
 
-<div class="nm-page-head">
-    <h1>Dag bewerken</h1>
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
+    <div>
+        <p class="eyebrow mb-2">TourWeb Portal</p>
+        <h1 class="font-display text-3xl font-bold sm:text-4xl">Dag bewerken</h1>
+    </div>
 </div>
 
-<div class="nm-surface p-4 col-lg-6">
-    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div class="card-glass reveal max-w-xl p-6 sm:p-7">
+    <div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
 
-    <form asp-action="Edit" method="post">
+    <form asp-action="Edit" method="post" class="space-y-5">
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="QuoteId" />
 
-    <div class="mb-3">
-        <label asp-for="DayNumber" class="form-label">Dagnummer</label>
-        <input asp-for="DayNumber" type="number" min="1" class="form-control" />
-    </div>
+        <div>
+            <label asp-for="DayNumber" class="field-label">Dagnummer</label>
+            <input asp-for="DayNumber" type="number" min="1" class="field" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Date" class="form-label">Datum</label>
-        <input asp-for="Date" type="date" class="form-control" value="@Model.Date?.ToString("yyyy-MM-dd")" />
-    </div>
+        <div>
+            <label asp-for="Date" class="field-label">Datum</label>
+            <input asp-for="Date" type="date" class="field" value="@Model.Date?.ToString("yyyy-MM-dd")" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Title" class="form-label">Titel <span class="text-muted">(optioneel)</span></label>
-        <input asp-for="Title" class="form-control" />
-    </div>
+        <div>
+            <label asp-for="Title" class="field-label">Titel <span style="color:var(--text-secondary);">(optioneel)</span></label>
+            <input asp-for="Title" class="field" />
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label">Omschrijving <span class="text-muted">(optioneel)</span></label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-    </div>
+        <div>
+            <label asp-for="Description" class="field-label">Omschrijving <span style="color:var(--text-secondary);">(optioneel)</span></label>
+            <textarea asp-for="Description" class="field" rows="3"></textarea>
+        </div>
 
-        <button type="submit" class="btn btn-primary">Opslaan</button>
-        <a asp-action="Index" asp-route-quoteId="@Model.QuoteId" class="btn btn-link">Annuleren</a>
+        <div class="flex items-center gap-3 pt-1">
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <a asp-action="Index" asp-route-quoteId="@Model.QuoteId" class="btn-link text-sm font-semibold">Annuleren</a>
+        </div>
     </form>
 </div>

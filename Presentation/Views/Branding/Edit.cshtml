@@ -3,97 +3,90 @@
     ViewData["Title"] = L["Huisstijl"];
 }
 
-<div class="nm-page-head">
-    <div>
-        <p class="nm-eyebrow mb-1">TourWeb Portal</p>
-        <h1>@L["Huisstijl"]</h1>
-    </div>
+<div class="mb-8 reveal">
+    <p class="eyebrow mb-2">TourWeb Portal</p>
+    <h1 class="font-display text-3xl font-bold sm:text-4xl">@L["Huisstijl"]</h1>
 </div>
 
 @if (TempData["BrandingSaved"] is string saved)
 {
-    <div class="alert alert-success">@saved</div>
+    <div class="alert alert-success reveal mb-4">@saved</div>
 }
 
-<div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
 
-<div class="row g-4">
-    <div class="col-lg-6">
-        <div class="nm-surface p-4">
-            <form asp-action="Edit" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label class="form-label">@L["Huidig logo"]</label>
-                    <div>
-                        @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
-                        {
-                            <img src="@Model.LogoPath" alt="@L["Huidig logo"]" style="max-height:64px;" class="border rounded p-1" />
-                        }
-                        else
-                        {
-                            <span class="text-muted">@L["Nog geen logo ingesteld."]</span>
-                        }
+<div class="grid gap-5 lg:grid-cols-2">
+    <div class="card-glass reveal p-6">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data" class="space-y-5">
+            <div>
+                <label class="field-label">@L["Huidig logo"]</label>
+                @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
+                {
+                    <img src="@Model.LogoPath" alt="@L["Huidig logo"]" class="max-h-16 rounded-lg border p-1" style="border-color:var(--card-border);" />
+                }
+                else
+                {
+                    <span class="text-sm" style="color:var(--text-secondary);">@L["Nog geen logo ingesteld."]</span>
+                }
+            </div>
+
+            <div>
+                <label asp-for="Logo" class="field-label">@L["Nieuw logo"] <span class="font-normal opacity-70">(PNG, JPG, SVG, max 2 MB)</span></label>
+                <input asp-for="Logo" type="file" accept=".png,.jpg,.jpeg,.svg" class="field" id="logoInput" />
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label asp-for="PrimaryColor" class="field-label">@L["Primaire kleur"]</label>
+                    <div class="flex items-center gap-3">
+                        <input asp-for="PrimaryColor" type="color" class="h-10 w-14 cursor-pointer rounded-lg border bg-transparent p-1" style="border-color:var(--card-border);" id="primaryColor" />
+                        <code class="text-sm" style="color:var(--text-secondary);" id="primaryColorHex">@Model.PrimaryColor</code>
                     </div>
                 </div>
-
-                <div class="mb-3">
-                    <label asp-for="Logo" class="form-label">@L["Nieuw logo"] <span class="text-muted">(PNG, JPG / SVG, max 2 MB)</span></label>
-                    <input asp-for="Logo" type="file" accept=".png,.jpg,.jpeg,.svg" class="form-control" id="logoInput" />
-                </div>
-
-                <div class="row g-3">
-                    <div class="col-sm-6 mb-3">
-                        <label asp-for="PrimaryColor" class="form-label">@L["Primaire kleur"]</label>
-                        <div class="d-flex align-items-center gap-2">
-                            <input asp-for="PrimaryColor" type="color" class="form-control form-control-color" id="primaryColor" />
-                            <code class="text-muted" id="primaryColorHex">@Model.PrimaryColor</code>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 mb-3">
-                        <label asp-for="AccentColor" class="form-label">@L["Accentkleur"]</label>
-                        <div class="d-flex align-items-center gap-2">
-                            <input asp-for="AccentColor" type="color" class="form-control form-control-color" id="accentColor" />
-                            <code class="text-muted" id="accentColorHex">@Model.AccentColor</code>
-                        </div>
+                <div>
+                    <label asp-for="AccentColor" class="field-label">@L["Accentkleur"]</label>
+                    <div class="flex items-center gap-3">
+                        <input asp-for="AccentColor" type="color" class="h-10 w-14 cursor-pointer rounded-lg border bg-transparent p-1" style="border-color:var(--card-border);" id="accentColor" />
+                        <code class="text-sm" style="color:var(--text-secondary);" id="accentColorHex">@Model.AccentColor</code>
                     </div>
                 </div>
+            </div>
 
-                <div class="d-flex gap-2 mt-2">
-                    <button type="submit" class="btn btn-primary">@L["Opslaan"]</button>
-                    <a asp-controller="Quote" asp-action="Index" class="btn btn-link">@L["Terug naar offertes"]</a>
-                </div>
-            </form>
-        </div>
+            <div class="flex items-center gap-3 pt-1">
+                <button type="submit" class="btn btn-primary">@L["Opslaan"]</button>
+                <a asp-controller="Quote" asp-action="Index" class="btn-link text-sm font-semibold">@L["Terug naar offertes"]</a>
+            </div>
+        </form>
     </div>
 
-    <div class="col-lg-6">
-        <div class="nm-surface p-4 h-100">
-            <p class="nm-eyebrow mb-3">@L["Voorbeeld"]</p>
+    <div class="card-glass reveal p-6">
+        <p class="eyebrow mb-4">@L["Voorbeeld"]</p>
 
-            <div class="d-flex justify-content-between align-items-center p-3 rounded mb-3"
-                 id="brandPreviewHeader"
-                 style="border-left:6px solid @Model.PrimaryColor; background:#f8f9fa;">
-                <div class="d-flex align-items-center gap-3">
-                    <img id="brandPreviewLogo"
-                         src="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "" : Model.LogoPath)"
-                         alt="logo"
-                         style="max-height:40px; @(string.IsNullOrWhiteSpace(Model.LogoPath) ? "display:none;" : "")" />
-                    <div>
-                        <strong id="brandPreviewTitle" style="color:@Model.PrimaryColor;">@L["Voorbeeldofferte"]</strong>
-                        <div class="text-muted small">NL · @L["Voorbeeld"]</div>
-                    </div>
+        <div class="mb-4 flex items-center justify-between rounded-xl p-4"
+             id="brandPreviewHeader"
+             style="border-left:6px solid @Model.PrimaryColor; background:#f8f9fa;">
+            <div class="flex items-center gap-3">
+                <img id="brandPreviewLogo"
+                     src="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "" : Model.LogoPath)"
+                     alt="logo"
+                     class="max-h-10"
+                     style="@(string.IsNullOrWhiteSpace(Model.LogoPath) ? "display:none;" : "")" />
+                <div>
+                    <strong id="brandPreviewTitle" style="color:@Model.PrimaryColor;">@L["Voorbeeldofferte"]</strong>
+                    <div class="text-xs text-slate-500">NL, @L["Voorbeeld"]</div>
                 </div>
-                <span class="badge" id="brandPreviewBadge" style="background:@Model.AccentColor; color:#fff;">concept</span>
             </div>
-
-            <div class="d-flex flex-wrap gap-2">
-                <span class="btn btn-sm" id="brandPreviewBtnPrimary"
-                      style="background:@Model.PrimaryColor; color:#fff;">@L["Dag toevoegen"]</span>
-                <span class="btn btn-sm" id="brandPreviewBtnAccent"
-                      style="background:@Model.AccentColor; color:#fff;">@L["Download PDF"]</span>
-            </div>
-
-            <p class="text-muted small mb-0 mt-3">@L["Zo zien je kleuren en logo eruit op een offerte voor je klant."]</p>
+            <span class="rounded-full px-3 py-1 text-xs font-semibold text-white" id="brandPreviewBadge" style="background:@Model.AccentColor;">concept</span>
         </div>
+
+        <div class="flex flex-wrap gap-2">
+            <span class="rounded-lg px-3 py-1.5 text-sm font-semibold text-white" id="brandPreviewBtnPrimary"
+                  style="background:@Model.PrimaryColor;">@L["Dag toevoegen"]</span>
+            <span class="rounded-lg px-3 py-1.5 text-sm font-semibold text-white" id="brandPreviewBtnAccent"
+                  style="background:@Model.AccentColor;">@L["Download PDF"]</span>
+        </div>
+
+        <p class="mt-4 text-sm" style="color:var(--text-secondary);">@L["Zo zien je kleuren en logo eruit op een offerte voor je klant."]</p>
     </div>
 </div>
 

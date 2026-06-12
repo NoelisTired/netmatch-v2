@@ -3,23 +3,24 @@
     ViewData["Title"] = "Nieuwe offerte";
 }
 
-<div class="nm-page-head">
-    <h1>Nieuwe offerte</h1>
+<div class="mb-8 reveal">
+    <p class="eyebrow mb-2">TourWeb Portal</p>
+    <h1 class="font-display text-3xl font-bold sm:text-4xl">Nieuwe offerte</h1>
 </div>
 
-<div class="nm-surface p-4 col-lg-6">
-    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+<div class="card-glass reveal max-w-xl p-6 sm:p-7">
+    <div asp-validation-summary="All" class="mb-4 text-sm" style="color:#f87171;"></div>
 
-    <form asp-action="Create" method="post">
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label">Titel</label>
-            <input asp-for="Title" class="form-control" autofocus />
+    <form asp-action="Create" method="post" class="space-y-5">
+        <div>
+            <label asp-for="Title" class="field-label">Titel</label>
+            <input asp-for="Title" class="field" autofocus />
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Language" class="form-label">Taal</label>
-            <select asp-for="Language" class="form-select">
-                <option value="">-- Kies een taal --</option>
+        <div>
+            <label asp-for="Language" class="field-label">Taal</label>
+            <select asp-for="Language" class="field">
+                <option value="">Kies een taal</option>
                 <option value="NL">Nederlands</option>
                 <option value="EN">Engels</option>
                 <option value="DE">Duits</option>
@@ -27,9 +28,9 @@
             </select>
         </div>
 
-        <div class="d-flex gap-2 mt-2">
+        <div class="flex items-center gap-3 pt-1">
             <button type="submit" class="btn btn-primary">Opslaan</button>
-            <a asp-action="Index" class="btn btn-link">Annuleren</a>
+            <a asp-action="Index" class="btn-link text-sm font-semibold">Annuleren</a>
         </div>
     </form>
 </div>

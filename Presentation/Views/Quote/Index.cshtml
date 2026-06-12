@@ -5,29 +5,29 @@
     ViewData["Title"] = L["Offertes"];
 }
 
-<div class="nm-page-head">
+<div class="mb-8 flex flex-wrap items-end justify-between gap-4 reveal">
     <div>
-        <p class="nm-eyebrow mb-1">TourWeb Portal</p>
-        <h1>@L["Offertes"]</h1>
+        <p class="eyebrow mb-2">TourWeb Portal</p>
+        <h1 class="font-display text-3xl font-bold sm:text-4xl">@L["Offertes"]</h1>
     </div>
     <a asp-action="Create" class="btn btn-accent">@L["Nieuwe offerte"]</a>
 </div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">@L["Er zijn nog geen offertes. Maak je eerste offerte aan."]</div>
+    <div class="alert alert-info reveal">@L["Er zijn nog geen offertes. Maak je eerste offerte aan."]</div>
 }
 else
 {
-    <div class="nm-surface p-0 overflow-hidden">
-        <table class="table table-hover align-middle mb-0">
+    <div class="card-glass reveal overflow-hidden">
+        <table class="table-glass">
             <thead>
                 <tr>
                     <th>@L["Titel"]</th>
                     <th>@L["Taal"]</th>
                     <th>@L["Status"]</th>
                     <th>@L["Aangemaakt"]</th>
-                    <th class="text-end">@L["Acties"]</th>
+                    <th class="text-right">@L["Acties"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,19 +35,21 @@ else
                 {
                     var isFinal = quote.Status == StatusType.Definitief;
                     <tr>
-                        <td class="fw-semibold">@quote.Title</td>
-                        <td>@quote.Language</td>
+                        <td class="font-semibold" style="color:var(--text-primary);">@quote.Title</td>
+                        <td style="color:var(--text-secondary);">@quote.Language</td>
                         <td>
-                            <span class="badge @(isFinal ? "nm-badge-final" : "nm-badge-draft")">@quote.Status</span>
+                            <span class="pill @(isFinal ? "pill-final" : "pill-draft")">@quote.Status</span>
                         </td>
-                        <td>@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
-                        <td class="text-end">
-                            <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-secondary">@L["Bekijken"]</a>
-                            <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-sm btn-outline-primary">@L["Bewerken"]</a>
-                            <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="d-inline"
-                                  onsubmit="return confirm('@L["Deze offerte verwijderen?"]');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">@L["Verwijderen"]</button>
-                            </form>
+                        <td style="color:var(--text-secondary);">@quote.CreatedAt.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <div class="flex flex-wrap justify-end gap-2">
+                                <a asp-action="Details" asp-route-id="@quote.Id" class="btn btn-ghost btn-sm">@L["Bekijken"]</a>
+                                <a asp-action="Edit" asp-route-id="@quote.Id" class="btn btn-ghost btn-sm">@L["Bewerken"]</a>
+                                <form asp-action="Delete" asp-route-id="@quote.Id" method="post" class="inline"
+                                      onsubmit="return confirm('@L["Deze offerte verwijderen?"]');">
+                                    <button type="submit" class="btn btn-danger btn-sm">@L["Verwijderen"]</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
