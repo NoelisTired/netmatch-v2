@@ -68,4 +68,154 @@
   <data name="Zo zien je kleuren en logo eruit op een offerte voor je klant." xml:space="preserve"><value>This is how your colours and logo appear on a quote for your customer.</value></data>
   <data name="Reisoffertes die" xml:space="preserve"><value>Travel quotes that</value></data>
   <data name="indruk maken" xml:space="preserve"><value>make an impression</value></data>
+  <data name="Aankomstlocatie" xml:space="preserve"><value>Arrival location</value></data>
+  <data name="Aantal personen per kamer." xml:space="preserve"><value>Number of people per room.</value></data>
+  <data name="Accommodatie bewerken" xml:space="preserve"><value>Edit accommodation</value></data>
+  <data name="Accommodatie opslaan" xml:space="preserve"><value>Save accommodation</value></data>
+  <data name="Accommodatiegegevens" xml:space="preserve"><value>Accommodation details</value></data>
+  <data name="Adres" xml:space="preserve"><value>Address</value></data>
+  <data name="Afbeelding" xml:space="preserve"><value>Image</value></data>
+  <data name="Alle" xml:space="preserve"><value>All</value></data>
+  <data name="Alle offertes" xml:space="preserve"><value>All quotes</value></data>
+  <data name="Beheer alle reisoffertes van je reisbureau." xml:space="preserve"><value>Manage all travel quotes of your agency.</value></data>
+  <data name="Bestand is te groot" xml:space="preserve"><value>File is too large</value></data>
+  <data name="Bijv. Aankomst in Tokio" xml:space="preserve"><value>E.g. Arrival in Tokyo</value></data>
+  <data name="Bijv. Amsterdam" xml:space="preserve"><value>E.g. Amsterdam</value></data>
+  <data name="Bijv. Hotel Granvia Kyoto" xml:space="preserve"><value>E.g. Hotel Granvia Kyoto</value></data>
+  <data name="Bijv. Rondreis Japan, 14 dagen" xml:space="preserve"><value>E.g. Japan round trip, 14 days</value></data>
+  <data name="Bijv. Tokio" xml:space="preserve"><value>E.g. Tokyo</value></data>
+  <data name="Bijv. Tweepersoonskamer deluxe" xml:space="preserve"><value>E.g. Double room deluxe</value></data>
+  <data name="Bus" xml:space="preserve"><value>Bus</value></data>
+  <data name="Concept" xml:space="preserve"><value>Draft</value></data>
+  <data name="Concepten" xml:space="preserve"><value>Drafts</value></data>
+  <data name="Controleer de toegestane bestandstypes" xml:space="preserve"><value>Check the allowed file types</value></data>
+  <data name="Dag" xml:space="preserve"><value>Day</value></data>
+  <data name="Dag bewerken" xml:space="preserve"><value>Edit day</value></data>
+  <data name="Dag opslaan" xml:space="preserve"><value>Save day</value></data>
+  <data name="Dag-tot-dag" xml:space="preserve"><value>Day by day</value></data>
+  <data name="Dagen" xml:space="preserve"><value>Days</value></data>
+  <data name="Daggegevens" xml:space="preserve"><value>Day details</value></data>
+  <data name="Dagnummer" xml:space="preserve"><value>Day number</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Datum" xml:space="preserve"><value>Date</value></data>
+  <data name="De taal waarin de offerte voor de klant wordt opgesteld." xml:space="preserve"><value>The language in which the quote is drawn up for the customer.</value></data>
+  <data name="Definitief" xml:space="preserve"><value>Final</value></data>
+  <data name="Definitieve offertes zijn klaar om met de klant te delen." xml:space="preserve"><value>Final quotes are ready to share with the customer.</value></data>
+  <data name="Deze accommodatie heeft nog geen kamertypes." xml:space="preserve"><value>This accommodation has no room types yet.</value></data>
+  <data name="Deze accommodatie verwijderen?" xml:space="preserve"><value>Delete this accommodation?</value></data>
+  <data name="Deze dag heeft nog geen accommodatie." xml:space="preserve"><value>This day has no accommodation yet.</value></data>
+  <data name="Deze dag heeft nog geen transport." xml:space="preserve"><value>This day has no transport yet.</value></data>
+  <data name="Deze dag verwijderen?" xml:space="preserve"><value>Delete this day?</value></data>
+  <data name="Deze kleuren en dit logo worden ook in de PDF van de offerte gebruikt." xml:space="preserve"><value>These colours and this logo are also used in the quote PDF.</value></data>
+  <data name="Deze offerte heeft nog geen dagen." xml:space="preserve"><value>This quote has no days yet.</value></data>
+  <data name="Deze offerte verwijderen?" xml:space="preserve"><value>Delete this quote?</value></data>
+  <data name="Dit bestandstype is niet toegestaan" xml:space="preserve"><value>This file type is not allowed</value></data>
+  <data name="Dit kamertype verwijderen?" xml:space="preserve"><value>Delete this room type?</value></data>
+  <data name="Dit transport verwijderen?" xml:space="preserve"><value>Delete this transport?</value></data>
+  <data name="Document" xml:space="preserve"><value>Document</value></data>
+  <data name="Eigen vervoer" xml:space="preserve"><value>Own transport</value></data>
+  <data name="Er ging iets mis bij het verwerken van je verzoek. Probeer het opnieuw." xml:space="preserve"><value>Something went wrong while processing your request. Please try again.</value></data>
+  <data name="Er is een fout opgetreden" xml:space="preserve"><value>An error occurred</value></data>
+  <data name="Foto" xml:space="preserve"><value>Photo</value></data>
+  <data name="Fout" xml:space="preserve"><value>Error</value></data>
+  <data name="Geen accommodatie voor deze dag." xml:space="preserve"><value>No accommodation for this day.</value></data>
+  <data name="Geen offertes gevonden voor deze zoekopdracht." xml:space="preserve"><value>No quotes found for this search.</value></data>
+  <data name="Geen transport voor deze dag." xml:space="preserve"><value>No transport for this day.</value></data>
+  <data name="Hoe TourWeb Portal met gegevens omgaat." xml:space="preserve"><value>How TourWeb Portal handles data.</value></data>
+  <data name="Hotels" xml:space="preserve"><value>Hotels</value></data>
+  <data name="Huidige afbeelding" xml:space="preserve"><value>Current image</value></data>
+  <data name="Huisstijl aanpassen" xml:space="preserve"><value>Adjust branding</value></data>
+  <data name="Huisstijl instellen" xml:space="preserve"><value>Set up branding</value></data>
+  <data name="Huisstijl opslaan" xml:space="preserve"><value>Save branding</value></data>
+  <data name="Indicatie: goedkoopste kamer per accommodatie plus alle transportprijzen." xml:space="preserve"><value>Indication: cheapest room per accommodation plus all transport prices.</value></data>
+  <data name="Instellingen" xml:space="preserve"><value>Settings</value></data>
+  <data name="Kamertype bewerken" xml:space="preserve"><value>Edit room type</value></data>
+  <data name="Kamertype opslaan" xml:space="preserve"><value>Save room type</value></data>
+  <data name="Kamertypegegevens" xml:space="preserve"><value>Room type details</value></data>
+  <data name="Kamertypes" xml:space="preserve"><value>Room types</value></data>
+  <data name="Kies een taal" xml:space="preserve"><value>Choose a language</value></data>
+  <data name="Kies een transporttype" xml:space="preserve"><value>Choose a transport type</value></data>
+  <data name="Kleuren van je reisbureau" xml:space="preserve"><value>Your agency's colours</value></data>
+  <data name="Korte beschrijving van de accommodatie voor de klant." xml:space="preserve"><value>Short description of the accommodation for the customer.</value></data>
+  <data name="Korte beschrijving van het dagprogramma voor de klant." xml:space="preserve"><value>Short description of the day programme for the customer.</value></data>
+  <data name="Laat het veld hieronder leeg om deze afbeelding te behouden." xml:space="preserve"><value>Leave the field below empty to keep this image.</value></data>
+  <data name="Laatste 6 maanden" xml:space="preserve"><value>Last 6 months</value></data>
+  <data name="Laden" xml:space="preserve"><value>Loading</value></data>
+  <data name="Live voorbeeld" xml:space="preserve"><value>Live preview</value></data>
+  <data name="Logo" xml:space="preserve"><value>Logo</value></data>
+  <data name="Logo en kleuren van je reisbureau, toegepast op offertes en PDF-documenten." xml:space="preserve"><value>Logo and colours of your agency, applied to quotes and PDF documents.</value></data>
+  <data name="Logo reisbureau" xml:space="preserve"><value>Agency logo</value></data>
+  <data name="Luchtvaartmaatschappij" xml:space="preserve"><value>Airline</value></data>
+  <data name="Maximaal" xml:space="preserve"><value>Maximum</value></data>
+  <data name="Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Merkinstellingen" xml:space="preserve"><value>Brand settings</value></data>
+  <data name="Naam" xml:space="preserve"><value>Name</value></data>
+  <data name="Naar" xml:space="preserve"><value>To</value></data>
+  <data name="Naar dashboard" xml:space="preserve"><value>To dashboard</value></data>
+  <data name="Nog geen accommodatie" xml:space="preserve"><value>No accommodation yet</value></data>
+  <data name="Nog geen dagprogramma" xml:space="preserve"><value>No day programme yet</value></data>
+  <data name="Nog geen kamertypes" xml:space="preserve"><value>No room types yet</value></data>
+  <data name="Nog geen offertes" xml:space="preserve"><value>No quotes yet</value></data>
+  <data name="Nog geen prijzen ingevoerd. Voeg kamertypes of transportprijzen toe." xml:space="preserve"><value>No prices entered yet. Add room types or transport prices.</value></data>
+  <data name="Nog geen transport" xml:space="preserve"><value>No transport yet</value></data>
+  <data name="Offerte" xml:space="preserve"><value>Quote</value></data>
+  <data name="Offerte aanmaken" xml:space="preserve"><value>Create quote</value></data>
+  <data name="Offertegegevens" xml:space="preserve"><value>Quote details</value></data>
+  <data name="Offertes per maand" xml:space="preserve"><value>Quotes per month</value></data>
+  <data name="Omschrijving" xml:space="preserve"><value>Description</value></data>
+  <data name="Overzicht" xml:space="preserve"><value>Overview</value></data>
+  <data name="Pas de gegevens van dit verblijf aan." xml:space="preserve"><value>Adjust the details of this stay.</value></data>
+  <data name="Pas de prijs of capaciteit van dit kamertype aan." xml:space="preserve"><value>Adjust the price or capacity of this room type.</value></data>
+  <data name="Pas de titel, taal of status van deze offerte aan." xml:space="preserve"><value>Adjust the title, language or status of this quote.</value></data>
+  <data name="Pas het dagprogramma van deze offerte aan." xml:space="preserve"><value>Adjust the day programme of this quote.</value></data>
+  <data name="Pas het vervoer van deze reisdag aan." xml:space="preserve"><value>Adjust the transport of this travel day.</value></data>
+  <data name="Prijs" xml:space="preserve"><value>Price</value></data>
+  <data name="Prijs per nacht" xml:space="preserve"><value>Price per night</value></data>
+  <data name="Prijsindicatie" xml:space="preserve"><value>Price indication</value></data>
+  <data name="Recente offertes" xml:space="preserve"><value>Recent quotes</value></data>
+  <data name="Reisofferte" xml:space="preserve"><value>Travel quote</value></data>
+  <data name="Reisoffertes voor reisbureaus" xml:space="preserve"><value>Travel quotes for travel agencies</value></data>
+  <data name="Rondreis Japan, 14 dagen" xml:space="preserve"><value>Japan round trip, 14 days</value></data>
+  <data name="Sleep een afbeelding hierheen of" xml:space="preserve"><value>Drag an image here or</value></data>
+  <data name="Snel naar" xml:space="preserve"><value>Quick links</value></data>
+  <data name="Start met een titel en taal; dagen en prijzen voeg je daarna toe." xml:space="preserve"><value>Start with a title and language; add days and prices afterwards.</value></data>
+  <data name="Terug naar accommodatie" xml:space="preserve"><value>Back to accommodation</value></data>
+  <data name="Terug naar dag-tot-dag" xml:space="preserve"><value>Back to day by day</value></data>
+  <data name="Terug naar dashboard" xml:space="preserve"><value>Back to dashboard</value></data>
+  <data name="Terug naar offerte" xml:space="preserve"><value>Back to quote</value></data>
+  <data name="Thema wisselen" xml:space="preserve"><value>Switch theme</value></data>
+  <data name="Tik om ongedaan te maken" xml:space="preserve"><value>Tap to undo</value></data>
+  <data name="Tik om te annuleren" xml:space="preserve"><value>Tap to cancel</value></data>
+  <data name="Totaal" xml:space="preserve"><value>Total</value></data>
+  <data name="Totaal offertes" xml:space="preserve"><value>Total quotes</value></data>
+  <data name="TourWeb Portal verwerkt uitsluitend de gegevens die nodig zijn om reisoffertes samen te stellen. Offertegegevens zijn alleen zichtbaar voor het reisbureau dat ze heeft aangemaakt en worden niet met derden gedeeld." xml:space="preserve"><value>TourWeb Portal only processes the data needed to compose travel quotes. Quote data is only visible to the travel agency that created it and is not shared with third parties.</value></data>
+  <data name="Transport bewerken" xml:space="preserve"><value>Edit transport</value></data>
+  <data name="Transport opslaan" xml:space="preserve"><value>Save transport</value></data>
+  <data name="Transportgegevens" xml:space="preserve"><value>Transport details</value></data>
+  <data name="Trein" xml:space="preserve"><value>Train</value></data>
+  <data name="Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Upload een nieuw bestand om dit logo te vervangen." xml:space="preserve"><value>Upload a new file to replace this logo.</value></data>
+  <data name="Van" xml:space="preserve"><value>From</value></data>
+  <data name="Vertreklocatie" xml:space="preserve"><value>Departure location</value></data>
+  <data name="Vlucht" xml:space="preserve"><value>Flight</value></data>
+  <data name="Vluchtgegevens" xml:space="preserve"><value>Flight details</value></data>
+  <data name="Vluchtnummer" xml:space="preserve"><value>Flight number</value></data>
+  <data name="Voeg een dag toe aan het reisprogramma van deze offerte." xml:space="preserve"><value>Add a day to the itinerary of this quote.</value></data>
+  <data name="Voeg een hotel of verblijf toe aan deze reisdag." xml:space="preserve"><value>Add a hotel or stay to this travel day.</value></data>
+  <data name="Voeg een kamertype met prijs en capaciteit toe aan deze accommodatie." xml:space="preserve"><value>Add a room type with price and capacity to this accommodation.</value></data>
+  <data name="Voeg vervoer toe aan deze reisdag." xml:space="preserve"><value>Add transport to this travel day.</value></data>
+  <data name="Voor koppen en knoppen op de offerte." xml:space="preserve"><value>For headings and buttons on the quote.</value></data>
+  <data name="Voor statuslabels en secundaire accenten." xml:space="preserve"><value>For status labels and secondary accents.</value></data>
+  <data name="Weet je het zeker?" xml:space="preserve"><value>Are you sure?</value></data>
+  <data name="Werkruimte" xml:space="preserve"><value>Workspace</value></data>
+  <data name="Wijzigingen opslaan" xml:space="preserve"><value>Save changes</value></data>
+  <data name="Wordt meegeteld in de prijsindicatie van de offerte." xml:space="preserve"><value>Included in the quote's price indication.</value></data>
+  <data name="Zo ziet je klant het" xml:space="preserve"><value>How your customer sees it</value></data>
+  <data name="Zoeken" xml:space="preserve"><value>Search</value></data>
+  <data name="Zoeken op titel of taal" xml:space="preserve"><value>Search by title or language</value></data>
+  <data name="blader" xml:space="preserve"><value>browse</value></data>
+  <data name="optioneel" xml:space="preserve"><value>optional</value></data>
+  <data name="optioneel, max 5 MB" xml:space="preserve"><value>optional, max 5 MB</value></data>
+  <data name="pers." xml:space="preserve"><value>pers.</value></data>
+  <data name="van" xml:space="preserve"><value>of</value></data>
 </root>
