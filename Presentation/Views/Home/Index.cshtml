@@ -2,16 +2,39 @@
     ViewData["Title"] = L["Home"];
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3 mb-0">NetMatch</h1>
-    <a asp-controller="Quote" asp-action="Index" class="btn btn-primary">@L["Naar offertes"]</a>
+<section class="nm-hero mb-4">
+    <div class="accent-bar"></div>
+    <p class="nm-eyebrow text-white-50 mb-2" style="letter-spacing:.18em;">TourWeb Portal · by NetMatch</p>
+    <h1>@L["Reisoffertes die indruk maken"]</h1>
+    <p class="lead mb-4">
+        @L["Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht."]
+    </p>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-controller="Quote" asp-action="Index" class="btn btn-accent">@L["Naar offertes"]</a>
+        <a asp-controller="Quote" asp-action="Create" class="btn btn-outline-light">@L["Nieuwe offerte aanmaken"]</a>
+    </div>
+</section>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <a asp-controller="Quote" asp-action="Index" class="nm-tile text-decoration-none">
+            <span class="nm-tile-icon">📋</span>
+            <div class="nm-tile-title">@L["Offertes beheren"]</div>
+            <p class="text-muted small mb-0">@L["Bekijk, bewerk en exporteer al je reisoffertes."]</p>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Quote" asp-action="Create" class="nm-tile text-decoration-none">
+            <span class="nm-tile-icon">✨</span>
+            <div class="nm-tile-title">@L["Nieuwe offerte aanmaken"]</div>
+            <p class="text-muted small mb-0">@L["Begin een nieuwe reisofferte van de grond af op."]</p>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Branding" asp-action="Edit" class="nm-tile text-decoration-none">
+            <span class="nm-tile-icon">🎨</span>
+            <div class="nm-tile-title">@L["Huisstijl"]</div>
+            <p class="text-muted small mb-0">@L["Stel je logo en kleuren in voor offertes met je eigen huisstijl."]</p>
+        </a>
+    </div>
 </div>
-
-<p class="text-muted">
-    @L["Stel gepersonaliseerde reisoffertes samen: per offerte een dag-tot-dag programma met transport, accommodatie en een prijsoverzicht."]
-</p>
-
-<ul class="list-unstyled">
-    <li class="mb-1"><a asp-controller="Quote" asp-action="Index">@L["Offertes beheren"]</a></li>
-    <li class="mb-1"><a asp-controller="Quote" asp-action="Create">@L["Nieuwe offerte aanmaken"]</a></li>
-</ul>

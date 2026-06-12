@@ -6,13 +6,16 @@
     {
         ("nl", "Nederlands"), ("en", "English"), ("de", "Deutsch"), ("fr", "Français")
     };
+    var activeController = (ViewContext.RouteData.Values["controller"] as string) ?? "";
+    string NavActive(params string[] controllers) =>
+        controllers.Contains(activeController, StringComparer.OrdinalIgnoreCase) ? "active" : "";
 }
 <!DOCTYPE html>
 <html lang="@culture">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] · NetMatch</title>
+    <title>@ViewData["Title"] · TourWeb Portal</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
@@ -20,23 +23,29 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-semibold" asp-controller="Quote" asp-action="Index">NetMatch</a>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">TW</span>
+                <span class="d-flex flex-column lh-1">
+                    TourWeb Portal
+                    <span class="brand-sub">by NetMatch</span>
+                </span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+                <ul class="navbar-nav flex-grow-1 ms-sm-4">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">@L["Home"]</a>
+                        <a class="nav-link @NavActive("Home")" asp-controller="Home" asp-action="Index">@L["Home"]</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Quote" asp-action="Index">@L["Offertes"]</a>
+                        <a class="nav-link @NavActive("Quote", "Day", "Transport", "Accommodation", "RoomType")" asp-controller="Quote" asp-action="Index">@L["Offertes"]</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Branding" asp-action="Edit">@L["Huisstijl"]</a>
+                        <a class="nav-link @NavActive("Branding")" asp-controller="Branding" asp-action="Edit">@L["Huisstijl"]</a>
                     </li>
                 </ul>
                 <form asp-controller="Culture" asp-action="Set" method="post" class="d-flex align-items-center">
@@ -68,8 +77,9 @@
 </div>
 
 <footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2026 NetMatch — <a asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+        <span>&copy; 2026 TourWeb Portal — <span class="nm-product">a NetMatch product</span></span>
+        <a asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
