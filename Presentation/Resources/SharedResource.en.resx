@@ -217,5 +217,4 @@
   <data name="optioneel" xml:space="preserve"><value>optional</value></data>
   <data name="optioneel, max 5 MB" xml:space="preserve"><value>optional, max 5 MB</value></data>
   <data name="pers." xml:space="preserve"><value>pers.</value></data>
-  <data name="van" xml:space="preserve"><value>of</value></data>
 </root>

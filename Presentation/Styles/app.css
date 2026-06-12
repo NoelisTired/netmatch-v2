@@ -516,6 +516,11 @@
     line-height: 1.4;
     white-space: nowrap;
   }
+  .badge-wrap {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+  }
   .badge .dot {
     width: 0.4rem;
     height: 0.4rem;
