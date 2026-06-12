@@ -1,0 +1,27 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!window.FilePond) return;
+        window.FilePond.registerPlugin(
+            window.FilePondPluginImagePreview,
+            window.FilePondPluginFileValidateType,
+            window.FilePondPluginFileValidateSize
+        );
+        document.querySelectorAll('input[data-filepond]').forEach(function (input) {
+            window.FilePond.create(input, {
+                storeAsFile: true,
+                maxFileSize: input.getAttribute('data-max-size') || '5MB',
+                acceptedFileTypes: (input.getAttribute('accept') || '').split(',').filter(Boolean),
+                imagePreviewHeight: 140,
+                credits: false,
+                labelIdle: @Json.Serialize($"{L["Sleep een afbeelding hierheen of"].Value} <span class=\"filepond--label-action\">{L["blader"].Value}</span>"),
+                labelMaxFileSizeExceeded: @Json.Serialize(L["Bestand is te groot"].Value),
+                labelMaxFileSize: @Json.Serialize($"{L["Maximaal"].Value} {{filesize}}"),
+                labelFileTypeNotAllowed: @Json.Serialize(L["Dit bestandstype is niet toegestaan"].Value),
+                fileValidateTypeLabelExpectedTypes: @Json.Serialize(L["Controleer de toegestane bestandstypes"].Value),
+                labelFileLoading: @Json.Serialize(L["Laden"].Value),
+                labelTapToCancel: @Json.Serialize(L["Tik om te annuleren"].Value),
+                labelTapToUndo: @Json.Serialize(L["Tik om ongedaan te maken"].Value)
+            });
+        });
+    });
+</script>

@@ -9,6 +9,8 @@
     var activeController = (ViewContext.RouteData.Values["controller"] as string) ?? "";
     string NavActive(params string[] controllers) =>
         controllers.Contains(activeController, StringComparer.OrdinalIgnoreCase) ? "is-active" : "";
+    var crumbs = ViewData["Crumbs"] as (string Label, string? Url)[];
+    var toast = TempData["Toast"] as string;
 }
 <!DOCTYPE html>
 <html lang="@culture" class="dark">
@@ -17,7 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] · TourWeb Portal</title>
     <script>
-        // Pas thema toe voor eerste paint zodat er geen flits is.
+        // Pas thema toe voor de eerste paint zodat er geen flits is.
         (function () {
             try {
                 var saved = localStorage.getItem('tw-theme');
@@ -29,98 +31,176 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="~/lib/glightbox/glightbox.min.css"/>
+    <link rel="stylesheet" href="~/lib/tom-select/tom-select.min.css"/>
+    <link rel="stylesheet" href="~/lib/flatpickr/flatpickr.min.css"/>
     <link rel="stylesheet" href="~/css/build.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Presentation.styles.css" asp-append-version="true"/>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-<div class="app-bg"></div>
+<div x-data="{ nav: false }">
 
-<header class="sticky top-0 z-40 backdrop-blur-md" style="background:color-mix(in srgb, var(--bg-primary) 78%, transparent); border-bottom:1px solid var(--card-border);">
-    <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-        <a class="group flex items-center gap-3" asp-controller="Home" asp-action="Index">
-            <span class="grid h-9 w-9 place-items-center rounded-lg font-display text-sm font-bold text-white"
+    <div x-cloak x-show="nav" x-transition.opacity.duration.150ms
+         class="fixed inset-0 z-40 bg-black/40 lg:hidden" x-on:click="nav = false"></div>
+
+    <aside class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col border-r transition-transform duration-200 lg:translate-x-0"
+           x-bind:class="nav ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+           style="background:var(--bg-surface); border-color:var(--border);">
+
+        <a class="flex items-center gap-3 border-b px-5" style="border-color:var(--border); height:3.5rem;"
+           asp-controller="Home" asp-action="Index">
+            <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-xs font-bold text-white"
                   style="background:var(--accent);">TW</span>
-            <span class="flex flex-col leading-none">
-                <span class="font-display text-lg font-bold tracking-tight" style="color:var(--text-primary);">TourWeb Portal</span>
-                <span class="text-[0.62rem] font-semibold uppercase tracking-[0.18em]" style="color:var(--text-secondary);">by NetMatch</span>
+            <span class="flex flex-col leading-tight">
+                <span class="text-sm font-semibold" style="color:var(--text-primary);">TourWeb Portal</span>
+                <span class="text-[0.65rem] font-medium" style="color:var(--text-tertiary);">by NetMatch</span>
             </span>
         </a>
 
-        <button type="button" id="nav-toggle" class="btn btn-ghost btn-sm sm:hidden" aria-label="Menu" aria-expanded="false">
-            <span class="block h-0.5 w-4 bg-current"></span>
-        </button>
+        <nav class="slim-scroll flex-1 overflow-y-auto px-3 py-2">
+            <p class="sidebar-section">@L["Werkruimte"]</p>
+            <a class="sidebar-link @NavActive("Home")" asp-controller="Home" asp-action="Index">
+                <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                <span>@L["Dashboard"]</span>
+            </a>
+            <a class="sidebar-link @NavActive("Quote", "Day", "Transport", "Accommodation", "RoomType")"
+               asp-controller="Quote" asp-action="Index">
+                <i data-lucide="file-text" class="h-4 w-4"></i>
+                <span>@L["Offertes"]</span>
+            </a>
 
-        <div id="nav-menu" class="hidden w-full flex-col gap-4 sm:flex sm:w-auto sm:flex-row sm:items-center">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-                <a class="nav-link @NavActive("Home")" asp-controller="Home" asp-action="Index">@L["Home"]</a>
-                <a class="nav-link @NavActive("Quote", "Day", "Transport", "Accommodation", "RoomType")" asp-controller="Quote" asp-action="Index">@L["Offertes"]</a>
-                <a class="nav-link @NavActive("Branding")" asp-controller="Branding" asp-action="Edit">@L["Huisstijl"]</a>
-            </div>
+            <p class="sidebar-section">@L["Instellingen"]</p>
+            <a class="sidebar-link @NavActive("Branding")" asp-controller="Branding" asp-action="Edit">
+                <i data-lucide="palette" class="h-4 w-4"></i>
+                <span>@L["Huisstijl"]</span>
+            </a>
+        </nav>
 
-            <div class="flex items-center gap-3">
-                <form asp-controller="Culture" asp-action="Set" method="post" class="flex items-center gap-2">
-                    <input type="hidden" name="returnUrl" value="@returnUrl" />
-                    <label class="sr-only" for="culture-select">@L["Taal"]</label>
-                    <select id="culture-select" name="culture" class="field !w-auto !py-1.5 !text-sm"
-                            onchange="this.form.submit()">
-                        @foreach (var lang in languages)
-                        {
-                            if (lang.Code == culture)
-                            {
-                                <option value="@lang.Code" selected>@lang.Label</option>
-                            }
-                            else
-                            {
-                                <option value="@lang.Code">@lang.Label</option>
-                            }
-                        }
-                    </select>
-                </form>
-
-                <button type="button" id="theme-toggle" class="btn btn-ghost btn-sm" aria-label="Thema wisselen" title="Thema wisselen">
-                    <span id="theme-icon-dark" class="hidden dark:inline">Licht</span>
-                    <span id="theme-icon-light" class="inline dark:hidden">Donker</span>
-                </button>
+        <div class="border-t px-5 py-4" style="border-color:var(--border);">
+            <div class="flex items-center justify-between text-xs" style="color:var(--text-tertiary);">
+                <span>TourWeb v2</span>
+                <a class="font-medium transition-colors hover:underline" style="color:var(--text-secondary);"
+                   asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
             </div>
         </div>
-    </nav>
-</header>
+    </aside>
 
-<main role="main" class="mx-auto max-w-6xl px-5 py-8">
-    @RenderBody()
-</main>
+    <div class="flex min-h-screen flex-col lg:pl-64">
+        <header class="sticky top-0 z-30 flex items-center gap-3 border-b px-4 backdrop-blur-md sm:px-6"
+                style="height:3.5rem; border-color:var(--border); background:color-mix(in srgb, var(--bg-primary) 82%, transparent);">
 
-<footer class="mt-16" style="border-top:1px solid var(--card-border);">
-    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-5 py-6 text-sm" style="color:var(--text-secondary);">
-        <span>&copy; 2026 TourWeb Portal, een NetMatch product</span>
-        <a class="btn-link text-sm" asp-controller="Home" asp-action="Privacy">@L["Privacy"]</a>
+            <button type="button" class="btn-icon lg:hidden" aria-label="@L["Menu"]" x-on:click="nav = true">
+                <i data-lucide="menu" class="h-4 w-4"></i>
+            </button>
+
+            <nav class="crumbs flex-1" aria-label="Breadcrumb">
+                @if (crumbs is { Length: > 0 })
+                {
+                    for (var i = 0; i < crumbs.Length; i++)
+                    {
+                        var (label, url) = crumbs[i];
+                        if (i > 0)
+                        {
+                            <i data-lucide="chevron-right" class="crumb-sep h-3.5 w-3.5"></i>
+                        }
+                        if (url is null || i == crumbs.Length - 1)
+                        {
+                            <span class="crumb is-current">@label</span>
+                        }
+                        else
+                        {
+                            <a class="crumb" href="@url">@label</a>
+                        }
+                    }
+                }
+                else
+                {
+                    <span class="crumb is-current">@ViewData["Title"]</span>
+                }
+            </nav>
+
+            <form asp-controller="Culture" asp-action="Set" method="post" class="flex items-center">
+                <input type="hidden" name="returnUrl" value="@returnUrl"/>
+                <label class="sr-only" for="culture-select">@L["Taal"]</label>
+                <select id="culture-select" name="culture"
+                        class="cursor-pointer rounded-lg border-0 bg-transparent py-1.5 pl-2 pr-7 text-sm font-medium focus:outline-none"
+                        style="color:var(--text-secondary);"
+                        onchange="this.form.submit()">
+                    @foreach (var lang in languages)
+                    {
+                        if (lang.Code == culture)
+                        {
+                            <option value="@lang.Code" selected>@lang.Label</option>
+                        }
+                        else
+                        {
+                            <option value="@lang.Code">@lang.Label</option>
+                        }
+                    }
+                </select>
+            </form>
+
+            <button type="button" id="theme-toggle" class="btn-icon" aria-label="@L["Thema wisselen"]" title="@L["Thema wisselen"]">
+                <i data-lucide="sun" class="hidden h-4 w-4 dark:block"></i>
+                <i data-lucide="moon" class="block h-4 w-4 dark:hidden"></i>
+            </button>
+        </header>
+
+        <main role="main" class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            @RenderBody()
+        </main>
+
+        <footer class="border-t" style="border-color:var(--border);">
+            <div class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs sm:px-6 lg:px-8"
+                 style="color:var(--text-tertiary);">
+                <span>&copy; 2026 TourWeb Portal, een NetMatch product</span>
+                <span>@L["Reisoffertes voor reisbureaus"]</span>
+            </div>
+        </footer>
     </div>
-</footer>
+</div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script>
-    (function () {
-        // Thema-toggle
-        var toggle = document.getElementById('theme-toggle');
-        if (toggle) {
-            toggle.addEventListener('click', function () {
-                var isDark = document.documentElement.classList.toggle('dark');
-                try { localStorage.setItem('tw-theme', isDark ? 'dark' : 'light'); } catch (e) {}
-            });
-        }
-        // Mobiel menu
-        var navToggle = document.getElementById('nav-toggle');
-        var navMenu = document.getElementById('nav-menu');
-        if (navToggle && navMenu) {
-            navToggle.addEventListener('click', function () {
-                var open = navMenu.classList.toggle('hidden');
-                navToggle.setAttribute('aria-expanded', String(!open));
-            });
-        }
-    })();
-</script>
+<div id="confirm-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-title" hidden>
+    <div class="modal-card p-5">
+        <div class="flex items-start gap-3.5">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full"
+                  style="background:var(--danger-bg); color:var(--danger);">
+                <i data-lucide="trash-2" class="h-5 w-5"></i>
+            </span>
+            <div class="min-w-0">
+                <h2 id="confirm-title" class="text-[0.95rem] font-semibold" style="color:var(--text-primary);">@L["Weet je het zeker?"]</h2>
+                <p id="confirm-message" class="mt-1 text-sm leading-relaxed" style="color:var(--text-secondary);"></p>
+            </div>
+        </div>
+        <div class="mt-5 flex justify-end gap-2.5">
+            <button type="button" class="btn btn-secondary" data-confirm-cancel>@L["Annuleren"]</button>
+            <button type="button" class="btn btn-danger-solid" data-confirm-accept>@L["Verwijderen"]</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast-region" class="fixed bottom-5 right-5 z-[80] flex flex-col gap-2" aria-live="polite">
+    @if (!string.IsNullOrWhiteSpace(toast))
+    {
+        <div class="toast" data-toast>
+            <i data-lucide="check-circle-2" class="h-4 w-4 shrink-0" style="color:var(--ok); margin-top:0.1rem;"></i>
+            <span>@toast</span>
+        </div>
+    }
+</div>
+
+<script src="~/lib/alpinejs/alpine.min.js" defer></script>
+<script src="~/lib/lucide/lucide.min.js" defer></script>
+<script src="~/lib/glightbox/glightbox.min.js" defer></script>
+<script src="~/lib/tom-select/tom-select.complete.min.js" defer></script>
+<script src="~/lib/flatpickr/flatpickr.min.js" defer></script>
+<script src="~/lib/flatpickr/l10n/nl.js" defer></script>
+<script src="~/lib/flatpickr/l10n/de.js" defer></script>
+<script src="~/lib/flatpickr/l10n/fr.js" defer></script>
+<script src="~/lib/listjs/list.min.js" defer></script>
+<script src="~/js/site.js" asp-append-version="true" defer></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
